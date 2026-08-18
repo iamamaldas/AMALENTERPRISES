@@ -1,176 +1,632 @@
 /* =========================================================
    AMAL ENTERPRISES
-   WHATSAPP QUOTATION SYSTEM
+   QUOTATION SYSTEM CSS
+   No main theme/layout modification
 ========================================================= */
 
-.ae-quotation-wrapper{
-    width:100%;
+#amalQuotationSystem {
+    width: 100%;
 }
 
 
-.ae-role-box{
-    margin-bottom:10px;
-    padding:10px;
-    border-radius:9px;
+/* =========================================================
+   WRAPPER
+========================================================= */
+
+.amal-quote-wrapper {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.amal-quote-header {
+
+    grid-column:
+        1 / -1;
+
+    padding:
+        8px 10px;
+
+    border-radius:
+        8px;
+
     background:
         linear-gradient(
             145deg,
-            #151f2b,
+            #172230,
             #101822
         );
-    border:1px solid rgba(89,115,136,.18);
+
+    border:
+        1px solid rgba(89,115,136,.18);
+
 }
 
 
-.ae-role-box label{
+.amal-brand-small {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+}
+
+
+.amal-brand-small img {
+
+    width:32px;
+
+    height:32px;
+
+    object-fit:contain;
+
+}
+
+
+.amal-brand-small strong {
+
     display:block;
-    margin-bottom:5px;
-    color:#858c96;
-    font-size:10px;
+
+    color:#d7dce2;
+
+    font-size:11px;
+
 }
 
 
-.ae-role-box select,
-.ae-form-panel input,
-.ae-form-panel select,
-.ae-form-panel textarea{
-    width:100%;
-    padding:8px;
-    margin-bottom:7px;
-    outline:none;
-    border-radius:5px;
-    border:1px solid #263846;
-    background:#101923;
-    color:#c5ccd4;
-    font-size:10px;
+.amal-brand-small small {
+
+    display:block;
+
+    margin-top:2px;
+
+    color:#737d89;
+
+    font-size:7px;
+
+    letter-spacing:.3px;
+
 }
 
 
-.ae-form-panel{
-    padding:10px;
+/* =========================================================
+   FORM
+========================================================= */
+
+.amal-quote-form {
+
+    padding:9px;
+
     border-radius:9px;
+
+    border:
+        1px solid rgba(89,115,136,.18);
+
     background:
         linear-gradient(
             145deg,
             #111b27,
             #0e1621
         );
-    border:1px solid rgba(89,115,136,.18);
+
 }
 
 
-.ae-form-title{
-    margin-bottom:9px;
-    color:#cbd0d7;
-    font-size:11px;
-    font-weight:500;
-    letter-spacing:.2px;
-}
+.amal-quote-form label {
 
-
-.ae-two-column{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:7px;
-}
-
-
-.ae-whatsapp-button{
-    width:100%;
-    padding:9px;
-    border:1px solid #326b9d;
-    border-radius:5px;
-    background:#244f76;
-    color:#e0ebf4;
-    cursor:pointer;
-    font-size:10px;
-    transition:.2s;
-}
-
-
-.ae-whatsapp-button:hover{
-    background:#2d6594;
-    transform:translateY(-1px);
-}
-
-
-.ae-admin-button{
-    width:100%;
-    padding:9px;
-    border:1px solid #4d6d87;
-    border-radius:5px;
-    background:#20384e;
-    color:#dbe6ef;
-    cursor:pointer;
-    font-size:10px;
-}
-
-
-.ae-login-message{
-    margin-top:7px;
-    color:#c78282;
-    font-size:9px;
-}
-
-
-.ae-admin-panel{
     display:block;
-}
 
+    margin:
+        4px 0 4px;
 
-.ae-admin-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom:9px;
-    padding:10px;
-    border-radius:9px;
-    background:
-        linear-gradient(
-            145deg,
-            #172535,
-            #101923
-        );
-    border:1px solid rgba(89,115,136,.2);
-}
+    color:#858e99;
 
-
-.ae-admin-title{
-    color:#d2d7dd;
-    font-size:12px;
-}
-
-
-.ae-admin-subtitle{
-    margin-top:3px;
-    color:#777f8b;
     font-size:9px;
+
 }
 
 
-.ae-logout-button{
-    padding:6px 10px;
-    border:1px solid #34495c;
+.amal-quote-form input,
+.amal-quote-form select,
+.amal-quote-form textarea {
+
+    width:100%;
+
+    padding:7px;
+
+    margin-bottom:5px;
+
+    outline:none;
+
     border-radius:5px;
-    background:#111c28;
-    color:#9da8b4;
-    cursor:pointer;
+
+    border:
+        1px solid #263846;
+
+    background:#101923;
+
+    color:#b7bec7;
+
+    font-family:inherit;
+
     font-size:9px;
+
 }
 
 
-.ae-admin-card{
-    margin-bottom:9px;
+.amal-quote-form input:focus,
+.amal-quote-form select:focus,
+.amal-quote-form textarea:focus {
+
+    border-color:#397db5;
+
+}
+
+
+.amal-quote-form textarea {
+
+    resize:vertical;
+
+}
+
+
+.amal-two-column {
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:6px;
+
+}
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+.amal-hidden {
+
+    display:none !important;
+
+}
+
+
+#amalAdminLogin {
+
+    margin:
+        7px 0;
+
+    padding:8px;
+
+    border-radius:6px;
+
+    border:
+        1px solid rgba(70,126,172,.35);
+
+    background:
+        rgba(25,55,80,.35);
+
+}
+
+
+.amal-login-title {
+
+    margin-bottom:6px;
+
+    color:#9bbbd5;
+
+    font-size:9px;
+
+    font-weight:600;
+
+}
+
+
+.amal-secondary-button {
+
+    width:100%;
+
+    padding:6px;
+
+    border:0;
+
+    border-radius:5px;
+
+    background:#263f56;
+
+    color:#cbd9e5;
+
+    cursor:pointer;
+
+    font-size:9px;
+
+}
+
+
+.amal-status {
+
+    margin-top:5px;
+
+    font-size:8px;
+
+}
+
+
+.amal-status.success {
+
+    color:#76b894;
+
+}
+
+
+.amal-status.error {
+
+    color:#d47c7c;
+
+}
+
+
+/* =========================================================
+   PRICE NOTE
+========================================================= */
+
+.amal-price-note {
+
+    margin:
+        2px 0 6px;
+
+    color:#6e8293;
+
+    font-size:8px;
+
+    line-height:1.35;
+
+}
+
+
+/* =========================================================
+   GENERATE BUTTON
+========================================================= */
+
+.amal-generate-button {
+
+    width:100%;
+
+    padding:8px;
+
+    margin-top:4px;
+
+    border:0;
+
+    border-radius:5px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #397fc0,
+            #2867a4
+        );
+
+    color:#e7f0f7;
+
+    cursor:pointer;
+
+    font-size:10px;
+
+    box-shadow:
+        0 4px 14px rgba(31,111,181,.20);
+
+}
+
+
+.amal-generate-button:hover {
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.amal-preview {
+
     padding:10px;
+
     border-radius:9px;
+
+    border:
+        1px solid #4e8bc2;
+
     background:
         linear-gradient(
             145deg,
-            #151f2b,
-            #101822
+            #2b69a6,
+            #1e568c
         );
-    border:1px solid rgba(89,115,136,.18);
+
+    box-shadow:
+        0 6px 20px rgba(20,87,145,.25);
+
+}
+
+
+.amal-preview-top {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding-bottom:8px;
+
+    margin-bottom:7px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.16);
+
+}
+
+
+.amal-preview-top img {
+
+    width:34px;
+
+    height:34px;
+
+    object-fit:contain;
+
+    background:
+        rgba(255,255,255,.08);
+
+    border-radius:5px;
+
+}
+
+
+.amal-preview-top strong {
+
+    display:block;
+
+    color:#e6f0f7;
+
+    font-size:10px;
+
+}
+
+
+.amal-preview-top small {
+
+    display:block;
+
+    margin-top:2px;
+
+    color:#b9d0e1;
+
+    font-size:7px;
+
+}
+
+
+.amal-preview-title {
+
+    margin-bottom:7px;
+
+    color:#e1edf5;
+
+    font-size:9px;
+
+    font-weight:600;
+
+    letter-spacing:.3px;
+
+}
+
+
+.amal-preview-row {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:8px;
+
+    padding:4px 0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+
+    color:#bdd0df;
+
+    font-size:8px;
+
+}
+
+
+.amal-preview-row strong {
+
+    color:#edf5fa;
+
+    text-align:right;
+
+    max-width:145px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+
+.amal-preview-total {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:8px;
+
+    margin-top:7px;
+
+    padding-top:8px;
+
+    color:#dbeaf4;
+
+    border-top:
+        1px solid rgba(255,255,255,.18);
+
+    font-size:10px;
+
+}
+
+
+.amal-preview-total strong {
+
+    color:#fff;
+
+}
+
+
+.amal-preview-details {
+
+    min-height:34px;
+
+    margin-top:8px;
+
+    padding:6px;
+
+    border-radius:5px;
+
+    background:
+        rgba(8,31,52,.25);
+
+    color:#c0d3e1;
+
+    font-size:8px;
+
+    line-height:1.4;
+
+}
+
+
+.amal-whatsapp-button {
+
+    width:100%;
+
+    padding:8px;
+
+    margin-top:8px;
+
+    border:0;
+
+    border-radius:5px;
+
+    background:#153d62;
+
+    color:#dbe8f4;
+
+    cursor:pointer;
+
+    font-size:10px;
+
+}
+
+
+.amal-whatsapp-button:hover {
+
+    background:#194b78;
+
+}
+
+
+/* =========================================================
+   FLASH MESSAGE
+========================================================= */
+
+.amal-flash {
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:22px;
+
+    z-index:99999;
+
+    min-width:230px;
+
+    max-width:90%;
+
+    padding:10px 15px;
+
+    border-radius:8px;
+
+    background:
+        rgba(17,27,39,.97);
+
+    border:
+        1px solid rgba(88,139,184,.45);
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.35);
+
+    color:#dce8f1;
+
+    text-align:center;
+
+    font-size:11px;
+
+    transform:
+        translate(-50%,20px);
+
+    opacity:0;
+
+    transition:
+        .3s ease;
+
+}
+
+
+.amal-flash.show {
+
+    transform:
+        translate(-50%,0);
+
+    opacity:1;
+
+}
+
+
+.amal-flash.success {
+
+    border-color:
+        rgba(74,153,106,.55);
+
+}
+
+
+.amal-flash.error {
+
+    border-color:
+        rgba(181,82,82,.55);
+
 }
 
 
@@ -178,16 +634,26 @@
    MOBILE
 ========================================================= */
 
-@media(max-width:620px){
+@media(max-width:620px) {
 
-    .ae-two-column{
+    .amal-quote-wrapper {
+
         grid-template-columns:1fr;
-        gap:0;
+
     }
 
 
-    .ae-admin-header{
-        align-items:flex-start;
+    .amal-quote-header {
+
+        grid-column:auto;
+
+    }
+
+
+    .amal-preview-row strong {
+
+        max-width:130px;
+
     }
 
 }
