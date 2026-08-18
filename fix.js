@@ -61,3 +61,67 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+/* =========================================================
+   LOAD QUOTATION SYSTEM WITHOUT EDITING index.html
+========================================================= */
+
+(function () {
+
+    function loadQuotationSystem() {
+
+        if (
+            document.querySelector(
+                'script[data-amal-quotation="true"]'
+            )
+        ) {
+            return;
+        }
+
+
+        /* Load CSS */
+
+        const css =
+            document.createElement("link");
+
+        css.rel = "stylesheet";
+
+        css.href = "quotation.css";
+
+        css.dataset.amalQuotation =
+            "true";
+
+        document.head.appendChild(css);
+
+
+        /* Load JavaScript */
+
+        const script =
+            document.createElement("script");
+
+        script.src =
+            "quotation.js";
+
+        script.dataset.amalQuotation =
+            "true";
+
+        document.body.appendChild(script);
+
+    }
+
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            loadQuotationSystem
+        );
+
+    } else {
+
+        loadQuotationSystem();
+
+    }
+
+})();
