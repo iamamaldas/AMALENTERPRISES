@@ -36,3 +36,24 @@ footer {
     padding-top: 15px !important;
     padding-bottom: 15px !important;
 }
+/* Forcefully reduce excessive vertical spacing on all main layout blocks */
+body > div, main > div, #app > div {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+/* Eliminate large inner layout gaps inside container boxes */
+.container, [class*="container"], [class*="wrapper"] {
+    gap: 15px !important;
+    row-gap: 15px !important;
+}
+
+/* Push the Buyer & Supplier section closer to the content above it */
+div:has(> .buyer-supplier-section), 
+div[class*="buyer"], 
+div[class*="supplier"] {
+    margin-top: 10px !important;
+    margin-bottom: 15px !important;
+}
