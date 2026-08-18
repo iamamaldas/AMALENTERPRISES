@@ -1,0 +1,19 @@
+/* Fix for the empty bottom space on desktop screens */
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100vh !important;
+    /* Keeps the dark theme color continuous if content is short */
+    background-color: #070d19 !important; 
+}
+
+/* Forces the footer container to stay at the very bottom */
+footer, .footer { 
+    margin-top: auto !important;
+}
