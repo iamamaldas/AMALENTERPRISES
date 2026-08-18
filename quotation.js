@@ -1,13 +1,17 @@
 /* =========================================================
    AMAL ENTERPRISES
-   QUOTATION SYSTEM
+   FINAL QUOTATION SYSTEM
    Buyer / Supplier / Admin
-   WhatsApp Only
+   WhatsApp + Admin PDF
 ========================================================= */
 
 (function () {
 
     "use strict";
+
+    /* =====================================================
+       CONFIGURATION
+    ===================================================== */
 
     const ADMIN_ID = "Amal.das.4930@gmail.com";
     const ADMIN_PASSWORD = "amal0706";
@@ -51,7 +55,7 @@
 
         roleGroup.innerHTML = `
             <label class="amal-label">
-                Quotation Type
+                Quotation Prepared For
             </label>
 
             <select id="amalRole" class="amal-role">
@@ -208,7 +212,7 @@
 
 
         /* =================================================
-           REPLACE OLD BUTTON
+           GENERATE BUTTON
         ================================================= */
 
         const oldButton =
@@ -230,7 +234,7 @@
 
 
         /* =================================================
-           WHATSAPP BUTTON
+           REPLACE PREVIEW BUTTONS
         ================================================= */
 
         const previewButtons =
@@ -248,11 +252,23 @@
                     class="amal-whatsapp-button">
 
                     <i class="fa-brands fa-whatsapp"></i>
-                    Send via WhatsApp
+                    WhatsApp
+
+                </button>
+
+                <button
+                    type="button"
+                    id="amalPDFButton"
+                    class="amal-pdf-button"
+                    style="display:none;">
+
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Save PDF
 
                 </button>
 
             `;
+
 
             document
                 .getElementById(
@@ -261,6 +277,16 @@
                 .addEventListener(
                     "click",
                     sendWhatsApp
+                );
+
+
+            document
+                .getElementById(
+                    "amalPDFButton"
+                )
+                .addEventListener(
+                    "click",
+                    saveAdminPDF
                 );
 
         }
@@ -338,6 +364,11 @@
                 "amalAdminPreview"
             );
 
+        const pdfButton =
+            document.getElementById(
+                "amalPDFButton"
+            );
+
 
         if (role === "admin") {
 
@@ -345,10 +376,15 @@
                 "block";
 
             hint.textContent =
-                "Admin login is required.";
+                "Admin login is required to create an official quotation.";
 
             if (adminPreview) {
                 adminPreview.style.display =
+                    "none";
+            }
+
+            if (pdfButton) {
+                pdfButton.style.display =
                     "none";
             }
 
@@ -360,7 +396,7 @@
             if (role === "supplier") {
 
                 hint.textContent =
-                    "Supplier will send their price directly to AMAL ENTERPRISES.";
+                    "Supplier can provide their price to AMAL ENTERPRISES for review and negotiation.";
 
             } else if (role === "buyer") {
 
@@ -376,6 +412,11 @@
 
             if (adminPreview) {
                 adminPreview.style.display =
+                    "none";
+            }
+
+            if (pdfButton) {
+                pdfButton.style.display =
                     "none";
             }
 
@@ -453,7 +494,7 @@
 
 
     /* =====================================================
-       ADMIN CHECK
+       ADMIN LOGIN CHECK
     ===================================================== */
 
     function isAdminLoggedIn() {
@@ -614,18 +655,14 @@
 
 
         if (previewBuyer) {
-
             previewBuyer.textContent =
                 name;
-
         }
 
 
         if (previewProduct) {
-
             previewProduct.textContent =
                 product;
-
         }
 
 
@@ -674,7 +711,7 @@
 
 
         /* =================================================
-           SAVE QUOTATION
+           SAVE DATA
         ================================================= */
 
         quotationData = {
@@ -697,7 +734,9 @@
 
             company: COMPANY_NAME,
 
-            msme: MSME_NUMBER
+            msme: MSME_NUMBER,
+
+            date: new Date()
 
         };
 
@@ -726,7 +765,26 @@
 
 
         /* =================================================
-           SUCCESS FLASH INSIDE PREVIEW
+           PDF BUTTON
+        ================================================= */
+
+        const pdfButton =
+            document.getElementById(
+                "amalPDFButton"
+            );
+
+        if (pdfButton) {
+
+            pdfButton.style.display =
+                role === "admin"
+                    ? "block"
+                    : "none";
+
+        }
+
+
+        /* =================================================
+           SUCCESS FLASH
         ================================================= */
 
         showPreviewFlash(
@@ -758,10 +816,9 @@
             ADMIN_WHATSAPP;
 
 
-        /*
-         Buyer:
-         Buyer → AMAL ENTERPRISES
-        */
+        /* =================================================
+           BUYER → ADMIN
+        ================================================= */
 
         if (
             quotationData.role === "buyer"
@@ -773,11 +830,9 @@
         }
 
 
-        /*
-         Supplier:
-         Supplier → AMAL ENTERPRISES
-         Supplier price is included
-        */
+        /* =================================================
+           SUPPLIER → ADMIN
+        ================================================= */
 
         if (
             quotationData.role === "supplier"
@@ -789,11 +844,9 @@
         }
 
 
-        /*
-         Admin:
-         Admin → Buyer / Supplier
-         Uses entered mobile number
-        */
+        /* =================================================
+           ADMIN → ENTERED BUYER/SUPPLIER
+        ================================================= */
 
         if (
             quotationData.role === "admin"
@@ -901,6 +954,9 @@ Please provide suitable quotation and commercial terms.
 MSME Registration No.:
 ${quotationData.msme}
 
+Date:
+${formatDate(quotationData.date)}
+
 Buyer / Supplier:
 ${quotationData.name}
 
@@ -948,7 +1004,652 @@ Regards,
 
 
     /* =====================================================
-       NUMBER FORMAT
+       ADMIN SAVE PDF
+       Uses browser print → Save as PDF
+    ===================================================== */
+
+    function saveAdminPDF() {
+
+        if (!quotationData) {
+
+            showPreviewFlash(
+                "Generate Admin quotation first",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (
+            quotationData.role !== "admin"
+        ) {
+
+            showPreviewFlash(
+                "PDF is available only for Admin quotation",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (!isAdminLoggedIn()) {
+
+            showPreviewFlash(
+                "Admin login required",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const quotationNumber =
+            createQuotationNumber();
+
+
+        const pdfWindow =
+            window.open(
+                "",
+                "_blank"
+            );
+
+
+        if (!pdfWindow) {
+
+            showPreviewFlash(
+                "Please allow pop-ups to save PDF",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const date =
+            formatDate(
+                quotationData.date
+            );
+
+
+        const price =
+            quotationData.price
+                ? "₹" +
+                  formatMoney(
+                      quotationData.price
+                  )
+                : "—";
+
+
+        const total =
+            "₹" +
+            formatMoney(
+                quotationData.total
+            );
+
+
+        pdfWindow.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+${COMPANY_NAME} - Quotation ${quotationNumber}
+</title>
+
+<style>
+
+@page {
+    size: A4;
+    margin: 18mm;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #222;
+
+    background: #fff;
+
+}
+
+.container {
+
+    max-width: 760px;
+
+    margin: auto;
+
+}
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        2px solid #222;
+
+}
+
+.company {
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    letter-spacing: .4px;
+
+}
+
+.msme {
+
+    margin-top: 7px;
+
+    font-size: 11px;
+
+    color: #555;
+
+}
+
+.title {
+
+    margin-top: 25px;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+    letter-spacing: .5px;
+
+}
+
+.meta {
+
+    margin-top: 18px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+
+}
+
+.meta-box {
+
+    padding: 10px;
+
+    border:
+        1px solid #ddd;
+
+}
+
+.label {
+
+    font-size: 9px;
+
+    color: #777;
+
+    text-transform: uppercase;
+
+}
+
+.value {
+
+    margin-top: 4px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+table {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    border-collapse: collapse;
+
+}
+
+th {
+
+    padding: 11px;
+
+    text-align: left;
+
+    background: #eeeeee;
+
+    border:
+        1px solid #d5d5d5;
+
+    font-size: 10px;
+
+}
+
+td {
+
+    padding: 11px;
+
+    border:
+        1px solid #d5d5d5;
+
+    font-size: 11px;
+
+}
+
+.total-row td {
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+.specification {
+
+    margin-top: 20px;
+
+    padding: 12px;
+
+    border:
+        1px solid #ddd;
+
+}
+
+.spec-title {
+
+    font-size: 10px;
+
+    color: #777;
+
+    margin-bottom: 6px;
+
+    text-transform: uppercase;
+
+}
+
+.spec-text {
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+.note {
+
+    margin-top: 25px;
+
+    padding: 12px;
+
+    background: #f6f6f6;
+
+    border-left:
+        3px solid #555;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+}
+
+.footer {
+
+    margin-top: 45px;
+
+    padding-top: 12px;
+
+    border-top:
+        1px solid #ddd;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 9px;
+
+    color: #666;
+
+}
+
+@media print {
+
+    body {
+        background: #fff;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <div class="header">
+
+        <div>
+
+            <div class="company">
+                ${COMPANY_NAME}
+            </div>
+
+            <div class="msme">
+                MSME Registration No.:
+                <strong>${MSME_NUMBER}</strong>
+            </div>
+
+        </div>
+
+        <div style="text-align:right;">
+
+            <div style="font-size:11px;">
+                Quotation No.
+            </div>
+
+            <div style="font-size:13px;font-weight:700;margin-top:4px;">
+                ${quotationNumber}
+            </div>
+
+            <div style="font-size:10px;margin-top:5px;color:#666;">
+                ${date}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="title">
+        OFFICIAL QUOTATION
+    </div>
+
+
+    <div class="meta">
+
+        <div class="meta-box">
+
+            <div class="label">
+                Buyer / Supplier
+            </div>
+
+            <div class="value">
+                ${escapeHTML(
+                    quotationData.name
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="meta-box">
+
+            <div class="label">
+                Contact
+            </div>
+
+            <div class="value">
+                ${escapeHTML(
+                    quotationData.mobile
+                )}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Product / Material
+                </th>
+
+                <th>
+                    Quantity
+                </th>
+
+                <th>
+                    Unit Price
+                </th>
+
+                <th>
+                    Estimated Total
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td>
+                    ${escapeHTML(
+                        quotationData.product
+                    )}
+                </td>
+
+                <td>
+                    ${
+                        quotationData.quantity
+                            ? quotationData.quantity.toLocaleString("en-IN")
+                            : "—"
+                    }
+                </td>
+
+                <td>
+                    ${price}
+                </td>
+
+                <td>
+                    ${total}
+                </td>
+
+            </tr>
+
+
+            <tr class="total-row">
+
+                <td colspan="3"
+                    style="text-align:right;">
+
+                    Estimated Total
+
+                </td>
+
+                <td>
+
+                    ${total}
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="specification">
+
+        <div class="spec-title">
+            Product Specification / Requirement
+        </div>
+
+        <div class="spec-text">
+
+            ${
+                escapeHTML(
+                    quotationData.details ||
+                    "Not specified"
+                )
+            }
+
+        </div>
+
+    </div>
+
+
+    <div class="note">
+
+        <strong>
+            Commercial Note:
+        </strong>
+
+        This quotation is subject to
+        commercial discussion, price negotiation,
+        availability and final confirmation
+        between the concerned parties.
+
+    </div>
+
+
+    <div class="footer">
+
+        <div>
+            Prepared by ${COMPANY_NAME}
+        </div>
+
+        <div>
+            MSME No. ${MSME_NUMBER}
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+window.onload = function () {
+
+    setTimeout(function () {
+
+        window.print();
+
+    }, 500);
+
+};
+
+<\/script>
+
+
+</body>
+
+</html>
+
+        `);
+
+
+        pdfWindow.document.close();
+
+
+        showPreviewFlash(
+            "PDF quotation opened — choose Save as PDF",
+            "success"
+        );
+
+    }
+
+
+    /* =====================================================
+       QUOTATION NUMBER
+    ===================================================== */
+
+    function createQuotationNumber() {
+
+        const now =
+            new Date();
+
+        const year =
+            now.getFullYear();
+
+        const month =
+            String(
+                now.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                now.getDate()
+            ).padStart(2, "0");
+
+        const random =
+            Math.floor(
+                1000 +
+                Math.random() * 9000
+            );
+
+        return (
+            "AE-" +
+            year +
+            month +
+            day +
+            "-" +
+            random
+        );
+
+    }
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    function formatDate(date) {
+
+        return new Date(date)
+            .toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       NUMBER NORMALIZATION
     ===================================================== */
 
     function normalizeNumber(number) {
@@ -956,6 +1657,7 @@ Regards,
         let cleaned =
             String(number)
                 .replace(/\D/g, "");
+
 
         if (
             cleaned.length === 10
@@ -965,6 +1667,7 @@ Regards,
                 "91" + cleaned;
 
         }
+
 
         return cleaned;
 
@@ -990,8 +1693,39 @@ Regards,
 
 
     /* =====================================================
-       PREVIEW FLASH
-       Appears INSIDE quotation preview box
+       HTML ESCAPE
+    ===================================================== */
+
+    function escapeHTML(value) {
+
+        return String(value || "")
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    /* =====================================================
+       FLASH MESSAGE
+       Inside quotation preview box
     ===================================================== */
 
     function showPreviewFlash(
@@ -1020,7 +1754,9 @@ Regards,
 
 
         const flash =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         flash.id =
             "amalPreviewFlash";
@@ -1043,7 +1779,7 @@ Regards,
             </span>
 
             <span>
-                ${message}
+                ${escapeHTML(message)}
             </span>
 
         `;
@@ -1078,6 +1814,7 @@ Regards,
                         "show"
                     );
 
+
                     setTimeout(
                         function () {
 
@@ -1101,7 +1838,7 @@ Regards,
 
 
     /* =====================================================
-       START SYSTEM
+       START
     ===================================================== */
 
     if (
