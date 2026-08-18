@@ -1,558 +1,143 @@
 /* =========================================================
    AMAL ENTERPRISES
-   QUOTATION SYSTEM CSS
-   No main theme/layout modification
+   QUOTATION SYSTEM STYLE
+   Does NOT change main website theme
 ========================================================= */
 
-#amalQuotationSystem {
+.amal-field-group {
+    margin-bottom: 6px;
+}
+
+.amal-label {
+    display: block;
+    color: #858c96;
+    font-size: 9px;
+    margin-bottom: 4px;
+}
+
+.amal-role {
     width: 100%;
+    padding: 7px;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #263846;
+    background: #101923;
+    color: #9ca4ae;
+    font-size: 9px;
+}
+
+.amal-role-hint {
+    margin-top: 4px;
+    color: #687481;
+    font-size: 8px;
+    line-height: 1.35;
+}
+
+.amal-mobile {
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 6px;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #263846;
+    background: #101923;
+    color: #9ca4ae;
+    font-size: 9px;
 }
 
 
 /* =========================================================
-   WRAPPER
+   ADMIN LOGIN
 ========================================================= */
 
-.amal-quote-wrapper {
+.amal-admin-box {
+    margin-bottom: 7px;
+    padding: 9px;
+    border-radius: 7px;
+    background: rgba(24, 38, 53, .75);
+    border: 1px solid rgba(82, 123, 157, .25);
+}
 
-    display: grid;
+.amal-admin-title {
+    color: #aeb8c2;
+    font-size: 10px;
+    margin-bottom: 7px;
+}
 
-    grid-template-columns:
-        1fr 1fr;
+.amal-admin-box input {
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 6px;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #263846;
+    background: #101923;
+    color: #cbd2da;
+    font-size: 9px;
+}
 
-    gap: 8px;
+.amal-admin-login {
+    width: 100%;
+    padding: 7px;
+    border: none;
+    border-radius: 5px;
+    background: #244a70;
+    color: #dce8f2;
+    font-size: 9px;
+    cursor: pointer;
+}
 
+.amal-admin-status {
+    margin-top: 5px;
+    font-size: 8px;
+}
+
+.amal-admin-status.success {
+    color: #72b88b;
+}
+
+.amal-admin-status.error {
+    color: #cf7c7c;
 }
 
 
 /* =========================================================
-   HEADER
+   ADMIN COMPANY INFORMATION
 ========================================================= */
 
-.amal-quote-header {
-
-    grid-column:
-        1 / -1;
-
-    padding:
-        8px 10px;
-
-    border-radius:
-        8px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #172230,
-            #101822
-        );
-
-    border:
-        1px solid rgba(89,115,136,.18);
-
+.amal-admin-preview {
+    margin-bottom: 8px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .08);
+    color: #d9e5ee;
+    font-size: 8px;
+    line-height: 1.5;
 }
 
-
-.amal-brand-small {
-
-    display:flex;
-
-    align-items:center;
-
-    gap:9px;
-
-}
-
-
-.amal-brand-small img {
-
-    width:32px;
-
-    height:32px;
-
-    object-fit:contain;
-
-}
-
-
-.amal-brand-small strong {
-
-    display:block;
-
-    color:#d7dce2;
-
-    font-size:11px;
-
-}
-
-
-.amal-brand-small small {
-
-    display:block;
-
-    margin-top:2px;
-
-    color:#737d89;
-
-    font-size:7px;
-
-    letter-spacing:.3px;
-
+.amal-admin-preview strong {
+    color: #ffffff;
+    font-size: 10px;
 }
 
 
 /* =========================================================
-   FORM
+   WHATSAPP BUTTON
 ========================================================= */
-
-.amal-quote-form {
-
-    padding:9px;
-
-    border-radius:9px;
-
-    border:
-        1px solid rgba(89,115,136,.18);
-
-    background:
-        linear-gradient(
-            145deg,
-            #111b27,
-            #0e1621
-        );
-
-}
-
-
-.amal-quote-form label {
-
-    display:block;
-
-    margin:
-        4px 0 4px;
-
-    color:#858e99;
-
-    font-size:9px;
-
-}
-
-
-.amal-quote-form input,
-.amal-quote-form select,
-.amal-quote-form textarea {
-
-    width:100%;
-
-    padding:7px;
-
-    margin-bottom:5px;
-
-    outline:none;
-
-    border-radius:5px;
-
-    border:
-        1px solid #263846;
-
-    background:#101923;
-
-    color:#b7bec7;
-
-    font-family:inherit;
-
-    font-size:9px;
-
-}
-
-
-.amal-quote-form input:focus,
-.amal-quote-form select:focus,
-.amal-quote-form textarea:focus {
-
-    border-color:#397db5;
-
-}
-
-
-.amal-quote-form textarea {
-
-    resize:vertical;
-
-}
-
-
-.amal-two-column {
-
-    display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap:6px;
-
-}
-
-
-/* =========================================================
-   ADMIN
-========================================================= */
-
-.amal-hidden {
-
-    display:none !important;
-
-}
-
-
-#amalAdminLogin {
-
-    margin:
-        7px 0;
-
-    padding:8px;
-
-    border-radius:6px;
-
-    border:
-        1px solid rgba(70,126,172,.35);
-
-    background:
-        rgba(25,55,80,.35);
-
-}
-
-
-.amal-login-title {
-
-    margin-bottom:6px;
-
-    color:#9bbbd5;
-
-    font-size:9px;
-
-    font-weight:600;
-
-}
-
-
-.amal-secondary-button {
-
-    width:100%;
-
-    padding:6px;
-
-    border:0;
-
-    border-radius:5px;
-
-    background:#263f56;
-
-    color:#cbd9e5;
-
-    cursor:pointer;
-
-    font-size:9px;
-
-}
-
-
-.amal-status {
-
-    margin-top:5px;
-
-    font-size:8px;
-
-}
-
-
-.amal-status.success {
-
-    color:#76b894;
-
-}
-
-
-.amal-status.error {
-
-    color:#d47c7c;
-
-}
-
-
-/* =========================================================
-   PRICE NOTE
-========================================================= */
-
-.amal-price-note {
-
-    margin:
-        2px 0 6px;
-
-    color:#6e8293;
-
-    font-size:8px;
-
-    line-height:1.35;
-
-}
-
-
-/* =========================================================
-   GENERATE BUTTON
-========================================================= */
-
-.amal-generate-button {
-
-    width:100%;
-
-    padding:8px;
-
-    margin-top:4px;
-
-    border:0;
-
-    border-radius:5px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #397fc0,
-            #2867a4
-        );
-
-    color:#e7f0f7;
-
-    cursor:pointer;
-
-    font-size:10px;
-
-    box-shadow:
-        0 4px 14px rgba(31,111,181,.20);
-
-}
-
-
-.amal-generate-button:hover {
-
-    transform:
-        translateY(-1px);
-
-}
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-.amal-preview {
-
-    padding:10px;
-
-    border-radius:9px;
-
-    border:
-        1px solid #4e8bc2;
-
-    background:
-        linear-gradient(
-            145deg,
-            #2b69a6,
-            #1e568c
-        );
-
-    box-shadow:
-        0 6px 20px rgba(20,87,145,.25);
-
-}
-
-
-.amal-preview-top {
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    padding-bottom:8px;
-
-    margin-bottom:7px;
-
-    border-bottom:
-        1px solid rgba(255,255,255,.16);
-
-}
-
-
-.amal-preview-top img {
-
-    width:34px;
-
-    height:34px;
-
-    object-fit:contain;
-
-    background:
-        rgba(255,255,255,.08);
-
-    border-radius:5px;
-
-}
-
-
-.amal-preview-top strong {
-
-    display:block;
-
-    color:#e6f0f7;
-
-    font-size:10px;
-
-}
-
-
-.amal-preview-top small {
-
-    display:block;
-
-    margin-top:2px;
-
-    color:#b9d0e1;
-
-    font-size:7px;
-
-}
-
-
-.amal-preview-title {
-
-    margin-bottom:7px;
-
-    color:#e1edf5;
-
-    font-size:9px;
-
-    font-weight:600;
-
-    letter-spacing:.3px;
-
-}
-
-
-.amal-preview-row {
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:8px;
-
-    padding:4px 0;
-
-    border-bottom:
-        1px solid rgba(255,255,255,.08);
-
-    color:#bdd0df;
-
-    font-size:8px;
-
-}
-
-
-.amal-preview-row strong {
-
-    color:#edf5fa;
-
-    text-align:right;
-
-    max-width:145px;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-
-}
-
-
-.amal-preview-total {
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:8px;
-
-    margin-top:7px;
-
-    padding-top:8px;
-
-    color:#dbeaf4;
-
-    border-top:
-        1px solid rgba(255,255,255,.18);
-
-    font-size:10px;
-
-}
-
-
-.amal-preview-total strong {
-
-    color:#fff;
-
-}
-
-
-.amal-preview-details {
-
-    min-height:34px;
-
-    margin-top:8px;
-
-    padding:6px;
-
-    border-radius:5px;
-
-    background:
-        rgba(8,31,52,.25);
-
-    color:#c0d3e1;
-
-    font-size:8px;
-
-    line-height:1.4;
-
-}
-
 
 .amal-whatsapp-button {
-
-    width:100%;
-
-    padding:8px;
-
-    margin-top:8px;
-
-    border:0;
-
-    border-radius:5px;
-
-    background:#153d62;
-
-    color:#dbe8f4;
-
-    cursor:pointer;
-
-    font-size:10px;
-
+    flex: 1;
+    padding: 7px;
+    border: none;
+    border-radius: 5px;
+    background: #153d62;
+    color: #dbe8f4;
+    font-size: 10px;
+    cursor: pointer;
 }
 
-
 .amal-whatsapp-button:hover {
-
-    background:#194b78;
-
+    background: #1d527f;
 }
 
 
@@ -560,73 +145,61 @@
    FLASH MESSAGE
 ========================================================= */
 
-.amal-flash {
+#amalQuotationFlash {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
 
-    position:fixed;
+    transform:
+        translate(-50%, 20px);
 
-    left:50%;
+    z-index: 99999;
 
-    bottom:22px;
+    width: max-content;
+    max-width: calc(100% - 30px);
 
-    z-index:99999;
+    padding: 10px 16px;
 
-    min-width:230px;
+    border-radius: 8px;
 
-    max-width:90%;
-
-    padding:10px 15px;
-
-    border-radius:8px;
-
-    background:
-        rgba(17,27,39,.97);
+    background: #172636;
 
     border:
-        1px solid rgba(88,139,184,.45);
+        1px solid rgba(100, 143, 175, .35);
 
     box-shadow:
-        0 10px 30px rgba(0,0,0,.35);
+        0 8px 28px rgba(0,0,0,.35);
 
-    color:#dce8f1;
+    color: #dce5ec;
 
-    text-align:center;
+    font-size: 11px;
 
-    font-size:11px;
+    text-align: center;
 
-    transform:
-        translate(-50%,20px);
+    opacity: 0;
 
-    opacity:0;
+    pointer-events: none;
 
     transition:
-        .3s ease;
-
+        opacity .25s ease,
+        transform .25s ease;
 }
 
-
-.amal-flash.show {
+#amalQuotationFlash.show {
+    opacity: 1;
 
     transform:
-        translate(-50%,0);
-
-    opacity:1;
-
+        translate(-50%, 0);
 }
 
-
-.amal-flash.success {
-
+#amalQuotationFlash.success {
     border-color:
-        rgba(74,153,106,.55);
-
+        rgba(82, 151, 110, .45);
 }
 
-
-.amal-flash.error {
-
+#amalQuotationFlash.error {
     border-color:
-        rgba(181,82,82,.55);
-
+        rgba(175, 82, 82, .45);
 }
 
 
@@ -636,24 +209,10 @@
 
 @media(max-width:620px) {
 
-    .amal-quote-wrapper {
-
-        grid-template-columns:1fr;
-
-    }
-
-
-    .amal-quote-header {
-
-        grid-column:auto;
-
-    }
-
-
-    .amal-preview-row strong {
-
-        max-width:130px;
-
+    #amalQuotationFlash {
+        bottom: 18px;
+        font-size: 10px;
+        padding: 9px 13px;
     }
 
 }
