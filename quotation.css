@@ -1,7 +1,7 @@
 /* =========================================================
    AMAL ENTERPRISES
-   QUOTATION SYSTEM
-   No main theme / layout changes
+   FINAL QUOTATION CSS
+   No main theme/layout changes
 ========================================================= */
 
 
@@ -15,13 +15,17 @@
 
 .amal-label {
     display: block;
+
     color: #858c96;
+
     font-size: 9px;
+
     margin-bottom: 4px;
 }
 
 .amal-role {
     width: 100%;
+
     padding: 7px;
 
     outline: none;
@@ -37,6 +41,10 @@
     font-size: 9px;
 }
 
+.amal-role:focus {
+    border-color: #3e7097;
+}
+
 .amal-role-hint {
     margin-top: 4px;
 
@@ -49,7 +57,7 @@
 
 
 /* =========================================================
-   MOBILE NUMBER
+   MOBILE / WHATSAPP NUMBER
 ========================================================= */
 
 .amal-mobile {
@@ -70,6 +78,10 @@
     color: #9ca4ae;
 
     font-size: 9px;
+}
+
+.amal-mobile:focus {
+    border-color: #3e7097;
 }
 
 
@@ -125,6 +137,12 @@
 
 }
 
+.amal-admin-box input:focus {
+
+    border-color: #3e7097;
+
+}
+
 .amal-admin-login {
 
     width: 100%;
@@ -142,6 +160,8 @@
     font-size: 9px;
 
     cursor: pointer;
+
+    transition: .2s;
 
 }
 
@@ -222,6 +242,21 @@
 
 
 /* =========================================================
+   PREVIEW BUTTON AREA
+========================================================= */
+
+.preview-buttons {
+
+    display: flex;
+
+    gap: 7px;
+
+    margin-top: 9px;
+
+}
+
+
+/* =========================================================
    WHATSAPP BUTTON
 ========================================================= */
 
@@ -257,8 +292,52 @@
 
 
 /* =========================================================
+   SAVE PDF BUTTON
+========================================================= */
+
+.amal-pdf-button {
+
+    flex: 1;
+
+    padding: 7px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #315b78,
+            #244762
+        );
+
+    color: #e0ebf2;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.amal-pdf-button:hover {
+
+    background:
+        linear-gradient(
+            180deg,
+            #3d6d8e,
+            #2c536f
+        );
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =========================================================
    PREVIEW FLASH MESSAGE
-   Appears INSIDE quotation preview box
 ========================================================= */
 
 .amal-preview-flash {
@@ -385,6 +464,21 @@
 
 @media(max-width:620px) {
 
+    .preview-buttons {
+
+        gap: 6px;
+
+    }
+
+    .amal-whatsapp-button,
+    .amal-pdf-button {
+
+        font-size: 9px;
+
+        padding: 7px 5px;
+
+    }
+
     .amal-preview-flash {
 
         left: 8px;
@@ -406,6 +500,23 @@
         height: 17px;
 
         font-size: 9px;
+
+    }
+
+}
+
+
+/* =========================================================
+   PRINT SAFETY
+========================================================= */
+
+@media print {
+
+    .amal-preview-flash,
+    .amal-whatsapp-button,
+    .amal-pdf-button {
+
+        display: none !important;
 
     }
 
