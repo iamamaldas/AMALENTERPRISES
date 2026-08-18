@@ -1,0 +1,193 @@
+/* =========================================================
+   AMAL ENTERPRISES
+   WHATSAPP QUOTATION SYSTEM
+========================================================= */
+
+.ae-quotation-wrapper{
+    width:100%;
+}
+
+
+.ae-role-box{
+    margin-bottom:10px;
+    padding:10px;
+    border-radius:9px;
+    background:
+        linear-gradient(
+            145deg,
+            #151f2b,
+            #101822
+        );
+    border:1px solid rgba(89,115,136,.18);
+}
+
+
+.ae-role-box label{
+    display:block;
+    margin-bottom:5px;
+    color:#858c96;
+    font-size:10px;
+}
+
+
+.ae-role-box select,
+.ae-form-panel input,
+.ae-form-panel select,
+.ae-form-panel textarea{
+    width:100%;
+    padding:8px;
+    margin-bottom:7px;
+    outline:none;
+    border-radius:5px;
+    border:1px solid #263846;
+    background:#101923;
+    color:#c5ccd4;
+    font-size:10px;
+}
+
+
+.ae-form-panel{
+    padding:10px;
+    border-radius:9px;
+    background:
+        linear-gradient(
+            145deg,
+            #111b27,
+            #0e1621
+        );
+    border:1px solid rgba(89,115,136,.18);
+}
+
+
+.ae-form-title{
+    margin-bottom:9px;
+    color:#cbd0d7;
+    font-size:11px;
+    font-weight:500;
+    letter-spacing:.2px;
+}
+
+
+.ae-two-column{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+}
+
+
+.ae-whatsapp-button{
+    width:100%;
+    padding:9px;
+    border:1px solid #326b9d;
+    border-radius:5px;
+    background:#244f76;
+    color:#e0ebf4;
+    cursor:pointer;
+    font-size:10px;
+    transition:.2s;
+}
+
+
+.ae-whatsapp-button:hover{
+    background:#2d6594;
+    transform:translateY(-1px);
+}
+
+
+.ae-admin-button{
+    width:100%;
+    padding:9px;
+    border:1px solid #4d6d87;
+    border-radius:5px;
+    background:#20384e;
+    color:#dbe6ef;
+    cursor:pointer;
+    font-size:10px;
+}
+
+
+.ae-login-message{
+    margin-top:7px;
+    color:#c78282;
+    font-size:9px;
+}
+
+
+.ae-admin-panel{
+    display:block;
+}
+
+
+.ae-admin-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:9px;
+    padding:10px;
+    border-radius:9px;
+    background:
+        linear-gradient(
+            145deg,
+            #172535,
+            #101923
+        );
+    border:1px solid rgba(89,115,136,.2);
+}
+
+
+.ae-admin-title{
+    color:#d2d7dd;
+    font-size:12px;
+}
+
+
+.ae-admin-subtitle{
+    margin-top:3px;
+    color:#777f8b;
+    font-size:9px;
+}
+
+
+.ae-logout-button{
+    padding:6px 10px;
+    border:1px solid #34495c;
+    border-radius:5px;
+    background:#111c28;
+    color:#9da8b4;
+    cursor:pointer;
+    font-size:9px;
+}
+
+
+.ae-admin-card{
+    margin-bottom:9px;
+    padding:10px;
+    border-radius:9px;
+    background:
+        linear-gradient(
+            145deg,
+            #151f2b,
+            #101822
+        );
+    border:1px solid rgba(89,115,136,.18);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:620px){
+
+    .ae-two-column{
+        grid-template-columns:1fr;
+        gap:0;
+    }
+
+
+    .ae-admin-header{
+        align-items:flex-start;
+    }
+
+}
