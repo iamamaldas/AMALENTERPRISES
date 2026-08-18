@@ -1,637 +1,501 @@
-```javascript
 /* =========================================================
    AMAL ENTERPRISES
-   WHATSAPP QUOTATION SYSTEM
-   LOGO + MSME + IMAGE SHARING VERSION
+   ADVANCED WHATSAPP QUOTATION SYSTEM
+   Loaded automatically by fix.js
+   No index.html quotation code modification required
 ========================================================= */
 
 (function () {
 
     "use strict";
 
-
-    /* =====================================================
-       BUSINESS CONFIGURATION
-       CHANGE THESE VALUES
-    ===================================================== */
-
     const CONFIG = {
 
         companyName: "AMAL ENTERPRISES",
 
-        adminWhatsApp: "91XXXXXXXXXX",
+        companyTagline:
+            "ECO & PACKAGING SOURCING SOLUTIONS",
 
-        msmeNumber: "YOUR MSME REGISTRATION NUMBER",
+        whatsappNumber:
+            "916296471636",
 
-        logoPath: "assets/logo.png",
+        adminLoginId:
+            "Amal.das.4930@gmail.com",
 
-        adminId: "admin",
+        adminPassword:
+            "amal0706",
 
-        adminPassword: "CHANGE_THIS_PASSWORD"
+        msmeNumber:
+            "XXXX",
+
+        logo:
+            "assets/logo.png"
 
     };
 
 
     /* =====================================================
-       INITIALIZE
+       START
     ===================================================== */
 
     function initQuotationSystem() {
 
-        const section =
-            document.getElementById("quotation");
-
-        if (!section) {
+        if (document.getElementById("amalQuotationSystem")) {
             return;
         }
 
-        if (
-            section.dataset.quotationSystemReady === "true"
-        ) {
+        const originalQuoteArea =
+            document.querySelector(".quote-area");
+
+        if (!originalQuoteArea) {
             return;
         }
 
-        section.dataset.quotationSystemReady = "true";
-
-        createQuotationInterface(section);
+        buildQuotationSystem(originalQuoteArea);
 
     }
 
 
     /* =====================================================
-       CREATE INTERFACE
+       BUILD SYSTEM
     ===================================================== */
 
-    function createQuotationInterface(section) {
+    function buildQuotationSystem(originalArea) {
 
-        section.innerHTML = `
+        originalArea.id = "amalQuotationSystem";
 
-        <div class="ae-quotation-wrapper">
+        originalArea.innerHTML = `
 
-            <div class="section-label">
-                WHATSAPP QUOTATION SYSTEM
-            </div>
+            <div class="amal-quote-wrapper">
 
+                <!-- HEADER -->
 
-            <div class="ae-role-box">
+                <div class="amal-quote-header">
 
-                <label>
-                    Request Type
-                </label>
+                    <div class="amal-brand-small">
 
-                <select id="aeRole">
+                        <img
+                            src="${CONFIG.logo}"
+                            alt="AMAL ENTERPRISES"
+                        >
 
-                    <option value="">
-                        Select Buyer / Supplier / Admin
-                    </option>
+                        <div>
 
-                    <option value="buyer">
-                        Buyer
-                    </option>
+                            <strong>
+                                ${CONFIG.companyName}
+                            </strong>
 
-                    <option value="supplier">
-                        Supplier
-                    </option>
+                            <small>
+                                ${CONFIG.companyTagline}
+                            </small>
 
-                    <option value="admin">
-                        Admin
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- ================= BUYER ================= -->
-
-            <div
-                id="aeBuyerForm"
-                class="ae-form-panel"
-                style="display:none;"
-            >
-
-                <div class="ae-form-title">
-                    Buyer Requirement
-                </div>
-
-
-                <input
-                    id="aeBuyerName"
-                    type="text"
-                    placeholder="Buyer / Company Name"
-                >
-
-
-                <input
-                    id="aeBuyerMobile"
-                    type="tel"
-                    placeholder="Mobile / WhatsApp Number"
-                >
-
-
-                <select id="aeBuyerProduct">
-
-                    <option value="">
-                        Select Product
-                    </option>
-
-                    <option>
-                        Biodegradable Bags
-                    </option>
-
-                    <option>
-                        Compostable Bags
-                    </option>
-
-                    <option>
-                        Polyethylene Carry Bags
-                    </option>
-
-                    <option>
-                        Corrugated Carton Boxes
-                    </option>
-
-                    <option>
-                        Packaging Materials
-                    </option>
-
-                    <option>
-                        Jute / Natural Fibre Bags
-                    </option>
-
-                    <option>
-                        Other
-                    </option>
-
-                </select>
-
-
-                <div class="ae-two-column">
-
-                    <input
-                        id="aeBuyerQuantity"
-                        type="number"
-                        min="1"
-                        placeholder="Quantity"
-                    >
-
-                    <input
-                        id="aeBuyerTargetPrice"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        placeholder="Target Price (Optional)"
-                    >
-
-                </div>
-
-
-                <textarea
-                    id="aeBuyerDetails"
-                    rows="4"
-                    placeholder="Product specification / requirements"
-                ></textarea>
-
-
-                <button
-                    type="button"
-                    id="aeBuyerSend"
-                    class="ae-whatsapp-button"
-                >
-                    <i class="fa-brands fa-whatsapp"></i>
-                    Send Requirement on WhatsApp
-                </button>
-
-            </div>
-
-
-
-            <!-- ================= SUPPLIER ================= -->
-
-            <div
-                id="aeSupplierForm"
-                class="ae-form-panel"
-                style="display:none;"
-            >
-
-                <div class="ae-form-title">
-                    Supplier Quotation
-                </div>
-
-
-                <input
-                    id="aeSupplierName"
-                    type="text"
-                    placeholder="Supplier / Company Name"
-                >
-
-
-                <input
-                    id="aeSupplierMobile"
-                    type="tel"
-                    placeholder="Supplier WhatsApp Number"
-                >
-
-
-                <select id="aeSupplierProduct">
-
-                    <option value="">
-                        Select Product
-                    </option>
-
-                    <option>
-                        Biodegradable Bags
-                    </option>
-
-                    <option>
-                        Compostable Bags
-                    </option>
-
-                    <option>
-                        Polyethylene Carry Bags
-                    </option>
-
-                    <option>
-                        Corrugated Carton Boxes
-                    </option>
-
-                    <option>
-                        Packaging Materials
-                    </option>
-
-                    <option>
-                        Jute / Natural Fibre Bags
-                    </option>
-
-                    <option>
-                        Other
-                    </option>
-
-                </select>
-
-
-                <div class="ae-two-column">
-
-                    <input
-                        id="aeSupplierQuantity"
-                        type="number"
-                        min="1"
-                        placeholder="Available Quantity"
-                    >
-
-                    <input
-                        id="aeSupplierMOQ"
-                        type="number"
-                        min="1"
-                        placeholder="MOQ"
-                    >
-
-                </div>
-
-
-                <input
-                    id="aeSupplierPrice"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="Supplier Quoted Unit Price (₹)"
-                >
-
-
-                <input
-                    id="aeSupplierDelivery"
-                    type="text"
-                    placeholder="Delivery / Transport Details"
-                >
-
-
-                <textarea
-                    id="aeSupplierDetails"
-                    rows="4"
-                    placeholder="Specification / Supply Details / Remarks"
-                ></textarea>
-
-
-                <button
-                    type="button"
-                    id="aeSupplierSend"
-                    class="ae-whatsapp-button"
-                >
-                    <i class="fa-brands fa-whatsapp"></i>
-                    Send Supplier Quote on WhatsApp
-                </button>
-
-            </div>
-
-
-
-            <!-- ================= ADMIN LOGIN ================= -->
-
-            <div
-                id="aeAdminLogin"
-                class="ae-form-panel"
-                style="display:none;"
-            >
-
-                <div class="ae-form-title">
-                    Admin Login
-                </div>
-
-
-                <input
-                    id="aeAdminId"
-                    type="text"
-                    placeholder="Admin Login ID"
-                >
-
-
-                <input
-                    id="aeAdminPassword"
-                    type="password"
-                    placeholder="Admin Password"
-                >
-
-
-                <button
-                    type="button"
-                    id="aeAdminLoginButton"
-                    class="ae-admin-button"
-                >
-                    Admin Login
-                </button>
-
-
-                <div
-                    id="aeLoginMessage"
-                    class="ae-login-message"
-                ></div>
-
-            </div>
-
-
-
-            <!-- ================= ADMIN PANEL ================= -->
-
-            <div
-                id="aeAdminPanel"
-                class="ae-admin-panel"
-                style="display:none;"
-            >
-
-                <div class="ae-admin-header">
-
-                    <div>
-
-                        <div class="ae-admin-title">
-                            AMAL ENTERPRISES
-                        </div>
-
-                        <div class="ae-admin-subtitle">
-                            Admin Quotation &amp; Negotiation
                         </div>
 
                     </div>
 
-
-                    <button
-                        type="button"
-                        id="aeAdminLogout"
-                        class="ae-logout-button"
-                    >
-                        Logout
-                    </button>
-
                 </div>
 
 
+                <!-- FORM -->
 
-                <!-- BUYER FINAL QUOTATION -->
-
-                <div class="ae-admin-card">
-
-                    <div class="ae-form-title">
-                        Official Buyer Quotation
-                    </div>
+                <div class="amal-quote-form">
 
 
-                    <input
-                        id="aeAdminBuyerName"
-                        type="text"
-                        placeholder="Buyer / Company Name"
-                    >
+                    <!-- ROLE -->
+
+                    <label>
+                        Quotation By
+                    </label>
+
+                    <select id="amalRole">
+
+                        <option value="">
+                            Select Buyer / Supplier / Admin
+                        </option>
+
+                        <option value="buyer">
+                            Buyer
+                        </option>
+
+                        <option value="supplier">
+                            Supplier
+                        </option>
+
+                        <option value="admin">
+                            Admin
+                        </option>
+
+                    </select>
 
 
-                    <input
-                        id="aeAdminBuyerMobile"
-                        type="tel"
-                        placeholder="Buyer WhatsApp Number"
-                    >
-
-
-                    <input
-                        id="aeAdminProduct"
-                        type="text"
-                        placeholder="Product"
-                    >
-
-
-                    <div class="ae-two-column">
-
-                        <input
-                            id="aeAdminQuantity"
-                            type="number"
-                            min="1"
-                            placeholder="Quantity"
-                        >
-
-
-                        <input
-                            id="aeAdminFinalPrice"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="Final Unit Price (₹)"
-                        >
-
-                    </div>
-
-
-                    <textarea
-                        id="aeAdminTerms"
-                        rows="4"
-                        placeholder="Terms & Conditions"
-                    ></textarea>
-
-
-                    <button
-                        type="button"
-                        id="aeGenerateQuotation"
-                        class="ae-whatsapp-button"
-                    >
-                        Generate Official Quotation
-                    </button>
-
-
-                    <!-- GENERATED QUOTATION -->
+                    <!-- ADMIN LOGIN -->
 
                     <div
-                        id="aeQuotationPreview"
-                        class="ae-quotation-preview"
-                        style="display:none;"
+                        id="amalAdminLogin"
+                        class="amal-hidden"
                     >
 
-                        <div class="ae-preview-buttons">
+                        <div class="amal-login-title">
+                            🔐 Admin Verification
+                        </div>
 
-                            <button
-                                type="button"
-                                id="aeShareQuotation"
+                        <input
+                            type="email"
+                            id="amalAdminId"
+                            placeholder="Admin Login ID"
+                            autocomplete="off"
+                        >
+
+                        <input
+                            type="password"
+                            id="amalAdminPassword"
+                            placeholder="Admin Password"
+                            autocomplete="off"
+                        >
+
+                        <button
+                            type="button"
+                            id="amalLoginButton"
+                            class="amal-secondary-button"
+                        >
+                            Verify Admin
+                        </button>
+
+                        <div
+                            id="amalLoginStatus"
+                            class="amal-status"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- PERSON -->
+
+                    <label id="amalPersonLabel">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="amalPerson"
+                        placeholder="Buyer / Supplier Name"
+                    >
+
+
+                    <!-- MOBILE -->
+
+                    <label>
+                        Mobile / WhatsApp Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="amalMobile"
+                        inputmode="numeric"
+                        maxlength="15"
+                        placeholder="10 digit WhatsApp number"
+                    >
+
+
+                    <!-- ADMIN TARGET -->
+
+                    <div
+                        id="amalAdminTarget"
+                        class="amal-hidden"
+                    >
+
+                        <label>
+                            Send Quotation To
+                        </label>
+
+                        <select id="amalTargetType">
+
+                            <option value="buyer">
+                                Buyer
+                            </option>
+
+                            <option value="supplier">
+                                Supplier
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PRODUCT -->
+
+                    <label>
+                        Product / Material
+                    </label>
+
+                    <select id="amalProduct">
+
+                        <option value="">
+                            Select Product / Material
+                        </option>
+
+                        <option>
+                            Biodegradable Bags
+                        </option>
+
+                        <option>
+                            Compostable Bags
+                        </option>
+
+                        <option>
+                            Polyethylene Carry Bags
+                        </option>
+
+                        <option>
+                            Corrugated Carton Boxes
+                        </option>
+
+                        <option>
+                            Packaging Materials
+                        </option>
+
+                        <option>
+                            Jute / Natural Fibre Bags
+                        </option>
+
+                        <option>
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="amal-two-column">
+
+                        <div>
+
+                            <label>
+                                Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                id="amalQuantity"
+                                min="0"
+                                placeholder="Quantity"
                             >
-                                <i class="fa-brands fa-whatsapp"></i>
-                                Share on WhatsApp
-                            </button>
+
+                        </div>
 
 
-                            <button
-                                type="button"
-                                id="aeDownloadQuotation"
-                            >
-                                Download Image
-                            </button>
+                        <div>
+
+                            <label>
+                                Unit
+                            </label>
+
+                            <select id="amalUnit">
+
+                                <option>Piece</option>
+                                <option>Bag</option>
+                                <option>Box</option>
+                                <option>Kg</option>
+                                <option>Bundle</option>
+                                <option>Carton</option>
+                                <option>Other</option>
+
+                            </select>
 
                         </div>
 
                     </div>
 
-                </div>
+
+                    <!-- PRICE -->
+
+                    <label>
+                        Price / Unit
+                    </label>
+
+                    <input
+                        type="number"
+                        id="amalPrice"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter price"
+                    >
 
 
+                    <!-- PRICE STATUS -->
 
-                <!-- SUPPLIER NEGOTIATION -->
-
-                <div class="ae-admin-card">
-
-                    <div class="ae-form-title">
-                        Supplier Price Negotiation
+                    <div
+                        id="amalPriceNote"
+                        class="amal-price-note"
+                    >
+                        Buyer can enter a target / reference price.
                     </div>
 
 
-                    <input
-                        id="aeNegotiationSupplier"
-                        type="text"
-                        placeholder="Supplier / Company Name"
-                    >
+                    <!-- DETAILS -->
 
-
-                    <input
-                        id="aeNegotiationMobile"
-                        type="tel"
-                        placeholder="Supplier WhatsApp Number"
-                    >
-
-
-                    <input
-                        id="aeNegotiationProduct"
-                        type="text"
-                        placeholder="Product"
-                    >
-
-
-                    <div class="ae-two-column">
-
-                        <input
-                            id="aeSupplierCurrentPrice"
-                            type="number"
-                            placeholder="Current Supplier Price ₹"
-                        >
-
-
-                        <input
-                            id="aeSupplierExpectedPrice"
-                            type="number"
-                            placeholder="Your Target Price ₹"
-                        >
-
-                    </div>
-
+                    <label>
+                        Specification / Requirement
+                    </label>
 
                     <textarea
-                        id="aeSupplierNegotiationMessage"
+                        id="amalDetails"
                         rows="3"
-                        placeholder="Negotiation message"
+                        placeholder="Size, material, GSM, printing, delivery, etc."
                     ></textarea>
 
 
+                    <!-- NEGOTIATION -->
+
+                    <label>
+                        Negotiation Status
+                    </label>
+
+                    <select id="amalNegotiation">
+
+                        <option>
+                            Price Negotiable
+                        </option>
+
+                        <option>
+                            Final Price
+                        </option>
+
+                        <option>
+                            Need Supplier Price
+                        </option>
+
+                        <option>
+                            Need Buyer Confirmation
+                        </option>
+
+                    </select>
+
+
+                    <!-- GENERATE -->
+
                     <button
                         type="button"
-                        id="aeNegotiateSupplier"
-                        class="ae-whatsapp-button"
+                        id="amalGenerate"
+                        class="amal-generate-button"
                     >
-                        <i class="fa-brands fa-whatsapp"></i>
-                        Negotiate With Supplier
+
+                        🧾 Generate WhatsApp Quotation
+
                     </button>
 
+
                 </div>
 
 
+                <!-- PREVIEW -->
 
-                <!-- BUYER NEGOTIATION -->
+                <div
+                    id="amalPreview"
+                    class="amal-preview"
+                >
 
-                <div class="ae-admin-card">
+                    <div class="amal-preview-top">
 
-                    <div class="ae-form-title">
-                        Buyer Price Negotiation
+                        <img
+                            src="${CONFIG.logo}"
+                            alt="Logo"
+                        >
+
+                        <div>
+
+                            <strong>
+                                ${CONFIG.companyName}
+                            </strong>
+
+                            <small>
+                                MSME Registration:
+                                ${CONFIG.msmeNumber}
+                            </small>
+
+                        </div>
+
                     </div>
 
 
-                    <input
-                        id="aeNegotiationBuyer"
-                        type="text"
-                        placeholder="Buyer / Company Name"
+                    <div class="amal-preview-title">
+                        QUOTATION PREVIEW
+                    </div>
+
+
+                    <div class="amal-preview-row">
+                        <span>Role</span>
+                        <strong id="pvRole">—</strong>
+                    </div>
+
+                    <div class="amal-preview-row">
+                        <span>Name</span>
+                        <strong id="pvPerson">—</strong>
+                    </div>
+
+                    <div class="amal-preview-row">
+                        <span>Mobile</span>
+                        <strong id="pvMobile">—</strong>
+                    </div>
+
+                    <div class="amal-preview-row">
+                        <span>Product</span>
+                        <strong id="pvProduct">—</strong>
+                    </div>
+
+                    <div class="amal-preview-row">
+                        <span>Quantity</span>
+                        <strong id="pvQuantity">—</strong>
+                    </div>
+
+                    <div class="amal-preview-row">
+                        <span>Price / Unit</span>
+                        <strong id="pvPrice">—</strong>
+                    </div>
+
+                    <div class="amal-preview-row">
+                        <span>Status</span>
+                        <strong id="pvNegotiation">—</strong>
+                    </div>
+
+                    <div class="amal-preview-total">
+
+                        <span>
+                            Estimated Total
+                        </span>
+
+                        <strong id="pvTotal">
+                            ₹0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        id="pvDetails"
+                        class="amal-preview-details"
                     >
-
-
-                    <input
-                        id="aeNegotiationBuyerMobile"
-                        type="tel"
-                        placeholder="Buyer WhatsApp Number"
-                    >
-
-
-                    <input
-                        id="aeNegotiationBuyerProduct"
-                        type="text"
-                        placeholder="Product"
-                    >
-
-
-                    <input
-                        id="aeNegotiationBuyerPrice"
-                        type="number"
-                        placeholder="Proposed Unit Price ₹"
-                    >
-
-
-                    <textarea
-                        id="aeBuyerNegotiationMessage"
-                        rows="3"
-                        placeholder="Negotiation message"
-                    ></textarea>
+                        —
+                    </div>
 
 
                     <button
                         type="button"
-                        id="aeNegotiateBuyer"
-                        class="ae-whatsapp-button"
+                        id="amalWhatsApp"
+                        class="amal-whatsapp-button"
                     >
+
                         <i class="fa-brands fa-whatsapp"></i>
-                        Negotiate With Buyer
+                        Send via WhatsApp
+
                     </button>
 
                 </div>
 
             </div>
 
-        </div>
         `;
 
 
@@ -641,306 +505,123 @@
 
 
     /* =====================================================
-       EVENT BINDING
+       EVENTS
     ===================================================== */
 
     function bindEvents() {
 
-        document
-            .getElementById("aeRole")
-            .addEventListener(
-                "change",
-                roleChanged
-            );
-
-
-        document
-            .getElementById("aeBuyerSend")
-            .addEventListener(
-                "click",
-                sendBuyerRequirement
-            );
-
-
-        document
-            .getElementById("aeSupplierSend")
-            .addEventListener(
-                "click",
-                sendSupplierQuote
-            );
-
-
-        document
-            .getElementById("aeAdminLoginButton")
-            .addEventListener(
-                "click",
-                adminLogin
-            );
-
-
-        document
-            .getElementById("aeAdminLogout")
-            .addEventListener(
-                "click",
-                adminLogout
-            );
-
-
-        document
-            .getElementById("aeGenerateQuotation")
-            .addEventListener(
-                "click",
-                generateOfficialQuotation
-            );
-
-
-        document
-            .getElementById("aeShareQuotation")
-            .addEventListener(
-                "click",
-                shareQuotation
-            );
-
-
-        document
-            .getElementById("aeDownloadQuotation")
-            .addEventListener(
-                "click",
-                downloadQuotation
-            );
-
-
-        document
-            .getElementById("aeNegotiateSupplier")
-            .addEventListener(
-                "click",
-                negotiateSupplier
-            );
-
-
-        document
-            .getElementById("aeNegotiateBuyer")
-            .addEventListener(
-                "click",
-                negotiateBuyer
-            );
-
-    }
-
-
-    /* =====================================================
-       ROLE
-    ===================================================== */
-
-    function roleChanged() {
-
-        hideAll();
-
         const role =
-            this.value;
+            document.getElementById("amalRole");
+
+        const loginButton =
+            document.getElementById("amalLoginButton");
+
+        const generateButton =
+            document.getElementById("amalGenerate");
+
+        const whatsappButton =
+            document.getElementById("amalWhatsApp");
 
 
-        if (role === "buyer") {
-
-            show("aeBuyerForm");
-
-        }
-
-
-        if (role === "supplier") {
-
-            show("aeSupplierForm");
-
-        }
+        role.addEventListener(
+            "change",
+            handleRoleChange
+        );
 
 
-        if (role === "admin") {
-
-            show("aeAdminLogin");
-
-        }
-
-    }
+        loginButton.addEventListener(
+            "click",
+            verifyAdmin
+        );
 
 
-    /* =====================================================
-       BUYER
-    ===================================================== */
-
-    function sendBuyerRequirement() {
-
-        const name =
-            val("aeBuyerName");
-
-        const mobile =
-            val("aeBuyerMobile");
-
-        const product =
-            val("aeBuyerProduct");
-
-        const quantity =
-            val("aeBuyerQuantity");
-
-        const targetPrice =
-            val("aeBuyerTargetPrice");
-
-        const details =
-            val("aeBuyerDetails");
+        generateButton.addEventListener(
+            "click",
+            generateQuotation
+        );
 
 
-        if (
-            !name ||
-            !mobile ||
-            !product ||
-            !quantity
-        ) {
-
-            alert(
-                "Please complete Buyer Name, Mobile, Product and Quantity."
-            );
-
-            return;
-
-        }
-
-
-        let message =
-
-`*AMAL ENTERPRISES - BUYER REQUIREMENT*
-
-Buyer / Company: ${name}
-
-Mobile: ${mobile}
-
-Product: ${product}
-
-Quantity: ${quantity}`;
-
-
-        if (targetPrice) {
-
-            message +=
-                `\nTarget Price: ₹${targetPrice}`;
-
-        }
-
-
-        message +=
-
-`
-
-Specification:
-${details || "Not provided"}
-
-Please review this buyer requirement.`;
-
-
-        openWhatsApp(
-            CONFIG.adminWhatsApp,
-            message
+        whatsappButton.addEventListener(
+            "click",
+            sendWhatsApp
         );
 
     }
 
 
     /* =====================================================
-       SUPPLIER
+       ROLE CHANGE
     ===================================================== */
 
-    function sendSupplierQuote() {
-
-        const name =
-            val("aeSupplierName");
-
-        const mobile =
-            val("aeSupplierMobile");
-
-        const product =
-            val("aeSupplierProduct");
-
-        const quantity =
-            val("aeSupplierQuantity");
-
-        const moq =
-            val("aeSupplierMOQ");
-
-        const price =
-            val("aeSupplierPrice");
-
-        const delivery =
-            val("aeSupplierDelivery");
-
-        const details =
-            val("aeSupplierDetails");
+    let adminVerified = false;
 
 
-        if (
-            !name ||
-            !mobile ||
-            !product ||
-            !price
-        ) {
+    function handleRoleChange() {
 
-            alert(
-                "Please complete Supplier Name, Mobile, Product and Price."
-            );
+        const selectedRole =
+            document.getElementById("amalRole").value;
 
-            return;
+        const loginBox =
+            document.getElementById("amalAdminLogin");
+
+        const targetBox =
+            document.getElementById("amalAdminTarget");
+
+        const personLabel =
+            document.getElementById("amalPersonLabel");
+
+        const priceNote =
+            document.getElementById("amalPriceNote");
+
+        adminVerified = false;
+
+        loginBox.classList.add("amal-hidden");
+        targetBox.classList.add("amal-hidden");
+
+
+        if (selectedRole === "admin") {
+
+            loginBox.classList.remove("amal-hidden");
+
+            targetBox.classList.remove("amal-hidden");
+
+            personLabel.textContent =
+                "Buyer / Supplier Name";
+
+            priceNote.textContent =
+                "Admin can negotiate price with both Buyer and Supplier.";
 
         }
 
+        else if (selectedRole === "supplier") {
 
-        let message =
+            personLabel.textContent =
+                "Supplier Name";
 
-`*AMAL ENTERPRISES - SUPPLIER QUOTATION*
-
-Supplier / Company: ${name}
-
-Mobile: ${mobile}
-
-Product: ${product}
-
-Supplier Quoted Unit Price: ₹${price}`;
-
-
-        if (quantity) {
-
-            message +=
-                `\nAvailable Quantity: ${quantity}`;
+            priceNote.textContent =
+                "Supplier can submit their own price to AMAL ENTERPRISES.";
 
         }
 
+        else if (selectedRole === "buyer") {
 
-        if (moq) {
+            personLabel.textContent =
+                "Buyer Name";
 
-            message +=
-                `\nMOQ: ${moq}`;
-
-        }
-
-
-        if (delivery) {
-
-            message +=
-                `\nDelivery / Transport: ${delivery}`;
+            priceNote.textContent =
+                "Buyer may enter a target/reference price, if available.";
 
         }
 
+        else {
 
-        message +=
+            personLabel.textContent =
+                "Name";
 
-`
+            priceNote.textContent =
+                "Select a role first.";
 
-Specification:
-${details || "Not provided"}
-
-Please review and negotiate if required.`;
-
-
-        openWhatsApp(
-            CONFIG.adminWhatsApp,
-            message
-        );
+        }
 
     }
 
@@ -949,42 +630,49 @@ Please review and negotiate if required.`;
        ADMIN LOGIN
     ===================================================== */
 
-    function adminLogin() {
+    function verifyAdmin() {
 
         const id =
-            val("aeAdminId");
+            document
+                .getElementById("amalAdminId")
+                .value
+                .trim();
 
         const password =
-            val("aeAdminPassword");
+            document
+                .getElementById("amalAdminPassword")
+                .value;
 
-
-        const msg =
+        const status =
             document.getElementById(
-                "aeLoginMessage"
+                "amalLoginStatus"
             );
 
 
         if (
-            id === CONFIG.adminId &&
+            id === CONFIG.adminLoginId &&
             password === CONFIG.adminPassword
         ) {
 
-            sessionStorage.setItem(
-                "aeAdminLoggedIn",
-                "true"
-            );
+            adminVerified = true;
 
+            status.textContent =
+                "✓ Admin verified successfully.";
 
-            hide("aeAdminLogin");
+            status.className =
+                "amal-status success";
 
-            show("aeAdminPanel");
+        }
 
-            msg.textContent = "";
+        else {
 
-        } else {
+            adminVerified = false;
 
-            msg.textContent =
-                "Invalid Admin Login ID or Password.";
+            status.textContent =
+                "✕ Invalid Admin Login ID or Password.";
+
+            status.className =
+                "amal-status error";
 
         }
 
@@ -992,930 +680,447 @@ Please review and negotiate if required.`;
 
 
     /* =====================================================
-       LOGOUT
+       VALIDATION
     ===================================================== */
 
-    function adminLogout() {
+    function validateForm() {
 
-        sessionStorage.removeItem(
-            "aeAdminLoggedIn"
-        );
+        const selectedRole =
+            document.getElementById("amalRole").value;
 
-
-        hide("aeAdminPanel");
-
-        show("aeAdminLogin");
-
-    }
-
-
-    /* =====================================================
-       GENERATE OFFICIAL QUOTATION
-    ===================================================== */
-
-    function generateOfficialQuotation() {
-
-        const buyer =
-            val("aeAdminBuyerName");
+        const person =
+            document.getElementById("amalPerson").value.trim();
 
         const mobile =
-            val("aeAdminBuyerMobile");
+            document.getElementById("amalMobile").value.trim();
 
         const product =
-            val("aeAdminProduct");
+            document.getElementById("amalProduct").value;
 
         const quantity =
             parseFloat(
-                val("aeAdminQuantity")
+                document.getElementById("amalQuantity").value
+            ) || 0;
+
+
+        if (!selectedRole) {
+
+            flash(
+                "⚠️ Please select Buyer, Supplier or Admin.",
+                "error"
             );
 
-        const price =
-            parseFloat(
-                val("aeAdminFinalPrice")
-            );
+            return false;
 
-        const terms =
-            val("aeAdminTerms");
+        }
 
 
         if (
-            !buyer ||
-            !mobile ||
-            !product ||
-            !quantity ||
-            !price
+            selectedRole === "admin" &&
+            !adminVerified
         ) {
 
-            alert(
-                "Please complete Buyer, Product, Quantity and Final Price."
+            flash(
+                "🔐 Please verify Admin Login first.",
+                "error"
             );
 
-            return;
+            return false;
 
         }
+
+
+        if (!person) {
+
+            flash(
+                "⚠️ Please enter the name.",
+                "error"
+            );
+
+            return false;
+
+        }
+
+
+        const cleanMobile =
+            mobile.replace(/\D/g, "");
+
+        if (
+            cleanMobile.length < 10
+        ) {
+
+            flash(
+                "⚠️ Please enter a valid WhatsApp number.",
+                "error"
+            );
+
+            return false;
+
+        }
+
+
+        if (!product) {
+
+            flash(
+                "⚠️ Please select a product.",
+                "error"
+            );
+
+            return false;
+
+        }
+
+
+        if (quantity <= 0) {
+
+            flash(
+                "⚠️ Please enter quantity.",
+                "error"
+            );
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+
+    /* =====================================================
+       GENERATE
+    ===================================================== */
+
+    let currentWhatsAppText = "";
+
+
+    function generateQuotation() {
+
+        if (!validateForm()) {
+            return;
+        }
+
+
+        const selectedRole =
+            document.getElementById("amalRole").value;
+
+        const person =
+            document.getElementById("amalPerson").value.trim();
+
+        const mobile =
+            document.getElementById("amalMobile").value.trim();
+
+        const product =
+            document.getElementById("amalProduct").value;
+
+        const quantity =
+            parseFloat(
+                document.getElementById("amalQuantity").value
+            ) || 0;
+
+        const unit =
+            document.getElementById("amalUnit").value;
+
+        const price =
+            parseFloat(
+                document.getElementById("amalPrice").value
+            ) || 0;
+
+        const details =
+            document.getElementById("amalDetails").value.trim();
+
+        const negotiation =
+            document.getElementById(
+                "amalNegotiation"
+            ).value;
+
+        const targetType =
+            document.getElementById(
+                "amalTargetType"
+            ).value;
 
 
         const total =
             quantity * price;
 
 
-        const quotationNumber =
-            generateQuotationNumber();
+        /* PREVIEW */
+
+        document.getElementById("pvRole").textContent =
+            roleName(selectedRole);
+
+        document.getElementById("pvPerson").textContent =
+            person;
+
+        document.getElementById("pvMobile").textContent =
+            mobile;
+
+        document.getElementById("pvProduct").textContent =
+            product;
+
+        document.getElementById("pvQuantity").textContent =
+            quantity.toLocaleString("en-IN") +
+            " " +
+            unit;
+
+        document.getElementById("pvPrice").textContent =
+            price > 0
+                ? money(price)
+                : "Price not specified";
+
+        document.getElementById("pvNegotiation").textContent =
+            negotiation;
+
+        document.getElementById("pvTotal").textContent =
+            price > 0
+                ? money(total)
+                : "To be negotiated";
+
+        document.getElementById("pvDetails").textContent =
+            details || "No additional specification";
 
 
-        const date =
-            new Date()
-                .toLocaleDateString(
-                    "en-IN"
-                );
+        /* MESSAGE */
 
+        currentWhatsAppText =
+            createWhatsAppMessage({
+
+                role:
+                    selectedRole,
+
+                person:
+                    person,
+
+                mobile:
+                    mobile,
+
+                product:
+                    product,
+
+                quantity:
+                    quantity,
+
+                unit:
+                    unit,
+
+                price:
+                    price,
+
+                total:
+                    total,
+
+                details:
+                    details,
+
+                negotiation:
+                    negotiation,
+
+                targetType:
+                    targetType
+
+            });
+
+
+        /* SHOW PREVIEW */
 
         const preview =
-            document.getElementById(
-                "aeQuotationPreview"
-            );
+            document.getElementById("amalPreview");
 
-
-        preview.innerHTML = `
-
-            <div
-                id="aeQuotationImage"
-                class="ae-official-quotation"
-            >
-
-                <div class="ae-company-header">
-
-                    <img
-                        src="${CONFIG.logoPath}"
-                        class="ae-company-logo"
-                        crossorigin="anonymous"
-                        alt="AMAL ENTERPRISES"
-                    >
-
-                    <div>
-
-                        <div class="ae-company-name">
-                            ${escapeHTML(
-                                CONFIG.companyName
-                            )}
-                        </div>
-
-                        <div class="ae-company-tagline">
-                            ECO &amp; PACKAGING SOURCING SOLUTIONS
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="ae-quotation-title">
-                    OFFICIAL QUOTATION
-                </div>
-
-
-                <div class="ae-quotation-meta">
-
-                    <div>
-                        <strong>
-                            Quotation No:
-                        </strong>
-                        ${quotationNumber}
-                    </div>
-
-                    <div>
-                        <strong>
-                            Date:
-                        </strong>
-                        ${date}
-                    </div>
-
-                </div>
-
-
-                <div class="ae-msme-box">
-
-                    <strong>
-                        MSME Registration No:
-                    </strong>
-
-                    ${escapeHTML(
-                        CONFIG.msmeNumber
-                    )}
-
-                </div>
-
-
-                <div class="ae-buyer-section">
-
-                    <div class="ae-small-heading">
-                        BILL TO / BUYER
-                    </div>
-
-                    <div>
-                        <strong>
-                            ${escapeHTML(buyer)}
-                        </strong>
-                    </div>
-
-                    <div>
-                        WhatsApp:
-                        ${escapeHTML(mobile)}
-                    </div>
-
-                </div>
-
-
-                <table class="ae-quotation-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Product
-                            </th>
-
-                            <th>
-                                Qty
-                            </th>
-
-                            <th>
-                                Unit Price
-                            </th>
-
-                            <th>
-                                Total
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        <tr>
-
-                            <td>
-                                ${escapeHTML(product)}
-                            </td>
-
-                            <td>
-                                ${quantity.toLocaleString("en-IN")}
-                            </td>
-
-                            <td>
-                                ₹${formatMoney(price)}
-                            </td>
-
-                            <td>
-                                ₹${formatMoney(total)}
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-
-                <div class="ae-grand-total">
-
-                    <span>
-                        GRAND TOTAL
-                    </span>
-
-                    <strong>
-                        ₹${formatMoney(total)}
-                    </strong>
-
-                </div>
-
-
-                <div class="ae-terms">
-
-                    <strong>
-                        Terms &amp; Conditions
-                    </strong>
-
-                    <p>
-                        ${escapeHTML(
-                            terms ||
-                            "Prices and commercial terms are subject to mutual confirmation."
-                        )}
-                    </p>
-
-                </div>
-
-
-                <div class="ae-authorized">
-
-                    <strong>
-                        Authorized by
-                    </strong>
-
-                    <br>
-
-                    ${escapeHTML(
-                        CONFIG.companyName
-                    )}
-
-                </div>
-
-
-                <div class="ae-footer-line">
-
-                    Thank you for your business.
-
-                </div>
-
-            </div>
-
-
-            <div class="ae-preview-buttons">
-
-                <button
-                    type="button"
-                    id="aeShareQuotation"
-                >
-                    <i class="fa-brands fa-whatsapp"></i>
-                    Share on WhatsApp
-                </button>
-
-
-                <button
-                    type="button"
-                    id="aeDownloadQuotation"
-                >
-                    Download Image
-                </button>
-
-            </div>
-        `;
-
-
-        preview.style.display =
-            "block";
-
-
-        document
-            .getElementById(
-                "aeShareQuotation"
-            )
-            .addEventListener(
-                "click",
-                shareQuotation
-            );
-
-
-        document
-            .getElementById(
-                "aeDownloadQuotation"
-            )
-            .addEventListener(
-                "click",
-                downloadQuotation
-            );
-
-
-        window.aeQuotationData = {
-
-            mobile: mobile,
-
-            quotationNumber:
-                quotationNumber,
-
-            buyer: buyer,
-
-            product: product,
-
-            quantity: quantity,
-
-            price: price,
-
-            total: total
-
-        };
-
-    }
-
-
-    /* =====================================================
-       SHARE QUOTATION
-    ===================================================== */
-
-    async function shareQuotation() {
-
-        const quotation =
-            document.getElementById(
-                "aeQuotationImage"
-            );
-
-
-        if (!quotation) {
-
-            alert(
-                "Please generate the quotation first."
-            );
-
-            return;
-
-        }
-
-
-        try {
-
-            const canvas =
-                await quotationToCanvas(
-                    quotation
-                );
-
-
-            const blob =
-                await canvasToBlob(
-                    canvas
-                );
-
-
-            const file =
-                new File(
-                    [
-                        blob
-                    ],
-                    "AMAL-ENTERPRISES-Quotation.png",
-                    {
-                        type:
-                            "image/png"
-                    }
-                );
-
-
-            /*
-             * Mobile browsers supporting Web Share
-             * can directly share the image to WhatsApp.
-             */
-
-            if (
-                navigator.share &&
-                navigator.canShare &&
-                navigator.canShare({
-                    files: [file]
-                })
-            ) {
-
-                await navigator.share({
-
-                    title:
-                        "AMAL ENTERPRISES Quotation",
-
-                    text:
-                        "Official quotation from AMAL ENTERPRISES.",
-
-                    files: [file]
-
-                });
-
-
-                return;
-
-            }
-
-
-            /*
-             * Fallback:
-             * Download image + open WhatsApp chat.
-             */
-
-            downloadBlob(
-                blob,
-                "AMAL-ENTERPRISES-Quotation.png"
-            );
-
-
-            const mobile =
-                window.aeQuotationData &&
-                window.aeQuotationData.mobile
-                    ? window.aeQuotationData.mobile
-                    : "";
-
-
-            const message =
-
-`Hello,
-
-Please find our official quotation from AMAL ENTERPRISES.
-
-Quotation No:
-${window.aeQuotationData
-    ? window.aeQuotationData.quotationNumber
-    : ""}
-
-Please refer to the attached quotation image.`;
-
-
-            openWhatsApp(
-                mobile,
-                message
-            );
-
-
-            alert(
-                "Quotation image downloaded. Please attach it in the WhatsApp chat."
-            );
-
-        }
-        catch (error) {
-
-            console.error(
-                error
-            );
-
-            alert(
-                "Unable to share quotation. Please use Download Image."
-            );
-
-        }
-
-    }
-
-
-    /* =====================================================
-       DOWNLOAD QUOTATION IMAGE
-    ===================================================== */
-
-    async function downloadQuotation() {
-
-        const quotation =
-            document.getElementById(
-                "aeQuotationImage"
-            );
-
-
-        if (!quotation) {
-
-            alert(
-                "Please generate the quotation first."
-            );
-
-            return;
-
-        }
-
-
-        try {
-
-            const canvas =
-                await quotationToCanvas(
-                    quotation
-                );
-
-
-            const blob =
-                await canvasToBlob(
-                    canvas
-                );
-
-
-            downloadBlob(
-                blob,
-                "AMAL-ENTERPRISES-Quotation.png"
-            );
-
-        }
-        catch (error) {
-
-            console.error(
-                error
-            );
-
-            alert(
-                "Unable to generate quotation image."
-            );
-
-        }
-
-    }
-
-
-    /* =====================================================
-       HTML → CANVAS
-       Uses browser DOM + SVG foreignObject
-    ===================================================== */
-
-    async function quotationToCanvas(
-        element
-    ) {
-
-        const rect =
-            element.getBoundingClientRect();
-
-
-        const width =
-            Math.max(
-                800,
-                Math.ceil(rect.width)
-            );
-
-
-        const height =
-            Math.ceil(
-                element.scrollHeight
-            );
-
-
-        const svg =
-`<svg xmlns="http://www.w3.org/2000/svg"
-      width="${width}"
-      height="${height}">
-
-    <foreignObject
-        width="100%"
-        height="100%">
-
-        <div
-            xmlns="http://www.w3.org/1999/xhtml"
-            style="
-                width:${width}px;
-                background:#ffffff;
-            "
-        >
-
-            ${element.outerHTML}
-
-        </div>
-
-    </foreignObject>
-
-</svg>`;
-
-
-        const svgBlob =
-            new Blob(
-                [svg],
-                {
-                    type:
-                        "image/svg+xml;charset=utf-8"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(
-                svgBlob
-            );
-
-
-        const image =
-            new Image();
-
-
-        return new Promise(
-            function (
-                resolve,
-                reject
-            ) {
-
-                image.onload =
-                    function () {
-
-                        const canvas =
-                            document.createElement(
-                                "canvas"
-                            );
-
-
-                        canvas.width =
-                            width * 2;
-
-
-                        canvas.height =
-                            height * 2;
-
-
-                        const ctx =
-                            canvas.getContext(
-                                "2d"
-                            );
-
-
-                        ctx.scale(
-                            2,
-                            2
-                        );
-
-
-                        ctx.fillStyle =
-                            "#ffffff";
-
-
-                        ctx.fillRect(
-                            0,
-                            0,
-                            width,
-                            height
-                        );
-
-
-                        ctx.drawImage(
-                            image,
-                            0,
-                            0,
-                            width,
-                            height
-                        );
-
-
-                        URL.revokeObjectURL(
-                            url
-                        );
-
-
-                        resolve(
-                            canvas
-                        );
-
-                    };
-
-
-                image.onerror =
-                    function () {
-
-                        URL.revokeObjectURL(
-                            url
-                        );
-
-                        reject(
-                            new Error(
-                                "Image generation failed"
-                            )
-                        );
-
-                    };
-
-
-                image.src =
-                    url;
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       CANVAS → BLOB
-    ===================================================== */
-
-    function canvasToBlob(canvas) {
-
-        return new Promise(
-            function (
-                resolve
-            ) {
-
-                canvas.toBlob(
-                    function (blob) {
-
-                        resolve(
-                            blob
-                        );
-
-                    },
-                    "image/png",
-                    1
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       DOWNLOAD BLOB
-    ===================================================== */
-
-    function downloadBlob(
-        blob,
-        filename
-    ) {
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const a =
-            document.createElement(
-                "a"
-            );
-
-
-        a.href =
-            url;
-
-        a.download =
-            filename;
-
-
-        document.body.appendChild(
-            a
+        preview.classList.add(
+            "amal-preview-active"
         );
 
 
-        a.click();
+        /* FLASH */
 
-
-        a.remove();
-
-
-        setTimeout(
-            function () {
-
-                URL.revokeObjectURL(
-                    url
-                );
-
-            },
-            1000
+        flash(
+            "✓ Quotation Preview Ready",
+            "success"
         );
+
+
+        preview.scrollIntoView({
+
+            behavior: "smooth",
+
+            block: "nearest"
+
+        });
 
     }
 
 
     /* =====================================================
-       SUPPLIER NEGOTIATION
+       WHATSAPP MESSAGE
     ===================================================== */
 
-    function negotiateSupplier() {
+    function createWhatsAppMessage(data) {
 
-        const supplier =
-            val("aeNegotiationSupplier");
-
-        const mobile =
-            val("aeNegotiationMobile");
-
-        const product =
-            val("aeNegotiationProduct");
-
-        const currentPrice =
-            val("aeSupplierCurrentPrice");
-
-        const targetPrice =
-            val("aeSupplierExpectedPrice");
-
-        const customMessage =
-            val(
-                "aeSupplierNegotiationMessage"
-            );
+        let message = "";
 
 
-        if (
-            !supplier ||
-            !mobile ||
-            !product
-        ) {
+        message +=
+            "🏢 *" +
+            CONFIG.companyName +
+            "*\n";
 
-            alert(
-                "Please enter Supplier Name, WhatsApp Number and Product."
-            );
+        message +=
+            CONFIG.companyTagline +
+            "\n";
 
-            return;
+        message +=
+            "━━━━━━━━━━━━━━━━━━\n";
 
-        }
+        message +=
+            "🧾 *QUOTATION / PRICE INQUIRY*\n";
 
-
-        let message =
-
-`Hello ${supplier},
-
-This is AMAL ENTERPRISES.
-
-Regarding:
-${product}`;
+        message +=
+            "━━━━━━━━━━━━━━━━━━\n\n";
 
 
-        if (currentPrice) {
+        message +=
+            "👤 *Role:* " +
+            roleName(data.role) +
+            "\n";
+
+        message +=
+            "👤 *Name:* " +
+            data.person +
+            "\n";
+
+        message +=
+            "📱 *WhatsApp:* " +
+            data.mobile +
+            "\n\n";
+
+
+        message +=
+            "📦 *Product:* " +
+            data.product +
+            "\n";
+
+        message +=
+            "🔢 *Quantity:* " +
+            Number(data.quantity)
+                .toLocaleString("en-IN") +
+            " " +
+            data.unit +
+            "\n";
+
+
+        if (data.price > 0) {
 
             message +=
-                `
+                "💰 *Price / Unit:* " +
+                money(data.price) +
+                "\n";
 
-Your current quoted price:
-₹${currentPrice}`;
+            message +=
+                "💵 *Estimated Total:* " +
+                money(data.total) +
+                "\n";
 
         }
 
-
-        if (targetPrice) {
+        else {
 
             message +=
-                `
-
-Our target price:
-₹${targetPrice}`;
+                "💰 *Price:* To be discussed\n";
 
         }
 
 
         message +=
-
-`
-
-${customMessage ||
-"Please let us know your best possible price."}
-
-Regards,
-AMAL ENTERPRISES`;
+            "🤝 *Status:* " +
+            data.negotiation +
+            "\n";
 
 
-        openWhatsApp(
-            mobile,
-            message
-        );
+        if (data.role === "supplier") {
+
+            message +=
+                "\n📌 *Supplier Price Submission*\n";
+
+            message +=
+                "Please review the above requirement and confirm your best price, availability and delivery terms.\n";
+
+        }
+
+
+        if (data.role === "buyer") {
+
+            message +=
+                "\n📌 *Buyer Requirement*\n";
+
+            message +=
+                "Please confirm your requirement and target/negotiable price if applicable.\n";
+
+        }
+
+
+        if (data.role === "admin") {
+
+            message +=
+                "\n🔐 *Admin Commercial Coordination*\n";
+
+            message +=
+                "AMAL ENTERPRISES may coordinate price negotiation with the ";
+
+            message +=
+                data.targetType === "supplier"
+                    ? "supplier"
+                    : "buyer";
+
+            message +=
+                ".\n";
+
+        }
+
+
+        if (data.details) {
+
+            message +=
+                "\n📝 *Specification:*\n" +
+                data.details +
+                "\n";
+
+        }
+
+
+        message +=
+            "\n━━━━━━━━━━━━━━━━━━\n";
+
+        message +=
+            "MSME Registration: " +
+            CONFIG.msmeNumber +
+            "\n";
+
+        message +=
+            "📲 WhatsApp: +" +
+            CONFIG.whatsappNumber.substring(2) +
+            "\n";
+
+        message +=
+            "━━━━━━━━━━━━━━━━━━";
+
+
+        return message;
 
     }
 
 
     /* =====================================================
-       BUYER NEGOTIATION
+       SEND WHATSAPP
     ===================================================== */
 
-    function negotiateBuyer() {
+    function sendWhatsApp() {
 
-        const buyer =
-            val("aeNegotiationBuyer");
+        if (!currentWhatsAppText) {
 
-        const mobile =
-            val(
-                "aeNegotiationBuyerMobile"
-            );
-
-        const product =
-            val(
-                "aeNegotiationBuyerProduct"
-            );
-
-        const price =
-            val(
-                "aeNegotiationBuyerPrice"
-            );
-
-        const customMessage =
-            val(
-                "aeBuyerNegotiationMessage"
-            );
-
-
-        if (
-            !buyer ||
-            !mobile ||
-            !product
-        ) {
-
-            alert(
-                "Please enter Buyer Name, WhatsApp Number and Product."
+            flash(
+                "⚠️ First generate the quotation.",
+                "error"
             );
 
             return;
@@ -1923,80 +1128,62 @@ AMAL ENTERPRISES`;
         }
 
 
-        let message =
+        const selectedRole =
+            document.getElementById("amalRole").value;
 
-`Hello ${buyer},
+        const recipientMobile =
+            document
+                .getElementById("amalMobile")
+                .value
+                .replace(/\D/g, "");
 
-This is AMAL ENTERPRISES.
 
-Regarding:
-${product}`;
+        let destination;
 
 
-        if (price) {
+        /*
+          SUPPLIER / BUYER:
+          Their entered WhatsApp number receives
+          the message.
 
-            message +=
-                `
+          ADMIN:
+          Message goes to AMAL ENTERPRISES
+          WhatsApp number.
+        */
 
-Our proposed price:
-₹${price}`;
+        if (selectedRole === "admin") {
+
+            destination =
+                CONFIG.whatsappNumber;
 
         }
 
+        else {
 
-        message +=
+            if (recipientMobile.length === 10) {
 
-`
+                destination =
+                    "91" +
+                    recipientMobile;
 
-${customMessage ||
-"Please let us know your feedback so we can discuss the best possible commercial terms."}
+            }
 
-Regards,
-AMAL ENTERPRISES`;
+            else {
 
+                destination =
+                    recipientMobile;
 
-        openWhatsApp(
-            mobile,
-            message
-        );
-
-    }
-
-
-    /* =====================================================
-       WHATSAPP
-    ===================================================== */
-
-    function openWhatsApp(
-        phone,
-        message
-    ) {
-
-        let cleanPhone =
-            String(phone)
-                .replace(
-                    /\D/g,
-                    ""
-                );
-
-
-        if (
-            cleanPhone.length === 10
-        ) {
-
-            cleanPhone =
-                "91" +
-                cleanPhone;
+            }
 
         }
 
 
         const url =
             "https://wa.me/" +
-            cleanPhone +
+            destination +
             "?text=" +
             encodeURIComponent(
-                message
+                currentWhatsAppText
             );
 
 
@@ -2005,6 +1192,69 @@ AMAL ENTERPRISES`;
             "_blank"
         );
 
+
+        flash(
+            "✓ Opening WhatsApp...",
+            "success"
+        );
+
+    }
+
+
+    /* =====================================================
+       FLASH MESSAGE
+    ===================================================== */
+
+    function flash(message, type) {
+
+        const old =
+            document.querySelector(
+                ".amal-flash"
+            );
+
+        if (old) {
+            old.remove();
+        }
+
+
+        const box =
+            document.createElement("div");
+
+        box.className =
+            "amal-flash " +
+            (type || "");
+
+
+        box.innerHTML =
+            message;
+
+
+        document.body.appendChild(box);
+
+
+        setTimeout(function () {
+
+            box.classList.add(
+                "show"
+            );
+
+        }, 20);
+
+
+        setTimeout(function () {
+
+            box.classList.remove(
+                "show"
+            );
+
+            setTimeout(function () {
+
+                box.remove();
+
+            }, 300);
+
+        }, 2800);
+
     }
 
 
@@ -2012,65 +1262,29 @@ AMAL ENTERPRISES`;
        HELPERS
     ===================================================== */
 
-    function val(id) {
+    function roleName(role) {
 
-        const el =
-            document.getElementById(id);
-
-        return el
-            ? el.value.trim()
-            : "";
-
-    }
-
-
-    function show(id) {
-
-        const el =
-            document.getElementById(id);
-
-        if (el) {
-
-            el.style.display =
-                "block";
-
+        if (role === "buyer") {
+            return "Buyer";
         }
 
-    }
-
-
-    function hide(id) {
-
-        const el =
-            document.getElementById(id);
-
-        if (el) {
-
-            el.style.display =
-                "none";
-
+        if (role === "supplier") {
+            return "Supplier";
         }
 
-    }
+        if (role === "admin") {
+            return "Admin";
+        }
 
-
-    function hideAll() {
-
-        hide("aeBuyerForm");
-
-        hide("aeSupplierForm");
-
-        hide("aeAdminLogin");
-
-        hide("aeAdminPanel");
+        return "—";
 
     }
 
 
-    function formatMoney(number) {
+    function money(value) {
 
-        return Number(number)
-            .toLocaleString(
+        return "₹" +
+            Number(value).toLocaleString(
                 "en-IN",
                 {
                     minimumFractionDigits: 2,
@@ -2081,70 +1295,12 @@ AMAL ENTERPRISES`;
     }
 
 
-    function generateQuotationNumber() {
-
-        const d =
-            new Date();
-
-
-        return (
-            "AE-" +
-            d.getFullYear() +
-            String(
-                d.getMonth() + 1
-            ).padStart(2, "0") +
-            String(
-                d.getDate()
-            ).padStart(2, "0") +
-            "-" +
-            String(
-                d.getHours()
-            ).padStart(2, "0") +
-            String(
-                d.getMinutes()
-            ).padStart(2, "0") +
-            String(
-                d.getSeconds()
-            ).padStart(2, "0")
-        );
-
-    }
-
-
-    function escapeHTML(text) {
-
-        return String(text)
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-            .replace(
-                /</g,
-                "&lt;"
-            )
-            .replace(
-                />/g,
-                "&gt;"
-            )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
-
-
     /* =====================================================
-       START
+       DOM READY
     ===================================================== */
 
     if (
-        document.readyState ===
-        "loading"
+        document.readyState === "loading"
     ) {
 
         document.addEventListener(
@@ -2153,6 +1309,7 @@ AMAL ENTERPRISES`;
         );
 
     }
+
     else {
 
         initQuotationSystem();
@@ -2160,4 +1317,3 @@ AMAL ENTERPRISES`;
     }
 
 })();
-```
