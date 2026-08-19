@@ -28,7 +28,7 @@
 
     // Must match Code.gs
     const API_TOKEN =
-        "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_9x7Qm2";
+        "AmalQuotation2026_9x7Qm2";
 
     let currentRole = "";
 
