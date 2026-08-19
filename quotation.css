@@ -759,3 +759,153 @@ body.ae-modal-open {
     }
 
 }
+
+/* =========================================================
+   FINAL QUOTATION LAYOUT
+   No website theme changes
+========================================================= */
+
+#quotation {
+    width: min(1120px, calc(100% - 28px));
+    margin: 55px auto 90px;
+}
+
+.ae-quotation-wrapper {
+    width: 100%;
+}
+
+.ae-quotation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.ae-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.ae-quantity-row {
+    display: grid;
+    grid-template-columns: 1.2fr .9fr 1.2fr;
+    gap: 14px;
+}
+
+.ae-live-total {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-align: right;
+}
+
+.ae-save-status {
+    margin-top: 10px;
+    min-height: 20px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.ae-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(0,0,0,.78);
+    overflow-y: auto;
+}
+
+.ae-modal-overlay[hidden] {
+    display: none !important;
+}
+
+.ae-modal-card {
+    width: min(920px, 100%);
+    max-height: 94vh;
+    overflow-y: auto;
+    border-radius: 18px;
+    position: relative;
+}
+
+.ae-preview-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.ae-preview-contact-grid > div {
+    min-width: 0;
+}
+
+.ae-preview-contact-grid strong {
+    word-break: break-word;
+}
+
+.ae-preview-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.ae-preview-table-head,
+.ae-preview-table-row {
+    min-width: 600px;
+}
+
+.ae-action-buttons {
+    position: sticky;
+    bottom: 0;
+    padding: 12px 0 0;
+}
+
+body.ae-modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 800px) {
+
+    #quotation {
+        width: min(100% - 18px, 700px);
+        margin-top: 35px;
+        margin-bottom: 65px;
+    }
+
+    .ae-quotation-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ae-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ae-quantity-row {
+        grid-template-columns: 1fr;
+    }
+
+    .ae-preview-contact-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+
+    #quotation {
+        width: calc(100% - 12px);
+        margin-top: 25px;
+        margin-bottom: 45px;
+    }
+
+    .ae-preview-contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ae-modal-overlay {
+        padding: 8px;
+    }
+
+}
