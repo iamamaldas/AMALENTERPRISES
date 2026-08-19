@@ -1,33 +1,51 @@
 /* =========================================================
-   AMAL ENTERPRISES
-   FINAL QUOTATION SYSTEM
-   ---------------------------------------------------------
-   DO NOT EDIT index.html
-   DO NOT EDIT fix.js
+   AMAL ENTERPRISES - FINAL QUOTATION SYSTEM
+   index.html / fix.js untouched
 ========================================================= */
 
 (function () {
-
     "use strict";
 
     /* =====================================================
        CONFIGURATION
     ===================================================== */
 
-    const ADMIN_LOGIN = "office.amaldas@gmail.com";
-    const ADMIN_PASSWORD = "amal0706";
-
-    const WHATSAPP_NUMBER = "916296471636";
-
     const COMPANY_NAME = "AMAL ENTERPRISES";
-    const MSME_NUMBER = "XXXX";
 
-    let currentRole = "";
-    let adminLoggedIn = false;
+    // Admin WhatsApp number
+    const ADMIN_WHATSAPP = "916296471636";
+
+    /*
+       AFTER DEPLOYING GOOGLE APPS SCRIPT:
+       Paste the Web App /exec URL here.
+    */
+    const APPS_SCRIPT_URL =
+        "PASTE_YOUR_WEB_APP_EXEC_URL_HERE";
+
+    /*
+       SAME TOKEN MUST BE USED IN Code.gs
+       Change this to your own long random value.
+    */
+    const API_TOKEN =
+        "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_9x7Qm2";
 
 
     /* =====================================================
-       UNIT DEFINITIONS
+       WEBSITE PRODUCT CATEGORIES
+    ===================================================== */
+
+    const PRODUCT_CATEGORIES = [
+        "Corrugated Carton Boxes",
+        "Packaging Materials",
+        "Polyethylene Carry Bags",
+        "Biodegradable & Compostable Bags",
+        "Other / Custom Product"
+    ];
+
+
+    /* =====================================================
+       UNITS
+       mg kept as the smallest practical weight unit
     ===================================================== */
 
     const UNITS = [
@@ -49,55 +67,53 @@
     ];
 
 
+    let currentRole = "";
+
+
     /* =====================================================
        SAFE NUMBER
     ===================================================== */
 
     function numberValue(value) {
 
-        const number = parseFloat(value);
+        const n =
+            Number.parseFloat(value);
 
-        return Number.isFinite(number) && number >= 0
-            ? number
+        return Number.isFinite(n) && n >= 0
+            ? n
             : 0;
-
     }
 
 
     /* =====================================================
-       FORMAT MONEY
+       MONEY
     ===================================================== */
 
     function formatMoney(value) {
 
-        return "₹" + Number(value || 0).toLocaleString(
-            "en-IN",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        );
-
+        return "₹" +
+            numberValue(value).toLocaleString(
+                "en-IN",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
     }
 
 
     /* =====================================================
-       FORMAT QUANTITY
+       QUANTITY
     ===================================================== */
 
     function formatQuantity(value) {
 
-        const n = numberValue(value);
-
-        if (!n) return "0";
-
-        return n.toLocaleString(
+        return numberValue(value).toLocaleString(
             "en-IN",
             {
                 maximumFractionDigits: 6
             }
         );
-
     }
 
 
@@ -115,23 +131,46 @@
                 year: "numeric"
             }
         );
-
     }
 
 
     /* =====================================================
-       ESCAPE HTML
+       HTML ESCAPE
     ===================================================== */
 
     function escapeHTML(value) {
 
-        return String(value || "")
+        return String(value ?? "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
 
+
+    /* =====================================================
+       QUOTATION NUMBER
+    ===================================================== */
+
+    function quotationNumber() {
+
+        const d = new Date();
+
+        const stamp =
+            d.getFullYear().toString() +
+            String(d.getMonth() + 1).padStart(2, "0") +
+            String(d.getDate()).padStart(2, "0");
+
+        const random =
+            Math.floor(
+                1000 + Math.random() * 9000
+            );
+
+        return "AE-" +
+            stamp +
+            "-" +
+            random;
     }
 
 
@@ -143,82 +182,61 @@
 
         const url =
             "https://wa.me/" +
-            WHATSAPP_NUMBER +
+            ADMIN_WHATSAPP +
             "?text=" +
             encodeURIComponent(message);
 
-        window.open(url, "_blank");
-
+        window.open(
+            url,
+            "_blank",
+            "noopener"
+        );
     }
 
 
     /* =====================================================
-       CREATE QUOTATION NUMBER
-    ===================================================== */
-
-    function quotationNumber() {
-
-        const now = new Date();
-
-        const year =
-            now.getFullYear();
-
-        const month =
-            String(now.getMonth() + 1)
-                .padStart(2, "0");
-
-        const day =
-            String(now.getDate())
-                .padStart(2, "0");
-
-        const random =
-            Math.floor(
-                1000 + Math.random() * 9000
-            );
-
-        return "AE-" +
-            year +
-            month +
-            day +
-            "-" +
-            random;
-
-    }
-
-
-    /* =====================================================
-       MAIN HTML
+       CREATE MAIN QUOTATION SYSTEM
     ===================================================== */
 
     function createQuotationSystem() {
 
-        const quotationArea =
+        const area =
             document.getElementById("quotation");
 
-        if (!quotationArea) return;
+        if (!area) return;
 
-        quotationArea.innerHTML = `
+
+        area.innerHTML = `
 
             <div class="ae-quotation-wrapper">
 
                 <div class="ae-quotation-header">
 
                     <div>
+
                         <div class="ae-small-label">
                             B2B COMMERCIAL TOOL
                         </div>
 
-                        <h2>Create Quotation</h2>
+                        <h2>
+                            Create Quotation
+                        </h2>
 
                         <p>
-                            Prepare, negotiate and share
-                            quotations directly through WhatsApp.
+                            Prepare, review and share
+                            quotations directly with
+                            AMAL ENTERPRISES through WhatsApp.
                         </p>
+
                     </div>
 
-                    <div class="ae-admin-status"
-                         id="aeAdminStatus">
-                        Admin Locked
+
+                    <div
+                        class="ae-admin-status"
+                        id="aeRoleStatus">
+
+                        Select Role
+
                     </div>
 
                 </div>
@@ -232,6 +250,7 @@
                         Select Role
                     </div>
 
+
                     <div class="ae-role-buttons">
 
                         <button
@@ -243,6 +262,7 @@
 
                         </button>
 
+
                         <button
                             type="button"
                             class="ae-role-btn"
@@ -251,6 +271,7 @@
                             Supplier
 
                         </button>
+
 
                         <button
                             type="button"
@@ -266,44 +287,6 @@
                 </div>
 
 
-                <!-- ADMIN LOGIN -->
-
-                <div
-                    class="ae-admin-login"
-                    id="aeAdminLogin"
-                    hidden>
-
-                    <div class="ae-field-label">
-                        Admin Login
-                    </div>
-
-                    <input
-                        type="email"
-                        id="aeAdminEmail"
-                        placeholder="Login ID">
-
-                    <input
-                        type="password"
-                        id="aeAdminPassword"
-                        placeholder="Password">
-
-                    <button
-                        type="button"
-                        class="ae-login-btn"
-                        id="aeLoginBtn">
-
-                        Admin Login
-
-                    </button>
-
-                    <div
-                        class="ae-login-message"
-                        id="aeLoginMessage">
-                    </div>
-
-                </div>
-
-
                 <!-- FORM -->
 
                 <div
@@ -311,40 +294,57 @@
                     id="aeFormPanel"
                     hidden>
 
-                    <div class="ae-form-role-title"
-                         id="aeRoleTitle">
+
+                    <div
+                        class="ae-form-role-title"
+                        id="aeRoleTitle">
                     </div>
 
 
                     <div class="ae-form-grid">
 
+
+                        <!-- NAME -->
+
                         <div class="ae-field">
 
-                            <label>Name</label>
+                            <label>
+                                Name *
+                            </label>
 
                             <input
                                 id="aeName"
                                 type="text"
+                                autocomplete="name"
                                 placeholder="Enter name">
 
                         </div>
 
 
+                        <!-- COMPANY -->
+
                         <div class="ae-field">
 
-                            <label>Company Name</label>
+                            <label>
+                                Company Name *
+                            </label>
 
                             <input
                                 id="aeCompany"
                                 type="text"
+                                autocomplete="organization"
                                 placeholder="Enter company name">
 
                         </div>
 
 
+                        <!-- MOBILE -->
+
                         <div class="ae-field">
 
-                            <label>Mobile Number</label>
+                            <label>
+                                Mobile Number *
+                            </label>
 
                             <input
                                 id="aeMobile"
@@ -356,29 +356,88 @@
                         </div>
 
 
+                        <!-- EMAIL -->
+
                         <div class="ae-field">
 
-                            <label>Product / Material</label>
+                            <label>
+                                Email Address
+                                <span>(Optional)</span>
+                            </label>
 
                             <input
-                                id="aeProduct"
-                                type="text"
-                                placeholder="Product or material">
+                                id="aeEmail"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="Email address (optional)">
 
                         </div>
 
 
+                        <!-- CATEGORY -->
+
+                        <div class="ae-field">
+
+                            <label>
+                                Product Category *
+                            </label>
+
+                            <select id="aeCategory">
+
+                                <option value="">
+                                    Select product category
+                                </option>
+
+                                ${
+                                    PRODUCT_CATEGORIES
+                                        .map(function (item) {
+
+                                            return `
+                                                <option value="${escapeHTML(item)}">
+                                                    ${escapeHTML(item)}
+                                                </option>
+                                            `;
+
+                                        })
+                                        .join("")
+                                }
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- PRODUCT -->
+
+                        <div class="ae-field">
+
+                            <label>
+                                Product / Material *
+                            </label>
+
+                            <input
+                                id="aeProduct"
+                                type="text"
+                                placeholder="Enter product or material">
+
+                        </div>
+
                     </div>
 
 
+                    <!-- DESCRIPTION -->
+
                     <div class="ae-field">
 
-                        <label>Product Specification</label>
+                        <label>
+                            Description / Specification
+                            <span>(Optional)</span>
+                        </label>
 
                         <textarea
                             id="aeSpecification"
                             rows="3"
-                            placeholder="Size, colour, thickness, GSM, quality, packing requirement etc."></textarea>
+                            placeholder="Size, colour, thickness, GSM, quality, packing requirement, delivery details etc."></textarea>
 
                     </div>
 
@@ -387,35 +446,48 @@
 
                     <div class="ae-quantity-row">
 
+
                         <div class="ae-field">
 
-                            <label>Quantity</label>
+                            <label>
+                                Quantity *
+                            </label>
 
                             <input
                                 id="aeQuantity"
                                 type="number"
-                                min="0"
+                                min="0.000001"
                                 step="any"
-                                placeholder="Enter quantity">
+                                placeholder="Quantity">
 
                         </div>
 
 
                         <div class="ae-field">
 
-                            <label>Unit</label>
+                            <label>
+                                Unit *
+                            </label>
 
                             <select id="aeUnit">
 
                                 <option value="">
-                                    Select Unit
+                                    Select unit
                                 </option>
 
-                                ${UNITS.map(unit => `
-                                    <option value="${unit}">
-                                        ${unit}
-                                    </option>
-                                `).join("")}
+                                ${
+                                    UNITS
+                                        .map(function (item) {
+
+                                            return `
+                                                <option value="${escapeHTML(item)}">
+                                                    ${escapeHTML(item)}
+                                                </option>
+                                            `;
+
+                                        })
+                                        .join("")
+                                }
 
                             </select>
 
@@ -424,16 +496,29 @@
 
                         <div class="ae-field">
 
-                            <label>Unit Price</label>
+                            <label>
+                                Unit Price (₹) *
+                            </label>
 
                             <input
                                 id="aePrice"
                                 type="number"
                                 min="0"
-                                step="any"
-                                placeholder="Price per selected unit">
+                                step="0.01"
+                                placeholder="Price per unit">
 
                         </div>
+
+                    </div>
+
+
+                    <!-- LIVE TOTAL -->
+
+                    <div
+                        class="ae-live-total"
+                        id="aeLiveTotal">
+
+                        Estimated Total: ₹0.00
 
                     </div>
 
@@ -443,12 +528,15 @@
                     <div class="ae-status-section">
 
                         <div class="ae-field-label">
-                            Quotation Status
+                            Quotation Status *
                         </div>
+
 
                         <div class="ae-status-options">
 
-                            <label class="ae-status-option">
+
+                            <label
+                                class="ae-status-option">
 
                                 <input
                                     type="radio"
@@ -462,7 +550,8 @@
                             </label>
 
 
-                            <label class="ae-status-option">
+                            <label
+                                class="ae-status-option">
 
                                 <input
                                     type="radio"
@@ -475,28 +564,43 @@
 
                             </label>
 
+
                         </div>
 
                     </div>
 
 
-                    <div class="ae-negotiation-note"
-                         id="aeNegotiationNote">
+                    <div
+                        class="ae-negotiation-note"
+                        id="aeNegotiationNote"
+                        hidden>
 
-                        Negotiable quotations may be discussed
-                        directly between the relevant parties.
+                        Price is subject to negotiation
+                        and commercial discussion.
 
                     </div>
 
+
+                    <!-- CREATE -->
 
                     <button
                         type="button"
                         class="ae-generate-btn"
                         id="aeGenerateBtn">
 
-                        Generate Quotation
+                        Create Quotation
 
                     </button>
+
+
+                    <!-- DATABASE STATUS -->
+
+                    <div
+                        class="ae-save-status"
+                        id="aeSaveStatus"
+                        aria-live="polite">
+                    </div>
+
 
                 </div>
 
@@ -510,7 +614,9 @@
                 id="aeModal"
                 hidden>
 
+
                 <div class="ae-modal-card">
+
 
                     <button
                         type="button"
@@ -525,14 +631,14 @@
                     <div
                         class="ae-preview-document"
                         id="aePreviewDocument">
-
                     </div>
 
 
-                    <div class="ae-action-buttons"
-                         id="aeActionButtons">
-
+                    <div
+                        class="ae-action-buttons"
+                        id="aeActionButtons">
                     </div>
+
 
                 </div>
 
@@ -542,15 +648,15 @@
 
 
         bindEvents();
-
     }
 
 
     /* =====================================================
-       ROLE BUTTONS
+       EVENTS
     ===================================================== */
 
     function bindEvents() {
+
 
         document
             .querySelectorAll(".ae-role-btn")
@@ -560,23 +666,14 @@
                     "click",
                     function () {
 
-                        const role =
-                            button.dataset.role;
-
-                        selectRole(role);
+                        selectRole(
+                            button.dataset.role
+                        );
 
                     }
                 );
 
             });
-
-
-        document
-            .getElementById("aeLoginBtn")
-            .addEventListener(
-                "click",
-                adminLogin
-            );
 
 
         document
@@ -602,7 +699,8 @@
                 function (event) {
 
                     if (
-                        event.target === this
+                        event.target ===
+                        event.currentTarget
                     ) {
 
                         closePreview();
@@ -634,6 +732,20 @@
 
         });
 
+
+        document
+            .querySelectorAll(
+                'input[name="aeQuotationStatus"]'
+            )
+            .forEach(function (radio) {
+
+                radio.addEventListener(
+                    "change",
+                    updateLiveCalculation
+                );
+
+            });
+
     }
 
 
@@ -644,6 +756,7 @@
     function selectRole(role) {
 
         currentRole = role;
+
 
         document
             .querySelectorAll(".ae-role-btn")
@@ -657,153 +770,29 @@
             });
 
 
-        const loginBox =
-            document.getElementById("aeAdminLogin");
-
-        const form =
-            document.getElementById("aeFormPanel");
-
-
-        if (role === "admin") {
-
-            form.hidden = true;
-
-            loginBox.hidden =
-                adminLoggedIn;
-
-            if (adminLoggedIn) {
-
-                showForm("Admin");
-
-            }
-
-        }
-        else {
-
-            loginBox.hidden = true;
-
-            adminLoggedIn = false;
-
-            showForm(
-                role === "buyer"
-                    ? "Buyer"
-                    : "Supplier"
-            );
-
-        }
-
-    }
+        const label =
+            role === "buyer"
+                ? "Buyer"
+                : role === "supplier"
+                    ? "Supplier"
+                    : "Admin";
 
 
-    /* =====================================================
-       ADMIN LOGIN
-    ===================================================== */
-
-    function adminLogin() {
-
-        const email =
-            document
-                .getElementById("aeAdminEmail")
-                .value
-                .trim();
-
-        const password =
-            document
-                .getElementById("aeAdminPassword")
-                .value;
-
-
-        const message =
-            document.getElementById(
-                "aeLoginMessage"
-            );
-
-
-        if (
-            email === ADMIN_LOGIN &&
-            password === ADMIN_PASSWORD
-        ) {
-
-            adminLoggedIn = true;
-
-            message.textContent =
-                "Admin login successful.";
-
-            message.className =
-                "ae-login-message success";
-
-
-            document
-                .getElementById(
-                    "aeAdminLogin"
-                )
-                .hidden = true;
-
-
-            showForm("Admin");
-
-        }
-        else {
-
-            adminLoggedIn = false;
-
-            message.textContent =
-                "Invalid Admin login details.";
-
-            message.className =
-                "ae-login-message error";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       SHOW FORM
-    ===================================================== */
-
-    function showForm(roleName) {
-
-        const form =
-            document.getElementById(
-                "aeFormPanel"
-            );
-
-        form.hidden = false;
+        document
+            .getElementById("aeRoleStatus")
+            .textContent =
+            label + " Mode";
 
 
         document
             .getElementById("aeRoleTitle")
             .textContent =
-            roleName + " Quotation";
+            label + " Quotation";
 
 
-        const status =
-            document.getElementById(
-                "aeAdminStatus"
-            );
-
-
-        if (roleName === "Admin") {
-
-            status.textContent =
-                "Admin Unlocked";
-
-            status.classList.add(
-                "unlocked"
-            );
-
-        }
-        else {
-
-            status.textContent =
-                roleName + " Mode";
-
-            status.classList.remove(
-                "unlocked"
-            );
-
-        }
+        document
+            .getElementById("aeFormPanel")
+            .hidden = false;
 
     }
 
@@ -816,26 +805,29 @@
 
         const quantity =
             numberValue(
-                document.getElementById(
-                    "aeQuantity"
-                ).value
+                document
+                    .getElementById("aeQuantity")
+                    .value
             );
+
 
         const price =
             numberValue(
-                document.getElementById(
-                    "aePrice"
-                ).value
+                document
+                    .getElementById("aePrice")
+                    .value
             );
+
 
         const total =
             quantity * price;
 
 
-        const note =
-            document.getElementById(
-                "aeNegotiationNote"
-            );
+        document
+            .getElementById("aeLiveTotal")
+            .textContent =
+            "Estimated Total: " +
+            formatMoney(total);
 
 
         const selected =
@@ -844,19 +836,13 @@
             );
 
 
-        if (
-            selected &&
-            selected.value === "Negotiable"
-        ) {
-
-            note.style.display = "block";
-
-        }
-        else {
-
-            note.style.display = "none";
-
-        }
+        document
+            .getElementById("aeNegotiationNote")
+            .hidden =
+            !(
+                selected &&
+                selected.value === "Negotiable"
+            );
 
     }
 
@@ -875,17 +861,17 @@
 
         const quantity =
             numberValue(
-                document.getElementById(
-                    "aeQuantity"
-                ).value
+                document
+                    .getElementById("aeQuantity")
+                    .value
             );
 
 
         const price =
             numberValue(
-                document.getElementById(
-                    "aePrice"
-                ).value
+                document
+                    .getElementById("aePrice")
+                    .value
             );
 
 
@@ -895,11 +881,11 @@
                 currentRole,
 
             roleName:
-                currentRole === "admin"
-                    ? "Admin"
-                    : currentRole === "buyer"
-                        ? "Buyer"
-                        : "Supplier",
+                currentRole === "buyer"
+                    ? "Buyer"
+                    : currentRole === "supplier"
+                        ? "Supplier"
+                        : "Admin",
 
             name:
                 document
@@ -917,7 +903,19 @@
                 document
                     .getElementById("aeMobile")
                     .value
+                    .replace(/\D/g, "")
+                    .slice(0, 10),
+
+            email:
+                document
+                    .getElementById("aeEmail")
+                    .value
                     .trim(),
+
+            category:
+                document
+                    .getElementById("aeCategory")
+                    .value,
 
             product:
                 document
@@ -961,27 +959,40 @@
 
     function validateData(data) {
 
-        if (!data.name) {
 
-            alert("Please enter Name.");
+        if (!data.role) {
+
+            alert(
+                "Please select Buyer, Supplier or Admin first."
+            );
 
             return false;
+        }
 
+
+        if (!data.name) {
+
+            alert(
+                "Please enter Name."
+            );
+
+            return false;
         }
 
 
         if (!data.company) {
 
-            alert("Please enter Company Name.");
+            alert(
+                "Please enter Company Name."
+            );
 
             return false;
-
         }
 
 
         if (
             !/^[0-9]{10}$/.test(
-                data.mobile.replace(/\D/g, "")
+                data.mobile
             )
         ) {
 
@@ -990,7 +1001,30 @@
             );
 
             return false;
+        }
 
+
+        if (
+            data.email &&
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                .test(data.email)
+        ) {
+
+            alert(
+                "Please enter a valid email address or leave it blank."
+            );
+
+            return false;
+        }
+
+
+        if (!data.category) {
+
+            alert(
+                "Please select Product Category."
+            );
+
+            return false;
         }
 
 
@@ -1001,34 +1035,36 @@
             );
 
             return false;
-
         }
 
 
-        if (!data.quantity || data.quantity <= 0) {
+        if (!(data.quantity > 0)) {
 
-            alert("Please enter a valid quantity.");
+            alert(
+                "Please enter a valid quantity."
+            );
 
             return false;
-
         }
 
 
         if (!data.unit) {
 
-            alert("Please select a unit.");
+            alert(
+                "Please select a unit."
+            );
 
             return false;
-
         }
 
 
-        if (!data.price || data.price < 0) {
+        if (!(data.price > 0)) {
 
-            alert("Please enter a valid unit price.");
+            alert(
+                "Please enter a valid unit price greater than 0."
+            );
 
             return false;
-
         }
 
 
@@ -1039,7 +1075,6 @@
             );
 
             return false;
-
         }
 
 
@@ -1049,33 +1084,10 @@
 
 
     /* =====================================================
-       GENERATE
+       GENERATE QUOTATION
     ===================================================== */
 
     function generateQuotation() {
-
-        if (
-            currentRole === "admin" &&
-            !adminLoggedIn
-        ) {
-
-            alert("Please login as Admin first.");
-
-            return;
-
-        }
-
-
-        if (!currentRole) {
-
-            alert(
-                "Please select Buyer, Supplier or Admin first."
-            );
-
-            return;
-
-        }
-
 
         const data =
             getFormData();
@@ -1095,6 +1107,33 @@
             quoteNo
         );
 
+
+        /*
+           ONLY FINAL QUOTATION
+           is stored in Google Sheet + Drive.
+        */
+
+        if (
+            data.status ===
+            "Final Quotation"
+        ) {
+
+            saveFinalQuotation(
+                data,
+                quoteNo
+            );
+
+        }
+
+        else {
+
+            document
+                .getElementById("aeSaveStatus")
+                .textContent =
+                "Negotiable quotation — not saved as the latest final quotation.";
+
+        }
+
     }
 
 
@@ -1107,19 +1146,13 @@
         quoteNo
     ) {
 
-        const documentBox =
+        const box =
             document.getElementById(
                 "aePreviewDocument"
             );
 
 
-        const roleLabel =
-            escapeHTML(
-                data.roleName
-            );
-
-
-        documentBox.innerHTML = `
+        box.innerHTML = `
 
             <div class="ae-preview-top">
 
@@ -1129,18 +1162,12 @@
                         ${COMPANY_NAME}
                     </div>
 
-                    ${
-                        data.roleName === "Admin"
-                            ? `
-                                <div class="ae-preview-msme">
-                                    MSME Registration No.:
-                                    ${MSME_NUMBER}
-                                </div>
-                              `
-                            : ""
-                    }
+                    <div class="ae-preview-subtitle">
+                        Packaging & Sourcing Solutions
+                    </div>
 
                 </div>
+
 
                 <div class="ae-preview-quote-info">
 
@@ -1149,11 +1176,11 @@
                     </strong>
 
                     <span>
-                        ${quoteNo}
+                        ${escapeHTML(quoteNo)}
                     </span>
 
                     <span>
-                        ${getDate()}
+                        ${escapeHTML(getDate())}
                     </span>
 
                 </div>
@@ -1163,7 +1190,8 @@
 
             <div class="ae-preview-role">
 
-                ${roleLabel} Quotation
+                ${escapeHTML(data.roleName)}
+                Quotation
 
             </div>
 
@@ -1208,6 +1236,25 @@
 
                 </div>
 
+
+                ${
+                    data.email
+                        ? `
+                            <div>
+
+                                <small>
+                                    Email
+                                </small>
+
+                                <strong>
+                                    ${escapeHTML(data.email)}
+                                </strong>
+
+                            </div>
+                          `
+                        : ""
+                }
+
             </div>
 
 
@@ -1215,10 +1262,21 @@
 
                 <div class="ae-preview-table-head">
 
-                    <span>Product</span>
-                    <span>Qty</span>
-                    <span>Unit Price</span>
-                    <span>Total</span>
+                    <span>
+                        Product
+                    </span>
+
+                    <span>
+                        Qty
+                    </span>
+
+                    <span>
+                        Unit Price
+                    </span>
+
+                    <span>
+                        Total
+                    </span>
 
                 </div>
 
@@ -1226,21 +1284,39 @@
                 <div class="ae-preview-table-row">
 
                     <span>
-                        ${escapeHTML(data.product)}
+
+                        ${escapeHTML(data.category)}
+
+                        <br>
+
+                        <b>
+                            ${escapeHTML(data.product)}
+                        </b>
+
                     </span>
 
+
                     <span>
+
                         ${formatQuantity(data.quantity)}
                         ${escapeHTML(data.unit)}
+
                     </span>
+
 
                     <span>
+
                         ${formatMoney(data.price)}
-                        / ${escapeHTML(data.unit)}
+                        /
+                        ${escapeHTML(data.unit)}
+
                     </span>
 
+
                     <strong>
+
                         ${formatMoney(data.total)}
+
                     </strong>
 
                 </div>
@@ -1254,7 +1330,7 @@
                         <div class="ae-preview-spec">
 
                             <small>
-                                Specification
+                                Description / Specification
                             </small>
 
                             <p>
@@ -1279,7 +1355,8 @@
 
                     <strong
                         class="${
-                            data.status === "Negotiable"
+                            data.status ===
+                            "Negotiable"
                                 ? "negotiable"
                                 : "final"
                         }">
@@ -1307,7 +1384,8 @@
 
 
             ${
-                data.status === "Negotiable"
+                data.status ===
+                "Negotiable"
                     ? `
                         <div class="ae-preview-note">
 
@@ -1328,16 +1406,14 @@
         );
 
 
-        const modal =
-            document.getElementById(
-                "aeModal"
-            );
+        document
+            .getElementById("aeModal")
+            .hidden = false;
 
-        modal.hidden = false;
 
-        document.body.classList.add(
-            "ae-modal-open"
-        );
+        document.body
+            .classList
+            .add("ae-modal-open");
 
     }
 
@@ -1357,7 +1433,7 @@
             );
 
 
-        let html = `
+        buttons.innerHTML = `
 
             <button
                 type="button"
@@ -1365,34 +1441,11 @@
                 id="aeWhatsAppBtn">
 
                 <i class="fa-brands fa-whatsapp"></i>
-                WhatsApp
+
+                WhatsApp Admin
 
             </button>
 
-        `;
-
-
-        if (
-            data.roleName === "Admin"
-        ) {
-
-            html += `
-
-                <button
-                    type="button"
-                    class="ae-pdf-btn"
-                    id="aePdfBtn">
-
-                    Save PDF
-
-                </button>
-
-            `;
-
-        }
-
-
-        html += `
 
             <button
                 type="button"
@@ -1406,11 +1459,10 @@
         `;
 
 
-        buttons.innerHTML = html;
-
-
         document
-            .getElementById("aeWhatsAppBtn")
+            .getElementById(
+                "aeWhatsAppBtn"
+            )
             .addEventListener(
                 "click",
                 function () {
@@ -1424,29 +1476,6 @@
 
                 }
             );
-
-
-        const pdfButton =
-            document.getElementById(
-                "aePdfBtn"
-            );
-
-
-        if (pdfButton) {
-
-            pdfButton.addEventListener(
-                "click",
-                function () {
-
-                    savePDF(
-                        data,
-                        quoteNo
-                    );
-
-                }
-            );
-
-        }
 
 
         document
@@ -1482,8 +1511,11 @@ Role: ${data.roleName}
 
 Name: ${data.name}
 Company: ${data.company}
-Mobile: ${data.mobile}
+Mobile: ${data.mobile}${data.email
+    ? `\nEmail: ${data.email}`
+    : ""}
 
+Product Category: ${data.category}
 Product: ${data.product}
 Quantity: ${formatQuantity(data.quantity)} ${data.unit}
 Unit Price: ${formatMoney(data.price)} / ${data.unit}
@@ -1498,7 +1530,7 @@ Quotation Status: *${data.status}*`;
 
 `
 
-Specification:
+Description / Specification:
 ${data.specification}`;
 
         }
@@ -1514,7 +1546,7 @@ ${data.specification}`;
 `
 
 Price is negotiable.
-Commercial terms can be discussed.`
+Commercial terms can be discussed.`;
 
         }
 
@@ -1533,7 +1565,7 @@ Please share/confirm your best supply price and commercial terms with AMAL ENTER
         }
 
 
-        if (
+        else if (
             data.roleName ===
             "Buyer"
         ) {
@@ -1547,18 +1579,14 @@ Please confirm the requirement and commercial terms.`;
         }
 
 
-        if (
-            data.roleName ===
-            "Admin"
-        ) {
+        else {
 
             message +=
 
 `
 
 Prepared by:
-AMAL ENTERPRISES
-MSME Registration No.: ${MSME_NUMBER}`;
+${COMPANY_NAME}`;
 
         }
 
@@ -1569,231 +1597,201 @@ MSME Registration No.: ${MSME_NUMBER}`;
 
 
     /* =====================================================
-       SAVE PDF
-       Uses browser print dialog → Save as PDF
-       No external library required.
+       SEND FINAL QUOTATION TO GOOGLE APPS SCRIPT
+       Uses hidden form + iframe, avoiding browser CORS problems.
     ===================================================== */
 
-    function savePDF(
+    function saveFinalQuotation(
         data,
         quoteNo
     ) {
 
-        const preview =
+        const status =
             document.getElementById(
-                "aePreviewDocument"
+                "aeSaveStatus"
             );
 
 
-        const printWindow =
-            window.open(
-                "",
-                "_blank",
-                "width=900,height=900"
-            );
+        if (
+            !APPS_SCRIPT_URL ||
+            APPS_SCRIPT_URL.includes(
+                "PASTE_YOUR"
+            )
+        ) {
 
-
-        if (!printWindow) {
-
-            alert(
-                "Please allow pop-ups to save the PDF."
-            );
+            status.textContent =
+                "Final quotation created. Google Sheet/Drive is not connected yet.";
 
             return;
+        }
+
+
+        status.textContent =
+            "Saving final quotation to Google Sheet & Drive…";
+
+
+        const iframeName =
+            "aeQuotationSaveFrame_" +
+            Date.now();
+
+
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
+
+        iframe.name =
+            iframeName;
+
+
+        iframe.style.display =
+            "none";
+
+
+        document.body.appendChild(
+            iframe
+        );
+
+
+        const form =
+            document.createElement(
+                "form"
+            );
+
+
+        form.method =
+            "POST";
+
+
+        form.action =
+            APPS_SCRIPT_URL;
+
+
+        form.target =
+            iframeName;
+
+
+        form.style.display =
+            "none";
+
+
+        const payload = {
+
+            token:
+                API_TOKEN,
+
+            action:
+                "saveFinalQuotation",
+
+            quoteNo:
+                quoteNo,
+
+            date:
+                getDate(),
+
+            role:
+                data.roleName,
+
+            name:
+                data.name,
+
+            company:
+                data.company,
+
+            mobile:
+                data.mobile,
+
+            email:
+                data.email,
+
+            category:
+                data.category,
+
+            product:
+                data.product,
+
+            specification:
+                data.specification,
+
+            quantity:
+                data.quantity,
+
+            unit:
+                data.unit,
+
+            price:
+                data.price,
+
+            total:
+                data.total,
+
+            status:
+                data.status
+
+        };
+
+
+        Object
+            .keys(payload)
+            .forEach(function (key) {
+
+                const input =
+                    document.createElement(
+                        "input"
+                    );
+
+                input.type =
+                    "hidden";
+
+                input.name =
+                    key;
+
+                input.value =
+                    payload[key] == null
+                        ? ""
+                        : payload[key];
+
+                form.appendChild(
+                    input
+                );
+
+            });
+
+
+        document.body.appendChild(
+            form
+        );
+
+
+        try {
+
+            form.submit();
+
+
+            status.textContent =
+                "Final quotation submitted. Latest PDF is being stored.";
+
+        }
+
+        catch (error) {
+
+            status.textContent =
+                "Quotation created, but database submission could not start.";
 
         }
 
 
-        printWindow.document.write(`
+        setTimeout(
+            function () {
 
-            <!DOCTYPE html>
+                form.remove();
 
-            <html>
+                iframe.remove();
 
-            <head>
-
-                <title>
-                    ${COMPANY_NAME} - ${quoteNo}
-                </title>
-
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1.0">
-
-                <style>
-
-                    * {
-                        box-sizing:border-box;
-                    }
-
-                    body {
-                        margin:0;
-                        padding:35px;
-                        font-family:
-                            Arial,
-                            Helvetica,
-                            sans-serif;
-                        color:#222;
-                        background:#fff;
-                    }
-
-                    .pdf-page {
-                        max-width:850px;
-                        margin:auto;
-                    }
-
-                    .ae-preview-top {
-                        display:flex;
-                        justify-content:space-between;
-                        border-bottom:2px solid #222;
-                        padding-bottom:18px;
-                    }
-
-                    .ae-preview-company {
-                        font-size:25px;
-                        font-weight:700;
-                    }
-
-                    .ae-preview-msme {
-                        margin-top:6px;
-                        font-size:12px;
-                        color:#555;
-                    }
-
-                    .ae-preview-quote-info {
-                        text-align:right;
-                        display:flex;
-                        flex-direction:column;
-                        gap:4px;
-                        font-size:12px;
-                    }
-
-                    .ae-preview-quote-info strong {
-                        font-size:18px;
-                    }
-
-                    .ae-preview-role {
-                        margin:20px 0;
-                        font-size:16px;
-                        font-weight:700;
-                    }
-
-                    .ae-preview-contact-grid {
-                        display:grid;
-                        grid-template-columns:
-                            repeat(3,1fr);
-                        gap:15px;
-                        margin-bottom:25px;
-                    }
-
-                    .ae-preview-contact-grid div {
-                        border:1px solid #ddd;
-                        padding:12px;
-                    }
-
-                    small {
-                        display:block;
-                        color:#777;
-                        font-size:10px;
-                        margin-bottom:5px;
-                    }
-
-                    .ae-preview-table {
-                        border:1px solid #ccc;
-                    }
-
-                    .ae-preview-table-head,
-                    .ae-preview-table-row {
-                        display:grid;
-                        grid-template-columns:
-                            2fr 1fr 1.3fr 1.2fr;
-                    }
-
-                    .ae-preview-table-head span,
-                    .ae-preview-table-row span,
-                    .ae-preview-table-row strong {
-                        padding:12px;
-                        border-right:1px solid #ddd;
-                    }
-
-                    .ae-preview-table-head {
-                        background:#eee;
-                        font-weight:700;
-                    }
-
-                    .ae-preview-spec {
-                        margin-top:20px;
-                        border:1px solid #ddd;
-                        padding:12px;
-                    }
-
-                    .ae-preview-spec p {
-                        margin:0;
-                        white-space:pre-wrap;
-                        line-height:1.5;
-                    }
-
-                    .ae-preview-bottom {
-                        display:flex;
-                        justify-content:space-between;
-                        margin-top:25px;
-                        padding-top:18px;
-                        border-top:1px solid #ccc;
-                    }
-
-                    .ae-preview-total {
-                        text-align:right;
-                    }
-
-                    .ae-preview-total strong {
-                        font-size:20px;
-                    }
-
-                    .ae-preview-note {
-                        margin-top:18px;
-                        padding:12px;
-                        border:1px solid #ccc;
-                        font-size:12px;
-                    }
-
-                    @media print {
-
-                        body {
-                            padding:0;
-                        }
-
-                    }
-
-                </style>
-
-            </head>
-
-            <body>
-
-                <div class="pdf-page">
-
-                    ${preview.innerHTML}
-
-                </div>
-
-                <script>
-
-                    window.onload = function () {
-                        setTimeout(function () {
-                            window.print();
-                        }, 300);
-                    };
-
-                <\/script>
-
-            </body>
-
-            </html>
-
-        `);
-
-
-        printWindow.document.close();
+            },
+            10000
+        );
 
     }
 
@@ -1809,30 +1807,18 @@ MSME Registration No.: ${MSME_NUMBER}`;
                 "aeModal"
             );
 
+
         if (!modal) return;
+
 
         modal.hidden = true;
 
-        document.body.classList.remove(
-            "ae-modal-open"
-        );
+
+        document.body
+            .classList
+            .remove("ae-modal-open");
 
     }
-
-
-    /* =====================================================
-       ADMIN LOGOUT WHEN PAGE/QUOTATION WINDOW IS CLOSED
-    ===================================================== */
-
-    window.addEventListener(
-        "beforeunload",
-        function () {
-
-            adminLoggedIn = false;
-            currentRole = "";
-
-        }
-    );
 
 
     /* =====================================================
@@ -1865,11 +1851,11 @@ MSME Registration No.: ${MSME_NUMBER}`;
         );
 
     }
+
     else {
 
         init();
 
     }
-
 
 })();
