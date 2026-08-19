@@ -1,38 +1,39 @@
 /* =========================================================
-   AMAL ENTERPRISES - FINAL QUOTATION SYSTEM
-   index.html / fix.js untouched
+   AMAL ENTERPRISES
+   FINAL QUOTATION SYSTEM
+   =========================================================
+   - No Admin Login
+   - No MSME
+   - Optional Email
+   - Buyer / Supplier / Admin
+   - Admin can WhatsApp any recipient
+   - Buyer / Supplier -> Admin WhatsApp
+   - Final quotation -> Google Sheet + Latest PDF
+   - Negotiable -> Preview + WhatsApp only
 ========================================================= */
 
 (function () {
     "use strict";
 
-    /* =====================================================
-       CONFIGURATION
-    ===================================================== */
+    /* ================= CONFIG ================= */
 
     const COMPANY_NAME = "AMAL ENTERPRISES";
 
-    // Admin WhatsApp number
+    // Admin WhatsApp / default recipient
     const ADMIN_WHATSAPP = "916296471636";
 
-    /*
-       AFTER DEPLOYING GOOGLE APPS SCRIPT:
-       Paste the Web App /exec URL here.
-    */
+    // Google Apps Script Web App URL
     const APPS_SCRIPT_URL =
         "PASTE_YOUR_WEB_APP_EXEC_URL_HERE";
 
-    /*
-       SAME TOKEN MUST BE USED IN Code.gs
-       Change this to your own long random value.
-    */
+    // Must match Code.gs
     const API_TOKEN =
         "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_9x7Qm2";
 
+    let currentRole = "";
 
-    /* =====================================================
-       WEBSITE PRODUCT CATEGORIES
-    ===================================================== */
+
+    /* ================= PRODUCT CATEGORIES ================= */
 
     const PRODUCT_CATEGORIES = [
         "Corrugated Carton Boxes",
@@ -43,10 +44,7 @@
     ];
 
 
-    /* =====================================================
-       UNITS
-       mg kept as the smallest practical weight unit
-    ===================================================== */
+    /* ================= UNITS ================= */
 
     const UNITS = [
         "mg",
@@ -67,27 +65,17 @@
     ];
 
 
-    let currentRole = "";
-
-
-    /* =====================================================
-       SAFE NUMBER
-    ===================================================== */
+    /* ================= HELPERS ================= */
 
     function numberValue(value) {
 
-        const n =
-            Number.parseFloat(value);
+        const n = Number.parseFloat(value);
 
         return Number.isFinite(n) && n >= 0
             ? n
             : 0;
     }
 
-
-    /* =====================================================
-       MONEY
-    ===================================================== */
 
     function formatMoney(value) {
 
@@ -102,10 +90,6 @@
     }
 
 
-    /* =====================================================
-       QUANTITY
-    ===================================================== */
-
     function formatQuantity(value) {
 
         return numberValue(value).toLocaleString(
@@ -116,10 +100,6 @@
         );
     }
 
-
-    /* =====================================================
-       DATE
-    ===================================================== */
 
     function getDate() {
 
@@ -134,10 +114,6 @@
     }
 
 
-    /* =====================================================
-       HTML ESCAPE
-    ===================================================== */
-
     function escapeHTML(value) {
 
         return String(value ?? "")
@@ -149,42 +125,71 @@
     }
 
 
-    /* =====================================================
-       QUOTATION NUMBER
-    ===================================================== */
-
     function quotationNumber() {
 
-        const d = new Date();
+        const now = new Date();
 
-        const stamp =
-            d.getFullYear().toString() +
-            String(d.getMonth() + 1).padStart(2, "0") +
-            String(d.getDate()).padStart(2, "0");
+        const date =
+            now.getFullYear() +
+            String(now.getMonth() + 1).padStart(2, "0") +
+            String(now.getDate()).padStart(2, "0");
 
         const random =
             Math.floor(
                 1000 + Math.random() * 9000
             );
 
-        return "AE-" +
-            stamp +
-            "-" +
-            random;
+        return "AE-" + date + "-" + random;
     }
 
 
-    /* =====================================================
-       WHATSAPP
-    ===================================================== */
+    /* ================= WHATSAPP ================= */
 
-    function openWhatsApp(message) {
+    function normalizeMobile(value) {
+
+        let number =
+            String(value || "")
+                .replace(/\D/g, "");
+
+        if (number.length === 10) {
+            return "91" + number;
+        }
+
+        if (
+            number.length === 12 &&
+            number.startsWith("91")
+        ) {
+            return number;
+        }
+
+        return "";
+    }
+
+
+    function openWhatsApp(
+        recipient,
+        message
+    ) {
+
+        const mobile =
+            normalizeMobile(recipient);
+
+        if (!mobile) {
+
+            alert(
+                "Please enter a valid 10 digit recipient mobile number."
+            );
+
+            return;
+        }
+
 
         const url =
             "https://wa.me/" +
-            ADMIN_WHATSAPP +
+            mobile +
             "?text=" +
             encodeURIComponent(message);
+
 
         window.open(
             url,
@@ -194,19 +199,17 @@
     }
 
 
-    /* =====================================================
-       CREATE MAIN QUOTATION SYSTEM
-    ===================================================== */
+    /* ================= MAIN HTML ================= */
 
     function createQuotationSystem() {
 
-        const area =
+        const quotationArea =
             document.getElementById("quotation");
 
-        if (!area) return;
+        if (!quotationArea) return;
 
 
-        area.innerHTML = `
+        quotationArea.innerHTML = `
 
             <div class="ae-quotation-wrapper">
 
@@ -218,22 +221,18 @@
                             B2B COMMERCIAL TOOL
                         </div>
 
-                        <h2>
-                            Create Quotation
-                        </h2>
+                        <h2>Create Quotation</h2>
 
                         <p>
                             Prepare, review and share
-                            quotations directly with
-                            AMAL ENTERPRISES through WhatsApp.
+                            quotations directly through WhatsApp.
                         </p>
 
                     </div>
 
-
                     <div
                         class="ae-admin-status"
-                        id="aeRoleStatus">
+                        id="aeAdminStatus">
 
                         Select Role
 
@@ -250,7 +249,6 @@
                         Select Role
                     </div>
 
-
                     <div class="ae-role-buttons">
 
                         <button
@@ -262,7 +260,6 @@
 
                         </button>
 
-
                         <button
                             type="button"
                             class="ae-role-btn"
@@ -271,7 +268,6 @@
                             Supplier
 
                         </button>
-
 
                         <button
                             type="button"
@@ -304,8 +300,6 @@
                     <div class="ae-form-grid">
 
 
-                        <!-- NAME -->
-
                         <div class="ae-field">
 
                             <label>
@@ -321,8 +315,6 @@
                         </div>
 
 
-                        <!-- COMPANY -->
-
                         <div class="ae-field">
 
                             <label>
@@ -337,8 +329,6 @@
 
                         </div>
 
-
-                        <!-- MOBILE -->
 
                         <div class="ae-field">
 
@@ -356,8 +346,6 @@
                         </div>
 
 
-                        <!-- EMAIL -->
-
                         <div class="ae-field">
 
                             <label>
@@ -374,8 +362,6 @@
                         </div>
 
 
-                        <!-- CATEGORY -->
-
                         <div class="ae-field">
 
                             <label>
@@ -385,7 +371,7 @@
                             <select id="aeCategory">
 
                                 <option value="">
-                                    Select product category
+                                    Select Product Category
                                 </option>
 
                                 ${
@@ -407,8 +393,6 @@
                         </div>
 
 
-                        <!-- PRODUCT -->
-
                         <div class="ae-field">
 
                             <label>
@@ -421,6 +405,48 @@
                                 placeholder="Enter product or material">
 
                         </div>
+
+                    </div>
+
+
+                    <!-- ADMIN RECIPIENT -->
+
+                    <div
+                        class="ae-field"
+                        id="aeAdminRecipientBox"
+                        hidden>
+
+                        <label>
+                            Send Quotation To Mobile *
+                        </label>
+
+                        <input
+                            id="aeRecipientMobile"
+                            type="tel"
+                            inputmode="numeric"
+                            maxlength="10"
+                            placeholder="Buyer / Supplier / Other mobile number">
+
+                        <small>
+                            Admin can share this quotation with anyone.
+                        </small>
+
+                    </div>
+
+
+                    <div
+                        class="ae-field"
+                        id="aeDefaultAdminRecipient"
+                        hidden>
+
+                        <label>
+                            Send To
+                        </label>
+
+                        <input
+                            type="text"
+                            value="AMAL ENTERPRISES — 6296471636"
+                            readonly>
 
                     </div>
 
@@ -472,16 +498,16 @@
                             <select id="aeUnit">
 
                                 <option value="">
-                                    Select unit
+                                    Select Unit
                                 </option>
 
                                 ${
                                     UNITS
-                                        .map(function (item) {
+                                        .map(function (unit) {
 
                                             return `
-                                                <option value="${escapeHTML(item)}">
-                                                    ${escapeHTML(item)}
+                                                <option value="${escapeHTML(unit)}">
+                                                    ${escapeHTML(unit)}
                                                 </option>
                                             `;
 
@@ -512,8 +538,6 @@
                     </div>
 
 
-                    <!-- LIVE TOTAL -->
-
                     <div
                         class="ae-live-total"
                         id="aeLiveTotal">
@@ -531,12 +555,9 @@
                             Quotation Status *
                         </div>
 
-
                         <div class="ae-status-options">
 
-
-                            <label
-                                class="ae-status-option">
+                            <label class="ae-status-option">
 
                                 <input
                                     type="radio"
@@ -550,8 +571,7 @@
                             </label>
 
 
-                            <label
-                                class="ae-status-option">
+                            <label class="ae-status-option">
 
                                 <input
                                     type="radio"
@@ -563,7 +583,6 @@
                                 </span>
 
                             </label>
-
 
                         </div>
 
@@ -581,8 +600,6 @@
                     </div>
 
 
-                    <!-- CREATE -->
-
                     <button
                         type="button"
                         class="ae-generate-btn"
@@ -593,14 +610,10 @@
                     </button>
 
 
-                    <!-- DATABASE STATUS -->
-
                     <div
                         class="ae-save-status"
-                        id="aeSaveStatus"
-                        aria-live="polite">
+                        id="aeSaveStatus">
                     </div>
-
 
                 </div>
 
@@ -614,9 +627,7 @@
                 id="aeModal"
                 hidden>
 
-
                 <div class="ae-modal-card">
-
 
                     <button
                         type="button"
@@ -639,7 +650,6 @@
                         id="aeActionButtons">
                     </div>
 
-
                 </div>
 
             </div>
@@ -648,15 +658,13 @@
 
 
         bindEvents();
+
     }
 
 
-    /* =====================================================
-       EVENTS
-    ===================================================== */
+    /* ================= EVENTS ================= */
 
     function bindEvents() {
-
 
         document
             .querySelectorAll(".ae-role-btn")
@@ -749,9 +757,7 @@
     }
 
 
-    /* =====================================================
-       SELECT ROLE
-    ===================================================== */
+    /* ================= ROLE ================= */
 
     function selectRole(role) {
 
@@ -770,7 +776,7 @@
             });
 
 
-        const label =
+        const roleName =
             role === "buyer"
                 ? "Buyer"
                 : role === "supplier"
@@ -779,27 +785,54 @@
 
 
         document
-            .getElementById("aeRoleStatus")
+            .getElementById("aeAdminStatus")
             .textContent =
-            label + " Mode";
+            roleName + " Mode";
 
 
         document
             .getElementById("aeRoleTitle")
             .textContent =
-            label + " Quotation";
+            roleName + " Quotation";
 
 
         document
             .getElementById("aeFormPanel")
             .hidden = false;
 
+
+        const adminRecipientBox =
+            document.getElementById(
+                "aeAdminRecipientBox"
+            );
+
+
+        const defaultAdminRecipient =
+            document.getElementById(
+                "aeDefaultAdminRecipient"
+            );
+
+
+        if (role === "admin") {
+
+            adminRecipientBox.hidden = false;
+
+            defaultAdminRecipient.hidden = true;
+
+        }
+
+        else {
+
+            adminRecipientBox.hidden = true;
+
+            defaultAdminRecipient.hidden = false;
+
+        }
+
     }
 
 
-    /* =====================================================
-       LIVE CALCULATION
-    ===================================================== */
+    /* ================= CALCULATION ================= */
 
     function updateLiveCalculation() {
 
@@ -841,15 +874,14 @@
             .hidden =
             !(
                 selected &&
-                selected.value === "Negotiable"
+                selected.value ===
+                "Negotiable"
             );
 
     }
 
 
-    /* =====================================================
-       GET FORM DATA
-    ===================================================== */
+    /* ================= DATA ================= */
 
     function getFormData() {
 
@@ -873,6 +905,22 @@
                     .getElementById("aePrice")
                     .value
             );
+
+
+        const mobile =
+            document
+                .getElementById("aeMobile")
+                .value
+                .replace(/\D/g, "")
+                .slice(0, 10);
+
+
+        const recipient =
+            document
+                .getElementById("aeRecipientMobile")
+                .value
+                .replace(/\D/g, "")
+                .slice(0, 10);
 
 
         return {
@@ -900,11 +948,7 @@
                     .trim(),
 
             mobile:
-                document
-                    .getElementById("aeMobile")
-                    .value
-                    .replace(/\D/g, "")
-                    .slice(0, 10),
+                mobile,
 
             email:
                 document
@@ -946,19 +990,19 @@
             status:
                 status
                     ? status.value
-                    : ""
+                    : "",
+
+            recipient:
+                recipient
 
         };
 
     }
 
 
-    /* =====================================================
-       VALIDATION
-    ===================================================== */
+    /* ================= VALIDATION ================= */
 
     function validateData(data) {
-
 
         if (!data.role) {
 
@@ -1051,7 +1095,7 @@
         if (!data.unit) {
 
             alert(
-                "Please select a unit."
+                "Please select Unit."
             );
 
             return false;
@@ -1061,7 +1105,7 @@
         if (!(data.price > 0)) {
 
             alert(
-                "Please enter a valid unit price greater than 0."
+                "Please enter a valid Unit Price."
             );
 
             return false;
@@ -1078,16 +1122,41 @@
         }
 
 
+        /* ADMIN MUST CHOOSE RECIPIENT */
+
+        if (
+            data.roleName === "Admin" &&
+            !/^[0-9]{10}$/.test(
+                data.recipient
+            )
+        ) {
+
+            alert(
+                "Admin: please enter the recipient's 10 digit mobile number."
+            );
+
+            return false;
+        }
+
+
         return true;
 
     }
 
 
-    /* =====================================================
-       GENERATE QUOTATION
-    ===================================================== */
+    /* ================= GENERATE ================= */
 
     function generateQuotation() {
+
+        if (!currentRole) {
+
+            alert(
+                "Please select Buyer, Supplier or Admin first."
+            );
+
+            return;
+        }
+
 
         const data =
             getFormData();
@@ -1108,10 +1177,7 @@
         );
 
 
-        /*
-           ONLY FINAL QUOTATION
-           is stored in Google Sheet + Drive.
-        */
+        /* FINAL ONLY -> DATABASE */
 
         if (
             data.status ===
@@ -1125,21 +1191,10 @@
 
         }
 
-        else {
-
-            document
-                .getElementById("aeSaveStatus")
-                .textContent =
-                "Negotiable quotation — not saved as the latest final quotation.";
-
-        }
-
     }
 
 
-    /* =====================================================
-       PREVIEW
-    ===================================================== */
+    /* ================= PREVIEW ================= */
 
     function showPreview(
         data,
@@ -1160,10 +1215,6 @@
 
                     <div class="ae-preview-company">
                         ${COMPANY_NAME}
-                    </div>
-
-                    <div class="ae-preview-subtitle">
-                        Packaging & Sourcing Solutions
                     </div>
 
                 </div>
@@ -1251,7 +1302,7 @@
                                 </strong>
 
                             </div>
-                          `
+                        `
                         : ""
                 }
 
@@ -1285,9 +1336,9 @@
 
                     <span>
 
-                        ${escapeHTML(data.category)}
-
-                        <br>
+                        <small>
+                            ${escapeHTML(data.category)}
+                        </small>
 
                         <b>
                             ${escapeHTML(data.product)}
@@ -1340,7 +1391,7 @@
                             </p>
 
                         </div>
-                      `
+                    `
                     : ""
             }
 
@@ -1393,7 +1444,7 @@
                             and commercial discussion.
 
                         </div>
-                      `
+                    `
                     : ""
             }
 
@@ -1418,9 +1469,7 @@
     }
 
 
-    /* =====================================================
-       ACTION BUTTONS
-    ===================================================== */
+    /* ================= ACTION BUTTONS ================= */
 
     function createActionButtons(
         data,
@@ -1442,7 +1491,11 @@
 
                 <i class="fa-brands fa-whatsapp"></i>
 
-                WhatsApp Admin
+                ${
+                    data.roleName === "Admin"
+                        ? "WhatsApp Recipient"
+                        : "WhatsApp Admin"
+                }
 
             </button>
 
@@ -1460,14 +1513,34 @@
 
 
         document
-            .getElementById(
-                "aeWhatsAppBtn"
-            )
+            .getElementById("aeWhatsAppBtn")
             .addEventListener(
                 "click",
                 function () {
 
+                    let recipient;
+
+
+                    if (
+                        data.roleName ===
+                        "Admin"
+                    ) {
+
+                        recipient =
+                            data.recipient;
+
+                    }
+
+                    else {
+
+                        recipient =
+                            ADMIN_WHATSAPP;
+
+                    }
+
+
                     openWhatsApp(
+                        recipient,
                         createWhatsAppMessage(
                             data,
                             quoteNo
@@ -1479,9 +1552,7 @@
 
 
         document
-            .getElementById(
-                "aeCloseActionBtn"
-            )
+            .getElementById("aeCloseActionBtn")
             .addEventListener(
                 "click",
                 closePreview
@@ -1490,9 +1561,7 @@
     }
 
 
-    /* =====================================================
-       WHATSAPP MESSAGE
-    ===================================================== */
+    /* ================= WHATSAPP MESSAGE ================= */
 
     function createWhatsAppMessage(
         data,
@@ -1511,9 +1580,19 @@ Role: ${data.roleName}
 
 Name: ${data.name}
 Company: ${data.company}
-Mobile: ${data.mobile}${data.email
-    ? `\nEmail: ${data.email}`
-    : ""}
+Mobile: ${data.mobile}`;
+
+        if (data.email) {
+
+            message +=
+                `\nEmail: ${data.email}`;
+
+        }
+
+
+        message +=
+
+`
 
 Product Category: ${data.category}
 Product: ${data.product}
@@ -1565,7 +1644,7 @@ Please share/confirm your best supply price and commercial terms with AMAL ENTER
         }
 
 
-        else if (
+        if (
             data.roleName ===
             "Buyer"
         ) {
@@ -1579,7 +1658,10 @@ Please confirm the requirement and commercial terms.`;
         }
 
 
-        else {
+        if (
+            data.roleName ===
+            "Admin"
+        ) {
 
             message +=
 
@@ -1596,10 +1678,7 @@ ${COMPANY_NAME}`;
     }
 
 
-    /* =====================================================
-       SEND FINAL QUOTATION TO GOOGLE APPS SCRIPT
-       Uses hidden form + iframe, avoiding browser CORS problems.
-    ===================================================== */
+    /* ================= GOOGLE SHEET + PDF ================= */
 
     function saveFinalQuotation(
         data,
@@ -1620,18 +1699,18 @@ ${COMPANY_NAME}`;
         ) {
 
             status.textContent =
-                "Final quotation created. Google Sheet/Drive is not connected yet.";
+                "Quotation created. Google Sheet is not connected yet.";
 
             return;
         }
 
 
         status.textContent =
-            "Saving final quotation to Google Sheet & Drive…";
+            "Saving final quotation...";
 
 
         const iframeName =
-            "aeQuotationSaveFrame_" +
+            "aeQuotationFrame_" +
             Date.now();
 
 
@@ -1732,8 +1811,7 @@ ${COMPANY_NAME}`;
         };
 
 
-        Object
-            .keys(payload)
+        Object.keys(payload)
             .forEach(function (key) {
 
                 const input =
@@ -1768,16 +1846,15 @@ ${COMPANY_NAME}`;
 
             form.submit();
 
-
             status.textContent =
-                "Final quotation submitted. Latest PDF is being stored.";
+                "Final quotation submitted. Latest PDF is being saved.";
 
         }
 
         catch (error) {
 
             status.textContent =
-                "Quotation created, but database submission could not start.";
+                "Quotation created, but database submission failed.";
 
         }
 
@@ -1786,7 +1863,6 @@ ${COMPANY_NAME}`;
             function () {
 
                 form.remove();
-
                 iframe.remove();
 
             },
@@ -1796,9 +1872,7 @@ ${COMPANY_NAME}`;
     }
 
 
-    /* =====================================================
-       CLOSE PREVIEW
-    ===================================================== */
+    /* ================= CLOSE ================= */
 
     function closePreview() {
 
@@ -1821,9 +1895,7 @@ ${COMPANY_NAME}`;
     }
 
 
-    /* =====================================================
-       INITIALIZE
-    ===================================================== */
+    /* ================= INIT ================= */
 
     function init() {
 
