@@ -13,1921 +13,2535 @@
 ========================================================= */
 
 (function () {
-    "use strict";
+  "use strict";
 
-    /* ================= CONFIG ================= */
+  /* =======================================================
+     CONFIGURATION
+  ======================================================= */
 
-    const COMPANY_NAME = "AMAL ENTERPRISES";
+  const APPS_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycby1xYE853B-z_EJAL9YC8MX6DWwsxOwzlGIxhZBjSb7x89vslTF3cjd8QMarOwwbYk07A/exec";
 
-    // Admin WhatsApp / default recipient
-    const ADMIN_WHATSAPP = "916296471636";
+  const API_TOKEN =
+    "AmalQuotation2026_9x7Qm2";
 
-    // Google Apps Script Web App URL
-    const APPS_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycby1xYE853B-z_EJAL9YC8MX6DWwsxOwzlGIxhZBjSb7x89vslTF3cjd8QMarOwwbYk07A/exec";
+  const ADMIN_WHATSAPP =
+    "6296471636";
 
-    // Must match Code.gs
-    const API_TOKEN =
-        "AmalQuotation2026_9x7Qm2";
+  const STORAGE_KEY =
+    "amal_enterprises_quotation_data";
 
-    let currentRole = "";
+  const QUOTATION_PREFIX =
+    "AE";
 
+  /* =======================================================
+     DOM HELPERS
+     ======================================================= */
 
-    /* ================= PRODUCT CATEGORIES ================= */
+  function $(selector, parent) {
+    return (parent || document).querySelector(selector);
+  }
 
-    const PRODUCT_CATEGORIES = [
-        "Corrugated Carton Boxes",
-        "Packaging Materials",
-        "Polyethylene Carry Bags",
-        "Biodegradable & Compostable Bags",
-        "Other / Custom Product"
-    ];
+  function $$(selector, parent) {
+    return Array.from(
+      (parent || document).querySelectorAll(selector)
+    );
+  }
 
+  function byId(id) {
+    return document.getElementById(id);
+  }
 
-    /* ================= UNITS ================= */
+  function text(value) {
+    return String(value == null ? "" : value).trim();
+  }
 
-    const UNITS = [
-        "mg",
-        "g",
-        "kg",
-        "tonne",
-        "ml",
-        "litre",
-        "piece",
-        "box",
-        "carton",
-        "packet",
-        "bag",
-        "set",
-        "metre",
-        "cm",
-        "dozen"
-    ];
+  function number(value) {
+    const n = parseFloat(
+      String(value == null ? "" : value)
+        .replace(/,/g, "")
+        .replace(/[^\d.-]/g, "")
+    );
 
+    return isNaN(n) ? 0 : n;
+  }
 
-    /* ================= HELPERS ================= */
+  function escapeHtml(value) {
+    return text(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
-    function numberValue(value) {
+  /* =======================================================
+     MOBILE NUMBER
+     ======================================================= */
 
-        const n = Number.parseFloat(value);
+  function cleanMobile(value) {
+    let mobile = text(value).replace(/\D/g, "");
 
-        return Number.isFinite(n) && n >= 0
-            ? n
-            : 0;
+    if (
+      mobile.length === 12 &&
+      mobile.indexOf("91") === 0
+    ) {
+      mobile = mobile.substring(2);
     }
 
+    return mobile;
+  }
 
-    function formatMoney(value) {
+  function whatsappNumber(value) {
+    let mobile = cleanMobile(value);
 
-        return "₹" +
-            numberValue(value).toLocaleString(
-                "en-IN",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            );
+    if (mobile.length === 10) {
+      return "91" + mobile;
     }
 
+    if (
+      mobile.length === 12 &&
+      mobile.indexOf("91") === 0
+    ) {
+      return mobile;
+    }
 
-    function formatQuantity(value) {
+    return mobile;
+  }
 
-        return numberValue(value).toLocaleString(
-            "en-IN",
-            {
-                maximumFractionDigits: 6
-            }
+  /* =======================================================
+     DATE / TIME
+     ======================================================= */
+
+  function today() {
+    const d = new Date();
+
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
+  function quotationNumber() {
+    const now = new Date();
+
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+
+    const stamp =
+      String(now.getHours()).padStart(2, "0") +
+      String(now.getMinutes()).padStart(2, "0") +
+      String(now.getSeconds()).padStart(2, "0");
+
+    return `${QUOTATION_PREFIX}-${y}${m}${d}-${stamp}`;
+  }
+
+  /* =======================================================
+     DATA STORAGE
+     ======================================================= */
+
+  function loadSavedData() {
+    try {
+      const value =
+        localStorage.getItem(
+          STORAGE_KEY
         );
+
+      if (!value) {
+        return {};
+      }
+
+      return JSON.parse(value);
+
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function saveData(data) {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+      );
+    } catch (error) {
+      console.warn(
+        "Could not save local quotation data.",
+        error
+      );
+    }
+  }
+
+  /* =======================================================
+     FIELD FINDER
+     ======================================================= */
+
+  function findField(names) {
+    for (const name of names) {
+
+      const selectors = [
+        `#${name}`,
+        `[name="${name}"]`,
+        `[data-field="${name}"]`,
+        `[data-name="${name}"]`
+      ];
+
+      for (const selector of selectors) {
+
+        const element =
+          document.querySelector(selector);
+
+        if (element) {
+          return element;
+        }
+      }
     }
 
+    return null;
+  }
 
-    function getDate() {
+  function fieldValue(names) {
+    const element =
+      findField(names);
 
-        return new Date().toLocaleDateString(
-            "en-IN",
-            {
-                day: "2-digit",
-                month: "short",
-                year: "numeric"
-            }
-        );
+    if (!element) {
+      return "";
     }
 
+    return text(element.value);
+  }
 
-    function escapeHTML(value) {
+  function setFieldValue(names, value) {
+    const element =
+      findField(names);
 
-        return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+    if (!element) {
+      return false;
     }
 
+    element.value =
+      value == null ? "" : value;
 
-    function quotationNumber() {
+    element.dispatchEvent(
+      new Event("input", {
+        bubbles: true
+      })
+    );
 
-        const now = new Date();
+    element.dispatchEvent(
+      new Event("change", {
+        bubbles: true
+      })
+    );
 
-        const date =
-            now.getFullYear() +
-            String(now.getMonth() + 1).padStart(2, "0") +
-            String(now.getDate()).padStart(2, "0");
+    return true;
+  }
 
-        const random =
-            Math.floor(
-                1000 + Math.random() * 9000
-            );
+  /* =======================================================
+     ROLE
+     ======================================================= */
 
-        return "AE-" + date + "-" + random;
-    }
+  function getRole() {
 
+    const roleField =
+      findField([
+        "role",
+        "userRole",
+        "partyType",
+        "quotationFor"
+      ]);
 
-    /* ================= WHATSAPP ================= */
+    if (roleField) {
 
-    function normalizeMobile(value) {
+      if (
+        roleField.type === "radio" ||
+        roleField.type === "checkbox"
+      ) {
 
-        let number =
-            String(value || "")
-                .replace(/\D/g, "");
+        const checked =
+          document.querySelector(
+            `[name="${roleField.name}"]:checked`
+          );
 
-        if (number.length === 10) {
-            return "91" + number;
+        if (checked) {
+          return text(checked.value);
         }
 
-        if (
-            number.length === 12 &&
-            number.startsWith("91")
-        ) {
-            return number;
-        }
+      } else {
 
-        return "";
+        return text(roleField.value);
+
+      }
     }
 
+    const checkedRole =
+      document.querySelector(
+        'input[name="role"]:checked,' +
+        'input[name="userRole"]:checked,' +
+        'input[name="partyType"]:checked'
+      );
 
-    function openWhatsApp(
-        recipient,
-        message
+    if (checkedRole) {
+      return text(checkedRole.value);
+    }
+
+    return "Admin";
+  }
+
+  /* =======================================================
+     CATEGORY
+     ======================================================= */
+
+  const DEFAULT_CATEGORIES = [
+    "Jute Products",
+    "Jute Bags",
+    "Jute Yarn",
+    "Jute Rope",
+    "Jute Twine",
+    "Jute Fabric",
+    "Jute Geotextile",
+    "Polyethylene Carry Bags",
+    "Paper Bags",
+    "Packaging Materials",
+    "Eco Friendly Products",
+    "Other"
+  ];
+
+  function setupCategoryDefaults() {
+
+    const category =
+      findField([
+        "category",
+        "productCategory",
+        "product_category"
+      ]);
+
+    if (!category) {
+      return;
+    }
+
+    if (
+      category.tagName.toLowerCase() ===
+      "select"
     ) {
 
-        const mobile =
-            normalizeMobile(recipient);
+      const existing =
+        Array.from(category.options)
+          .map(function (option) {
+            return text(option.value);
+          })
+          .filter(Boolean);
 
-        if (!mobile) {
+      if (existing.length <= 1) {
 
-            alert(
-                "Please enter a valid 10 digit recipient mobile number."
-            );
+        DEFAULT_CATEGORIES.forEach(
+          function (item) {
 
-            return;
-        }
+            const option =
+              document.createElement("option");
 
+            option.value = item;
+            option.textContent = item;
 
-        const url =
-            "https://wa.me/" +
-            mobile +
-            "?text=" +
-            encodeURIComponent(message);
+            category.appendChild(option);
 
-
-        window.open(
-            url,
-            "_blank",
-            "noopener"
+          }
         );
+      }
+    }
+  }
+
+  /* =======================================================
+     UNIT
+     ======================================================= */
+
+  const DEFAULT_UNITS = [
+    "piece",
+    "kg",
+    "g",
+    "mg",
+    "tonne",
+    "meter",
+    "roll",
+    "bundle",
+    "box",
+    "bag",
+    "packet",
+    "set"
+  ];
+
+  function setupUnitDefaults() {
+
+    const unit =
+      findField([
+        "unit",
+        "productUnit",
+        "product_unit"
+      ]);
+
+    if (!unit) {
+      return;
     }
 
+    if (
+      unit.tagName.toLowerCase() ===
+      "select"
+    ) {
 
-    /* ================= MAIN HTML ================= */
+      const existing =
+        Array.from(unit.options)
+          .map(function (option) {
+            return text(option.value);
+          })
+          .filter(Boolean);
+
+      if (existing.length <= 1) {
+
+        DEFAULT_UNITS.forEach(
+          function (item) {
 
-    function createQuotationSystem() {
-
-        const quotationArea =
-            document.getElementById("quotation");
-
-        if (!quotationArea) return;
-
-
-        quotationArea.innerHTML = `
-
-            <div class="ae-quotation-wrapper">
-
-                <div class="ae-quotation-header">
-
-                    <div>
-
-                        <div class="ae-small-label">
-                            B2B COMMERCIAL TOOL
-                        </div>
-
-                        <h2>Create Quotation</h2>
-
-                        <p>
-                            Prepare, review and share
-                            quotations directly through WhatsApp.
-                        </p>
-
-                    </div>
-
-                    <div
-                        class="ae-admin-status"
-                        id="aeAdminStatus">
-
-                        Select Role
-
-                    </div>
-
-                </div>
-
-
-                <!-- ROLE -->
-
-                <div class="ae-role-box">
-
-                    <div class="ae-field-label">
-                        Select Role
-                    </div>
-
-                    <div class="ae-role-buttons">
-
-                        <button
-                            type="button"
-                            class="ae-role-btn"
-                            data-role="buyer">
-
-                            Buyer
-
-                        </button>
-
-                        <button
-                            type="button"
-                            class="ae-role-btn"
-                            data-role="supplier">
-
-                            Supplier
-
-                        </button>
-
-                        <button
-                            type="button"
-                            class="ae-role-btn"
-                            data-role="admin">
-
-                            Admin
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- FORM -->
-
-                <div
-                    class="ae-form-panel"
-                    id="aeFormPanel"
-                    hidden>
-
-
-                    <div
-                        class="ae-form-role-title"
-                        id="aeRoleTitle">
-                    </div>
-
-
-                    <div class="ae-form-grid">
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Name *
-                            </label>
-
-                            <input
-                                id="aeName"
-                                type="text"
-                                autocomplete="name"
-                                placeholder="Enter name">
-
-                        </div>
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Company Name *
-                            </label>
-
-                            <input
-                                id="aeCompany"
-                                type="text"
-                                autocomplete="organization"
-                                placeholder="Enter company name">
-
-                        </div>
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Mobile Number *
-                            </label>
-
-                            <input
-                                id="aeMobile"
-                                type="tel"
-                                inputmode="numeric"
-                                maxlength="10"
-                                placeholder="10 digit mobile number">
-
-                        </div>
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Email Address
-                                <span>(Optional)</span>
-                            </label>
-
-                            <input
-                                id="aeEmail"
-                                type="email"
-                                autocomplete="email"
-                                placeholder="Email address (optional)">
-
-                        </div>
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Product Category *
-                            </label>
-
-                            <select id="aeCategory">
-
-                                <option value="">
-                                    Select Product Category
-                                </option>
-
-                                ${
-                                    PRODUCT_CATEGORIES
-                                        .map(function (item) {
-
-                                            return `
-                                                <option value="${escapeHTML(item)}">
-                                                    ${escapeHTML(item)}
-                                                </option>
-                                            `;
-
-                                        })
-                                        .join("")
-                                }
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Product / Material *
-                            </label>
-
-                            <input
-                                id="aeProduct"
-                                type="text"
-                                placeholder="Enter product or material">
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- ADMIN RECIPIENT -->
-
-                    <div
-                        class="ae-field"
-                        id="aeAdminRecipientBox"
-                        hidden>
-
-                        <label>
-                            Send Quotation To Mobile *
-                        </label>
-
-                        <input
-                            id="aeRecipientMobile"
-                            type="tel"
-                            inputmode="numeric"
-                            maxlength="10"
-                            placeholder="Buyer / Supplier / Other mobile number">
-
-                        <small>
-                            Admin can share this quotation with anyone.
-                        </small>
-
-                    </div>
-
-
-                    <div
-                        class="ae-field"
-                        id="aeDefaultAdminRecipient"
-                        hidden>
-
-                        <label>
-                            Send To
-                        </label>
-
-                        <input
-                            type="text"
-                            value="AMAL ENTERPRISES — 6296471636"
-                            readonly>
-
-                    </div>
-
-
-                    <!-- DESCRIPTION -->
-
-                    <div class="ae-field">
-
-                        <label>
-                            Description / Specification
-                            <span>(Optional)</span>
-                        </label>
-
-                        <textarea
-                            id="aeSpecification"
-                            rows="3"
-                            placeholder="Size, colour, thickness, GSM, quality, packing requirement, delivery details etc."></textarea>
-
-                    </div>
-
-
-                    <!-- QUANTITY -->
-
-                    <div class="ae-quantity-row">
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Quantity *
-                            </label>
-
-                            <input
-                                id="aeQuantity"
-                                type="number"
-                                min="0.000001"
-                                step="any"
-                                placeholder="Quantity">
-
-                        </div>
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Unit *
-                            </label>
-
-                            <select id="aeUnit">
-
-                                <option value="">
-                                    Select Unit
-                                </option>
-
-                                ${
-                                    UNITS
-                                        .map(function (unit) {
-
-                                            return `
-                                                <option value="${escapeHTML(unit)}">
-                                                    ${escapeHTML(unit)}
-                                                </option>
-                                            `;
-
-                                        })
-                                        .join("")
-                                }
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="ae-field">
-
-                            <label>
-                                Unit Price (₹) *
-                            </label>
-
-                            <input
-                                id="aePrice"
-                                type="number"
-                                min="0"
-                                step="0.01"
-                                placeholder="Price per unit">
-
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        class="ae-live-total"
-                        id="aeLiveTotal">
-
-                        Estimated Total: ₹0.00
-
-                    </div>
-
-
-                    <!-- STATUS -->
-
-                    <div class="ae-status-section">
-
-                        <div class="ae-field-label">
-                            Quotation Status *
-                        </div>
-
-                        <div class="ae-status-options">
-
-                            <label class="ae-status-option">
-
-                                <input
-                                    type="radio"
-                                    name="aeQuotationStatus"
-                                    value="Final Quotation">
-
-                                <span>
-                                    Final Quotation
-                                </span>
-
-                            </label>
-
-
-                            <label class="ae-status-option">
-
-                                <input
-                                    type="radio"
-                                    name="aeQuotationStatus"
-                                    value="Negotiable">
-
-                                <span>
-                                    Negotiable
-                                </span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        class="ae-negotiation-note"
-                        id="aeNegotiationNote"
-                        hidden>
-
-                        Price is subject to negotiation
-                        and commercial discussion.
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        class="ae-generate-btn"
-                        id="aeGenerateBtn">
-
-                        Create Quotation
-
-                    </button>
-
-
-                    <div
-                        class="ae-save-status"
-                        id="aeSaveStatus">
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- FLASH PREVIEW -->
-
+            const option =
+              document.createElement("option");
+
+            option.value = item;
+            option.textContent = item;
+
+            unit.appendChild(option);
+
+          }
+        );
+      }
+    }
+  }
+
+  /* =======================================================
+     EMAIL OPTIONAL
+     ======================================================= */
+
+  function makeEmailOptional() {
+
+    const email =
+      findField([
+        "email",
+        "emailAddress",
+        "customerEmail"
+      ]);
+
+    if (!email) {
+      return;
+    }
+
+    email.required = false;
+
+    email.removeAttribute(
+      "required"
+    );
+
+    const wrapper =
+      email.closest(
+        ".form-group,.field,.input-group,.form-field"
+      );
+
+    if (wrapper) {
+
+      const label =
+        wrapper.querySelector("label");
+
+      if (label) {
+
+        label.textContent =
+          label.textContent
+            .replace("*", "")
+            .replace(
+              /\(required\)/gi,
+              ""
+            )
+            .trim();
+
+      }
+    }
+  }
+
+  /* =======================================================
+     QUOTATION STATUS
+     ======================================================= */
+
+  function getQuotationStatus() {
+
+    const checked =
+      document.querySelector(
+        'input[name="quotationStatus"]:checked,' +
+        'input[name="status"]:checked,' +
+        'input[name="priceStatus"]:checked'
+      );
+
+    if (checked) {
+
+      const value =
+        text(checked.value)
+          .toLowerCase();
+
+      if (
+        value.indexOf("negoti") !== -1
+      ) {
+        return "Negotiable";
+      }
+
+      return "Final Quotation";
+    }
+
+    const select =
+      findField([
+        "quotationStatus",
+        "status",
+        "priceStatus"
+      ]);
+
+    if (select) {
+
+      const value =
+        text(select.value)
+          .toLowerCase();
+
+      if (
+        value.indexOf("negoti") !== -1
+      ) {
+        return "Negotiable";
+      }
+    }
+
+    return "Final Quotation";
+  }
+
+  function setupQuotationStatus() {
+
+    const container =
+      document.querySelector(
+        '[data-quotation-status]'
+      );
+
+    if (container) {
+      return;
+    }
+
+    const possible =
+      document.querySelector(
+        '#quotationStatus,' +
+        '[name="quotationStatus"]'
+      );
+
+    if (possible) {
+      possible.required = false;
+    }
+  }
+
+  /* =======================================================
+     PRODUCT DATA
+     ======================================================= */
+
+  function collectQuotationData() {
+
+    const quantity =
+      fieldValue([
+        "quantity",
+        "qty"
+      ]);
+
+    const unit =
+      fieldValue([
+        "unit",
+        "productUnit",
+        "product_unit"
+      ]);
+
+    const price =
+      fieldValue([
+        "price",
+        "unitPrice",
+        "unit_price"
+      ]);
+
+    const totalField =
+      findField([
+        "total",
+        "totalPrice",
+        "grandTotal",
+        "estimatedTotal"
+      ]);
+
+    let total =
+      totalField
+        ? text(totalField.value)
+        : "";
+
+    if (!total) {
+
+      const calculated =
+        number(quantity) *
+        number(price);
+
+      if (calculated) {
+        total =
+          calculated.toFixed(2);
+      }
+    }
+
+    return {
+
+      quoteNo:
+        fieldValue([
+          "quotationNo",
+          "quoteNo",
+          "quotationNumber"
+        ]) ||
+        quotationNumber(),
+
+      date:
+        fieldValue([
+          "quotationDate",
+          "date"
+        ]) ||
+        today(),
+
+      role:
+        getRole(),
+
+      name:
+        fieldValue([
+          "name",
+          "customerName",
+          "buyerName",
+          "supplierName",
+          "partyName"
+        ]),
+
+      company:
+        fieldValue([
+          "company",
+          "companyName",
+          "customerCompany",
+          "buyerCompany",
+          "supplierCompany"
+        ]),
+
+      mobile:
+        cleanMobile(
+          fieldValue([
+            "mobile",
+            "mobileNumber",
+            "phone",
+            "phoneNumber",
+            "customerMobile",
+            "buyerMobile",
+            "supplierMobile"
+          ])
+        ),
+
+      email:
+        fieldValue([
+          "email",
+          "emailAddress",
+          "customerEmail"
+        ]),
+
+      category:
+        fieldValue([
+          "category",
+          "productCategory",
+          "product_category"
+        ]),
+
+      product:
+        fieldValue([
+          "product",
+          "productName",
+          "product_name"
+        ]),
+
+      specification:
+        fieldValue([
+          "description",
+          "specification",
+          "productDescription",
+          "notes"
+        ]),
+
+      quantity:
+        quantity,
+
+      unit:
+        unit,
+
+      price:
+        price,
+
+      total:
+        total,
+
+      status:
+        getQuotationStatus()
+
+    };
+  }
+
+  /* =======================================================
+     VALIDATION
+     ======================================================= */
+
+  function validateQuotation(data) {
+
+    const errors = [];
+
+    if (!data.name) {
+      errors.push(
+        "Name is required."
+      );
+    }
+
+    if (!data.company) {
+      errors.push(
+        "Company Name is required."
+      );
+    }
+
+    if (
+      !data.mobile ||
+      data.mobile.length !== 10
+    ) {
+      errors.push(
+        "Please enter a valid 10-digit mobile number."
+      );
+    }
+
+    if (!data.product) {
+      errors.push(
+        "Product is required."
+      );
+    }
+
+    if (!data.quantity) {
+      errors.push(
+        "Quantity is required."
+      );
+    }
+
+    if (!data.unit) {
+      errors.push(
+        "Unit is required."
+      );
+    }
+
+    if (
+      data.status ===
+      "Final Quotation" &&
+      !data.price
+    ) {
+      errors.push(
+        "Price is required for Final Quotation."
+      );
+    }
+
+    return errors;
+  }
+
+  /* =======================================================
+     CALCULATE TOTAL
+     ======================================================= */
+
+  function calculateTotal() {
+
+    const quantity =
+      number(
+        fieldValue([
+          "quantity",
+          "qty"
+        ])
+      );
+
+    const price =
+      number(
+        fieldValue([
+          "price",
+          "unitPrice",
+          "unit_price"
+        ])
+      );
+
+    const total =
+      quantity * price;
+
+    const totalField =
+      findField([
+        "total",
+        "totalPrice",
+        "grandTotal",
+        "estimatedTotal"
+      ]);
+
+    if (
+      totalField &&
+      total > 0
+    ) {
+
+      totalField.value =
+        total.toFixed(2);
+
+      totalField.dispatchEvent(
+        new Event("input", {
+          bubbles: true
+        })
+      );
+
+    }
+
+    return total;
+  }
+
+  /* =======================================================
+     UPDATE CALCULATION EVENTS
+     ======================================================= */
+
+  function setupCalculation() {
+
+    const fields = [
+      "quantity",
+      "qty",
+      "price",
+      "unitPrice",
+      "unit_price"
+    ];
+
+    fields.forEach(
+      function (id) {
+
+        const field =
+          findField([id]);
+
+        if (field) {
+
+          field.addEventListener(
+            "input",
+            calculateTotal
+          );
+
+          field.addEventListener(
+            "change",
+            calculateTotal
+          );
+
+        }
+
+      }
+    );
+
+  }
+
+  /* =======================================================
+     PREVIEW MODAL
+     ======================================================= */
+
+  function createPreviewStyles() {
+
+    if (
+      byId(
+        "amalQuotationPreviewStyle"
+      )
+    ) {
+      return;
+    }
+
+    const style =
+      document.createElement("style");
+
+    style.id =
+      "amalQuotationPreviewStyle";
+
+    style.textContent = `
+
+      #amalQuotationOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.62);
+        z-index: 999999;
+        display: none;
+        overflow-y: auto;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      #amalQuotationModal {
+        width: min(900px, 100%);
+        margin: 20px auto;
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 20px 70px rgba(0,0,0,.28);
+        overflow: hidden;
+      }
+
+      #amalQuotationHeader {
+        padding: 18px 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+      }
+
+      #amalQuotationHeader h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      #amalQuotationClose {
+        border: 0;
+        background: transparent;
+        font-size: 28px;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      #amalQuotationContent {
+        padding: 25px;
+      }
+
+      .amal-company-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 800;
+      }
+
+      .amal-company-subtitle {
+        text-align: center;
+        color: #667085;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+
+      .amal-quotation-title {
+        text-align: center;
+        margin: 25px 0 18px;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      .amal-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 10px 25px;
+        margin-bottom: 20px;
+      }
+
+      .amal-info-item {
+        font-size: 14px;
+      }
+
+      .amal-info-item strong {
+        display: inline-block;
+        min-width: 110px;
+      }
+
+      .amal-product-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      .amal-product-table th,
+      .amal-product-table td {
+        border: 1px solid #d0d5dd;
+        padding: 10px;
+        text-align: left;
+        font-size: 13px;
+      }
+
+      .amal-product-table th {
+        font-weight: 700;
+        background: #f8fafc;
+      }
+
+      .amal-total {
+        text-align: right;
+        margin-top: 18px;
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .amal-status {
+        margin-top: 15px;
+        font-weight: 800;
+      }
+
+      .amal-negotiable-note {
+        margin-top: 10px;
+        padding: 12px;
+        border: 1px solid #d0d5dd;
+        border-radius: 8px;
+        font-size: 13px;
+      }
+
+      #amalQuotationActions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 18px 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .amal-action-btn {
+        flex: 1;
+        min-width: 150px;
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 15px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      .amal-primary-btn {
+        background: #111827;
+        color: #ffffff;
+      }
+
+      .amal-whatsapp-btn {
+        background: #25D366;
+        color: #ffffff;
+      }
+
+      .amal-cancel-btn {
+        background: #f2f4f7;
+        color: #344054;
+      }
+
+      #amalSavingStatus {
+        display: none;
+        margin: 0 20px 18px;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 13px;
+      }
+
+      @media(max-width:650px) {
+
+        #amalQuotationOverlay {
+          padding: 8px;
+        }
+
+        #amalQuotationContent {
+          padding: 15px;
+        }
+
+        .amal-info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .amal-product-table {
+          font-size: 11px;
+        }
+
+        .amal-product-table th,
+        .amal-product-table td {
+          padding: 7px;
+        }
+
+        .amal-company-title {
+          font-size: 22px;
+        }
+
+      }
+
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  function createPreviewModal() {
+
+    if (
+      byId(
+        "amalQuotationOverlay"
+      )
+    ) {
+      return;
+    }
+
+    createPreviewStyles();
+
+    const overlay =
+      document.createElement("div");
+
+    overlay.id =
+      "amalQuotationOverlay";
+
+    overlay.innerHTML = `
+
+      <div id="amalQuotationModal">
+
+        <div id="amalQuotationHeader">
+
+          <h2>
+            Quotation Preview
+          </h2>
+
+          <button
+            type="button"
+            id="amalQuotationClose"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+
+        </div>
+
+        <div id="amalQuotationContent"></div>
+
+        <div id="amalSavingStatus"></div>
+
+        <div id="amalQuotationActions">
+
+          <button
+            type="button"
+            class="amal-action-btn amal-primary-btn"
+            id="amalFinalSaveBtn"
+          >
+            Final Quotation
+          </button>
+
+          <button
+            type="button"
+            class="amal-action-btn amal-whatsapp-btn"
+            id="amalWhatsappBtn"
+          >
+            Share on WhatsApp
+          </button>
+
+          <button
+            type="button"
+            class="amal-action-btn amal-cancel-btn"
+            id="amalCancelBtn"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(
+      overlay
+    );
+
+    byId(
+      "amalQuotationClose"
+    ).addEventListener(
+      "click",
+      closePreview
+    );
+
+    byId(
+      "amalCancelBtn"
+    ).addEventListener(
+      "click",
+      closePreview
+    );
+
+    overlay.addEventListener(
+      "click",
+      function (event) {
+
+        if (
+          event.target === overlay
+        ) {
+          closePreview();
+        }
+
+      }
+    );
+  }
+
+  function closePreview() {
+
+    const overlay =
+      byId(
+        "amalQuotationOverlay"
+      );
+
+    if (overlay) {
+      overlay.style.display =
+        "none";
+    }
+  }
+
+  function showPreview(data) {
+
+    createPreviewModal();
+
+    const overlay =
+      byId(
+        "amalQuotationOverlay"
+      );
+
+    const content =
+      byId(
+        "amalQuotationContent"
+      );
+
+    content.innerHTML = `
+
+      <div class="amal-company-title">
+        AMAL ENTERPRISES
+      </div>
+
+      <div class="amal-company-subtitle">
+        ECO & PACKAGING SOURCING SOLUTIONS
+      </div>
+
+      <div class="amal-quotation-title">
+        QUOTATION
+      </div>
+
+      <div class="amal-info-grid">
+
+        <div class="amal-info-item">
+          <strong>Quotation No:</strong>
+          ${escapeHtml(data.quoteNo)}
+        </div>
+
+        <div class="amal-info-item">
+          <strong>Date:</strong>
+          ${escapeHtml(data.date)}
+        </div>
+
+        <div class="amal-info-item">
+          <strong>For:</strong>
+          ${escapeHtml(data.role)}
+        </div>
+
+        <div class="amal-info-item">
+          <strong>Name:</strong>
+          ${escapeHtml(data.name)}
+        </div>
+
+        <div class="amal-info-item">
+          <strong>Company:</strong>
+          ${escapeHtml(data.company)}
+        </div>
+
+        <div class="amal-info-item">
+          <strong>Mobile:</strong>
+          ${escapeHtml(data.mobile)}
+        </div>
+
+        ${
+          data.email
+            ? `
+              <div class="amal-info-item">
+                <strong>Email:</strong>
+                ${escapeHtml(data.email)}
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+      <table class="amal-product-table">
+
+        <thead>
+
+          <tr>
+            <th>Category</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr>
+
+            <td>
+              ${escapeHtml(data.category)}
+            </td>
+
+            <td>
+              ${escapeHtml(data.product)}
+            </td>
+
+            <td>
+              ${escapeHtml(data.quantity)}
+              ${escapeHtml(data.unit)}
+            </td>
+
+            <td>
+              ₹${escapeHtml(data.price)}
+              / ${escapeHtml(data.unit)}
+            </td>
+
+            <td>
+              ₹${escapeHtml(data.total)}
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      ${
+        data.specification
+          ? `
             <div
-                class="ae-modal-overlay"
-                id="aeModal"
-                hidden>
+              style="
+                margin-top:18px;
+                font-size:14px;
+              "
+            >
+              <strong>
+                Description / Specification:
+              </strong>
 
-                <div class="ae-modal-card">
-
-                    <button
-                        type="button"
-                        class="ae-close-btn"
-                        id="aeCloseModal">
-
-                        ×
-
-                    </button>
-
-
-                    <div
-                        class="ae-preview-document"
-                        id="aePreviewDocument">
-                    </div>
-
-
-                    <div
-                        class="ae-action-buttons"
-                        id="aeActionButtons">
-                    </div>
-
-                </div>
-
+              <div style="margin-top:6px;">
+                ${escapeHtml(
+                  data.specification
+                )}
+              </div>
             </div>
+          `
+          : ""
+      }
 
-        `;
+      <div class="amal-total">
+        Estimated Total:
+        ₹${escapeHtml(data.total)}
+      </div>
 
+      <div class="amal-status">
+        Quotation Status:
+        ${escapeHtml(data.status)}
+      </div>
 
-        bindEvents();
+      ${
+        data.status ===
+        "Negotiable"
+          ? `
+            <div class="amal-negotiable-note">
+              Price is subject to negotiation
+              and commercial discussion.
+            </div>
+          `
+          : ""
+      }
 
-    }
+    `;
 
+    const finalBtn =
+      byId(
+        "amalFinalSaveBtn"
+      );
 
-    /* ================= EVENTS ================= */
+    const whatsappBtn =
+      byId(
+        "amalWhatsappBtn"
+      );
 
-    function bindEvents() {
+    if (
+      data.status ===
+      "Negotiable"
+    ) {
 
-        document
-            .querySelectorAll(".ae-role-btn")
-            .forEach(function (button) {
+      finalBtn.style.display =
+        "none";
 
-                button.addEventListener(
-                    "click",
-                    function () {
+    } else {
 
-                        selectRole(
-                            button.dataset.role
-                        );
-
-                    }
-                );
-
-            });
-
-
-        document
-            .getElementById("aeGenerateBtn")
-            .addEventListener(
-                "click",
-                generateQuotation
-            );
-
-
-        document
-            .getElementById("aeCloseModal")
-            .addEventListener(
-                "click",
-                closePreview
-            );
-
-
-        document
-            .getElementById("aeModal")
-            .addEventListener(
-                "click",
-                function (event) {
-
-                    if (
-                        event.target ===
-                        event.currentTarget
-                    ) {
-
-                        closePreview();
-
-                    }
-
-                }
-            );
-
-
-        [
-            "aeQuantity",
-            "aePrice",
-            "aeUnit"
-        ].forEach(function (id) {
-
-            const element =
-                document.getElementById(id);
-
-            element.addEventListener(
-                "input",
-                updateLiveCalculation
-            );
-
-            element.addEventListener(
-                "change",
-                updateLiveCalculation
-            );
-
-        });
-
-
-        document
-            .querySelectorAll(
-                'input[name="aeQuotationStatus"]'
-            )
-            .forEach(function (radio) {
-
-                radio.addEventListener(
-                    "change",
-                    updateLiveCalculation
-                );
-
-            });
+      finalBtn.style.display =
+        "";
 
     }
 
-
-    /* ================= ROLE ================= */
-
-    function selectRole(role) {
-
-        currentRole = role;
-
-
-        document
-            .querySelectorAll(".ae-role-btn")
-            .forEach(function (button) {
-
-                button.classList.toggle(
-                    "selected",
-                    button.dataset.role === role
-                );
-
-            });
-
-
-        const roleName =
-            role === "buyer"
-                ? "Buyer"
-                : role === "supplier"
-                    ? "Supplier"
-                    : "Admin";
-
-
-        document
-            .getElementById("aeAdminStatus")
-            .textContent =
-            roleName + " Mode";
-
-
-        document
-            .getElementById("aeRoleTitle")
-            .textContent =
-            roleName + " Quotation";
-
-
-        document
-            .getElementById("aeFormPanel")
-            .hidden = false;
-
-
-        const adminRecipientBox =
-            document.getElementById(
-                "aeAdminRecipientBox"
-            );
-
-
-        const defaultAdminRecipient =
-            document.getElementById(
-                "aeDefaultAdminRecipient"
-            );
-
-
-        if (role === "admin") {
-
-            adminRecipientBox.hidden = false;
-
-            defaultAdminRecipient.hidden = true;
-
-        }
-
-        else {
-
-            adminRecipientBox.hidden = true;
-
-            defaultAdminRecipient.hidden = false;
-
-        }
-
-    }
-
-
-    /* ================= CALCULATION ================= */
-
-    function updateLiveCalculation() {
-
-        const quantity =
-            numberValue(
-                document
-                    .getElementById("aeQuantity")
-                    .value
-            );
-
-
-        const price =
-            numberValue(
-                document
-                    .getElementById("aePrice")
-                    .value
-            );
-
-
-        const total =
-            quantity * price;
-
-
-        document
-            .getElementById("aeLiveTotal")
-            .textContent =
-            "Estimated Total: " +
-            formatMoney(total);
-
-
-        const selected =
-            document.querySelector(
-                'input[name="aeQuotationStatus"]:checked'
-            );
-
-
-        document
-            .getElementById("aeNegotiationNote")
-            .hidden =
-            !(
-                selected &&
-                selected.value ===
-                "Negotiable"
-            );
-
-    }
-
-
-    /* ================= DATA ================= */
-
-    function getFormData() {
-
-        const status =
-            document.querySelector(
-                'input[name="aeQuotationStatus"]:checked'
-            );
-
-
-        const quantity =
-            numberValue(
-                document
-                    .getElementById("aeQuantity")
-                    .value
-            );
-
-
-        const price =
-            numberValue(
-                document
-                    .getElementById("aePrice")
-                    .value
-            );
-
-
-        const mobile =
-            document
-                .getElementById("aeMobile")
-                .value
-                .replace(/\D/g, "")
-                .slice(0, 10);
-
-
-        const recipient =
-            document
-                .getElementById("aeRecipientMobile")
-                .value
-                .replace(/\D/g, "")
-                .slice(0, 10);
-
-
-        return {
-
-            role:
-                currentRole,
-
-            roleName:
-                currentRole === "buyer"
-                    ? "Buyer"
-                    : currentRole === "supplier"
-                        ? "Supplier"
-                        : "Admin",
-
-            name:
-                document
-                    .getElementById("aeName")
-                    .value
-                    .trim(),
-
-            company:
-                document
-                    .getElementById("aeCompany")
-                    .value
-                    .trim(),
-
-            mobile:
-                mobile,
-
-            email:
-                document
-                    .getElementById("aeEmail")
-                    .value
-                    .trim(),
-
-            category:
-                document
-                    .getElementById("aeCategory")
-                    .value,
-
-            product:
-                document
-                    .getElementById("aeProduct")
-                    .value
-                    .trim(),
-
-            specification:
-                document
-                    .getElementById("aeSpecification")
-                    .value
-                    .trim(),
-
-            quantity:
-                quantity,
-
-            unit:
-                document
-                    .getElementById("aeUnit")
-                    .value,
-
-            price:
-                price,
-
-            total:
-                quantity * price,
-
-            status:
-                status
-                    ? status.value
-                    : "",
-
-            recipient:
-                recipient
-
-        };
-
-    }
-
-
-    /* ================= VALIDATION ================= */
-
-    function validateData(data) {
-
-        if (!data.role) {
-
-            alert(
-                "Please select Buyer, Supplier or Admin first."
-            );
-
-            return false;
-        }
-
-
-        if (!data.name) {
-
-            alert(
-                "Please enter Name."
-            );
-
-            return false;
-        }
-
-
-        if (!data.company) {
-
-            alert(
-                "Please enter Company Name."
-            );
-
-            return false;
-        }
-
-
-        if (
-            !/^[0-9]{10}$/.test(
-                data.mobile
-            )
-        ) {
-
-            alert(
-                "Please enter a valid 10 digit mobile number."
-            );
-
-            return false;
-        }
-
-
-        if (
-            data.email &&
-            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                .test(data.email)
-        ) {
-
-            alert(
-                "Please enter a valid email address or leave it blank."
-            );
-
-            return false;
-        }
-
-
-        if (!data.category) {
-
-            alert(
-                "Please select Product Category."
-            );
-
-            return false;
-        }
-
-
-        if (!data.product) {
-
-            alert(
-                "Please enter Product / Material."
-            );
-
-            return false;
-        }
-
-
-        if (!(data.quantity > 0)) {
-
-            alert(
-                "Please enter a valid quantity."
-            );
-
-            return false;
-        }
-
-
-        if (!data.unit) {
-
-            alert(
-                "Please select Unit."
-            );
-
-            return false;
-        }
-
-
-        if (!(data.price > 0)) {
-
-            alert(
-                "Please enter a valid Unit Price."
-            );
-
-            return false;
-        }
-
-
-        if (!data.status) {
-
-            alert(
-                "Please select Final Quotation or Negotiable."
-            );
-
-            return false;
-        }
-
-
-        /* ADMIN MUST CHOOSE RECIPIENT */
-
-        if (
-            data.roleName === "Admin" &&
-            !/^[0-9]{10}$/.test(
-                data.recipient
-            )
-        ) {
-
-            alert(
-                "Admin: please enter the recipient's 10 digit mobile number."
-            );
-
-            return false;
-        }
-
-
-        return true;
-
-    }
-
-
-    /* ================= GENERATE ================= */
-
-    function generateQuotation() {
-
-        if (!currentRole) {
-
-            alert(
-                "Please select Buyer, Supplier or Admin first."
-            );
-
-            return;
-        }
-
-
-        const data =
-            getFormData();
-
-
-        if (!validateData(data)) {
-            return;
-        }
-
-
-        const quoteNo =
-            quotationNumber();
-
-
-        showPreview(
-            data,
-            quoteNo
+    finalBtn.onclick =
+      function () {
+
+        saveFinalQuotation(
+          data
         );
 
+      };
 
-        /* FINAL ONLY -> DATABASE */
+    whatsappBtn.onclick =
+      function () {
 
-        if (
-            data.status ===
-            "Final Quotation"
-        ) {
-
-            saveFinalQuotation(
-                data,
-                quoteNo
-            );
-
-        }
-
-    }
-
-
-    /* ================= PREVIEW ================= */
-
-    function showPreview(
-        data,
-        quoteNo
-    ) {
-
-        const box =
-            document.getElementById(
-                "aePreviewDocument"
-            );
-
-
-        box.innerHTML = `
-
-            <div class="ae-preview-top">
-
-                <div>
-
-                    <div class="ae-preview-company">
-                        ${COMPANY_NAME}
-                    </div>
-
-                </div>
-
-
-                <div class="ae-preview-quote-info">
-
-                    <strong>
-                        QUOTATION
-                    </strong>
-
-                    <span>
-                        ${escapeHTML(quoteNo)}
-                    </span>
-
-                    <span>
-                        ${escapeHTML(getDate())}
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="ae-preview-role">
-
-                ${escapeHTML(data.roleName)}
-                Quotation
-
-            </div>
-
-
-            <div class="ae-preview-contact-grid">
-
-                <div>
-
-                    <small>
-                        Name
-                    </small>
-
-                    <strong>
-                        ${escapeHTML(data.name)}
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <small>
-                        Company
-                    </small>
-
-                    <strong>
-                        ${escapeHTML(data.company)}
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <small>
-                        Mobile
-                    </small>
-
-                    <strong>
-                        ${escapeHTML(data.mobile)}
-                    </strong>
-
-                </div>
-
-
-                ${
-                    data.email
-                        ? `
-                            <div>
-
-                                <small>
-                                    Email
-                                </small>
-
-                                <strong>
-                                    ${escapeHTML(data.email)}
-                                </strong>
-
-                            </div>
-                        `
-                        : ""
-                }
-
-            </div>
-
-
-            <div class="ae-preview-table">
-
-                <div class="ae-preview-table-head">
-
-                    <span>
-                        Product
-                    </span>
-
-                    <span>
-                        Qty
-                    </span>
-
-                    <span>
-                        Unit Price
-                    </span>
-
-                    <span>
-                        Total
-                    </span>
-
-                </div>
-
-
-                <div class="ae-preview-table-row">
-
-                    <span>
-
-                        <small>
-                            ${escapeHTML(data.category)}
-                        </small>
-
-                        <b>
-                            ${escapeHTML(data.product)}
-                        </b>
-
-                    </span>
-
-
-                    <span>
-
-                        ${formatQuantity(data.quantity)}
-                        ${escapeHTML(data.unit)}
-
-                    </span>
-
-
-                    <span>
-
-                        ${formatMoney(data.price)}
-                        /
-                        ${escapeHTML(data.unit)}
-
-                    </span>
-
-
-                    <strong>
-
-                        ${formatMoney(data.total)}
-
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            ${
-                data.specification
-                    ? `
-                        <div class="ae-preview-spec">
-
-                            <small>
-                                Description / Specification
-                            </small>
-
-                            <p>
-                                ${escapeHTML(
-                                    data.specification
-                                )}
-                            </p>
-
-                        </div>
-                    `
-                    : ""
-            }
-
-
-            <div class="ae-preview-bottom">
-
-                <div>
-
-                    <small>
-                        Quotation Status
-                    </small>
-
-                    <strong
-                        class="${
-                            data.status ===
-                            "Negotiable"
-                                ? "negotiable"
-                                : "final"
-                        }">
-
-                        ${escapeHTML(data.status)}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="ae-preview-total">
-
-                    <small>
-                        Estimated Total
-                    </small>
-
-                    <strong>
-                        ${formatMoney(data.total)}
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            ${
-                data.status ===
-                "Negotiable"
-                    ? `
-                        <div class="ae-preview-note">
-
-                            Price is subject to negotiation
-                            and commercial discussion.
-
-                        </div>
-                    `
-                    : ""
-            }
-
-        `;
-
-
-        createActionButtons(
-            data,
-            quoteNo
+        shareQuotationWhatsApp(
+          data
         );
 
+      };
 
-        document
-            .getElementById("aeModal")
-            .hidden = false;
+    overlay.style.display =
+      "block";
+  }
 
+  /* =======================================================
+     SAVING STATUS
+     ======================================================= */
 
-        document.body
-            .classList
-            .add("ae-modal-open");
+  function showSavingStatus(
+    message,
+    success
+  ) {
 
+    const box =
+      byId(
+        "amalSavingStatus"
+      );
+
+    if (!box) {
+      return;
     }
 
-
-    /* ================= ACTION BUTTONS ================= */
-
-    function createActionButtons(
-        data,
-        quoteNo
-    ) {
-
-        const buttons =
-            document.getElementById(
-                "aeActionButtons"
-            );
-
-
-        buttons.innerHTML = `
-
-            <button
-                type="button"
-                class="ae-whatsapp-btn"
-                id="aeWhatsAppBtn">
-
-                <i class="fa-brands fa-whatsapp"></i>
-
-                ${
-                    data.roleName === "Admin"
-                        ? "WhatsApp Recipient"
-                        : "WhatsApp Admin"
-                }
-
-            </button>
-
-
-            <button
-                type="button"
-                class="ae-secondary-btn"
-                id="aeCloseActionBtn">
-
-                Close
-
-            </button>
-
-        `;
-
-
-        document
-            .getElementById("aeWhatsAppBtn")
-            .addEventListener(
-                "click",
-                function () {
-
-                    let recipient;
-
-
-                    if (
-                        data.roleName ===
-                        "Admin"
-                    ) {
-
-                        recipient =
-                            data.recipient;
-
-                    }
-
-                    else {
-
-                        recipient =
-                            ADMIN_WHATSAPP;
-
-                    }
-
-
-                    openWhatsApp(
-                        recipient,
-                        createWhatsAppMessage(
-                            data,
-                            quoteNo
-                        )
-                    );
-
-                }
-            );
-
-
-        document
-            .getElementById("aeCloseActionBtn")
-            .addEventListener(
-                "click",
-                closePreview
-            );
-
-    }
-
-
-    /* ================= WHATSAPP MESSAGE ================= */
-
-    function createWhatsAppMessage(
-        data,
-        quoteNo
-    ) {
-
-        let message =
-
-`*${COMPANY_NAME}*
-*Quotation*
-
-Quotation No: ${quoteNo}
-Date: ${getDate()}
-
-Role: ${data.roleName}
-
-Name: ${data.name}
-Company: ${data.company}
-Mobile: ${data.mobile}`;
-
-        if (data.email) {
-
-            message +=
-                `\nEmail: ${data.email}`;
-
-        }
-
-
-        message +=
-
-`
-
-Product Category: ${data.category}
-Product: ${data.product}
-Quantity: ${formatQuantity(data.quantity)} ${data.unit}
-Unit Price: ${formatMoney(data.price)} / ${data.unit}
-Estimated Total: ${formatMoney(data.total)}
-
-Quotation Status: *${data.status}*`;
-
-
-        if (data.specification) {
-
-            message +=
-
-`
-
-Description / Specification:
-${data.specification}`;
-
-        }
-
-
-        if (
-            data.status ===
-            "Negotiable"
-        ) {
-
-            message +=
-
-`
-
-Price is negotiable.
-Commercial terms can be discussed.`;
-
-        }
-
-
-        if (
-            data.roleName ===
-            "Supplier"
-        ) {
-
-            message +=
-
-`
-
-Please share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.`;
-
-        }
-
-
-        if (
-            data.roleName ===
-            "Buyer"
-        ) {
-
-            message +=
-
-`
-
-Please confirm the requirement and commercial terms.`;
-
-        }
-
-
-        if (
-            data.roleName ===
-            "Admin"
-        ) {
-
-            message +=
-
-`
-
-Prepared by:
-${COMPANY_NAME}`;
-
-        }
-
-
-        return message;
-
-    }
-
-
-    /* ================= GOOGLE SHEET + PDF ================= */
-
-    function saveFinalQuotation(
-        data,
-        quoteNo
-    ) {
-
-        const status =
-            document.getElementById(
-                "aeSaveStatus"
-            );
-
-
-        if (
-            !APPS_SCRIPT_URL ||
-            APPS_SCRIPT_URL.includes(
-                "PASTE_YOUR"
-            )
-        ) {
-
-            status.textContent =
-                "Quotation created. Google Sheet is not connected yet.";
-
-            return;
-        }
-
-
-        status.textContent =
-            "Saving final quotation...";
-
-
-        const iframeName =
-            "aeQuotationFrame_" +
-            Date.now();
-
-
-        const iframe =
-            document.createElement(
-                "iframe"
-            );
-
-
-        iframe.name =
-            iframeName;
-
-
-        iframe.style.display =
-            "none";
-
-
-        document.body.appendChild(
-            iframe
-        );
-
+    box.style.display =
+      "block";
+
+    box.style.background =
+      success
+        ? "#ecfdf3"
+        : "#fef3f2";
+
+    box.style.color =
+      success
+        ? "#027a48"
+        : "#b42318";
+
+    box.textContent =
+      message;
+  }
+
+  /* =======================================================
+     SEND DATA TO APPS SCRIPT
+     ======================================================= */
+
+  function postToAppsScript(
+    data
+  ) {
+
+    return new Promise(
+      function (
+        resolve,
+        reject
+      ) {
 
         const form =
-            document.createElement(
-                "form"
-            );
-
+          document.createElement(
+            "form"
+          );
 
         form.method =
-            "POST";
-
+          "POST";
 
         form.action =
-            APPS_SCRIPT_URL;
-
+          APPS_SCRIPT_URL;
 
         form.target =
-            iframeName;
-
+          "amalAppsScriptFrame";
 
         form.style.display =
-            "none";
+          "none";
 
 
-        const payload = {
+        const values = {
 
-            token:
-                API_TOKEN,
+          token:
+            API_TOKEN,
 
-            action:
-                "saveFinalQuotation",
+          action:
+            "saveFinalQuotation",
 
-            quoteNo:
-                quoteNo,
+          quoteNo:
+            data.quoteNo,
 
-            date:
-                getDate(),
+          date:
+            data.date,
 
-            role:
-                data.roleName,
+          role:
+            data.role,
 
-            name:
-                data.name,
+          mobile:
+            data.mobile,
 
-            company:
-                data.company,
+          email:
+            data.email,
 
-            mobile:
-                data.mobile,
+          name:
+            data.name,
 
-            email:
-                data.email,
+          company:
+            data.company,
 
-            category:
-                data.category,
+          category:
+            data.category,
 
-            product:
-                data.product,
+          product:
+            data.product,
 
-            specification:
-                data.specification,
+          specification:
+            data.specification,
 
-            quantity:
-                data.quantity,
+          quantity:
+            data.quantity,
 
-            unit:
-                data.unit,
+          unit:
+            data.unit,
 
-            price:
-                data.price,
+          price:
+            data.price,
 
-            total:
-                data.total,
+          total:
+            data.total,
 
-            status:
-                data.status
+          status:
+            data.status
 
         };
 
 
-        Object.keys(payload)
-            .forEach(function (key) {
+        Object.keys(values)
+          .forEach(
+            function (key) {
 
-                const input =
-                    document.createElement(
-                        "input"
-                    );
-
-                input.type =
-                    "hidden";
-
-                input.name =
-                    key;
-
-                input.value =
-                    payload[key] == null
-                        ? ""
-                        : payload[key];
-
-                form.appendChild(
-                    input
+              const input =
+                document.createElement(
+                  "input"
                 );
 
-            });
+              input.type =
+                "hidden";
+
+              input.name =
+                key;
+
+              input.value =
+                values[key] == null
+                  ? ""
+                  : values[key];
+
+              form.appendChild(
+                input
+              );
+
+            }
+          );
+
+
+        let frame =
+          byId(
+            "amalAppsScriptFrame"
+          );
+
+
+        if (!frame) {
+
+          frame =
+            document.createElement(
+              "iframe"
+            );
+
+          frame.id =
+            "amalAppsScriptFrame";
+
+          frame.name =
+            "amalAppsScriptFrame";
+
+          frame.style.display =
+            "none";
+
+          document.body.appendChild(
+            frame
+          );
+
+        }
 
 
         document.body.appendChild(
-            form
+          form
         );
 
 
-        try {
+        let resolved =
+          false;
 
-            form.submit();
 
-            status.textContent =
-                "Final quotation submitted. Latest PDF is being saved.";
+        const finish =
+          function (
+            success,
+            message
+          ) {
 
-        }
+            if (resolved) {
+              return;
+            }
 
-        catch (error) {
+            resolved = true;
 
-            status.textContent =
-                "Quotation created, but database submission failed.";
+            try {
+              form.remove();
+            } catch (e) {}
 
-        }
+            resolve({
+              success:
+                success,
+              message:
+                message
+            });
+
+          };
+
+
+        /*
+         * Apps Script Web App redirects after POST.
+         * We therefore use a short delay after submission.
+         */
+
+        form.submit();
 
 
         setTimeout(
-            function () {
+          function () {
 
-                form.remove();
-                iframe.remove();
-
-            },
-            10000
-        );
-
-    }
-
-
-    /* ================= CLOSE ================= */
-
-    function closePreview() {
-
-        const modal =
-            document.getElementById(
-                "aeModal"
+            finish(
+              true,
+              "Quotation submitted to Google Apps Script."
             );
 
-
-        if (!modal) return;
-
-
-        modal.hidden = true;
+          },
+          1800
+        );
 
 
-        document.body
-            .classList
-            .remove("ae-modal-open");
+        /*
+         * Hard timeout.
+         */
 
-    }
+        setTimeout(
+          function () {
 
+            if (!resolved) {
 
-    /* ================= INIT ================= */
+              finish(
+                false,
+                "Google Apps Script did not respond."
+              );
 
-    function init() {
+            }
 
-        if (
-            document.getElementById(
-                "quotation"
-            )
-        ) {
+          },
+          10000
+        );
 
-            createQuotationSystem();
+      }
+    );
+  }
 
-        }
+  /* =======================================================
+     SAVE FINAL QUOTATION
+     ======================================================= */
+
+  async function saveFinalQuotation(
+    data
+  ) {
+
+    const errors =
+      validateQuotation(
+        data
+      );
+
+    if (
+      errors.length
+    ) {
+
+      alert(
+        errors.join("\n")
+      );
+
+      return;
 
     }
 
 
     if (
-        document.readyState ===
-        "loading"
+      data.status !==
+      "Final Quotation"
     ) {
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            init
+      alert(
+        "Only Final Quotation can be stored in Google Sheet."
+      );
+
+      return;
+
+    }
+
+
+    showSavingStatus(
+      "Saving quotation to Google Sheet and creating latest PDF...",
+      false
+    );
+
+
+    const button =
+      byId(
+        "amalFinalSaveBtn"
+      );
+
+    if (button) {
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "Saving...";
+
+    }
+
+
+    try {
+
+      const result =
+        await postToAppsScript(
+          data
         );
 
+
+      if (!result.success) {
+
+        throw new Error(
+          result.message ||
+          "Could not submit quotation."
+        );
+
+      }
+
+
+      /*
+       * Save latest local copy too.
+       */
+
+      saveData({
+        mobile:
+          data.mobile,
+
+        name:
+          data.name,
+
+        company:
+          data.company,
+
+        email:
+          data.email,
+
+        product:
+          data.product,
+
+        quoteNo:
+          data.quoteNo,
+
+        savedAt:
+          new Date().toISOString()
+      });
+
+
+      showSavingStatus(
+        "✓ Final quotation submitted. Google Sheet and latest PDF processing started.",
+        true
+      );
+
+
+      if (button) {
+
+        button.textContent =
+          "Saved ✓";
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        error
+      );
+
+
+      showSavingStatus(
+        "Could not save quotation: " +
+        error.message,
+        false
+      );
+
+
+      if (button) {
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "Final Quotation";
+
+      }
+
+    }
+  }
+
+  /* =======================================================
+     ADMIN WHATSAPP VERIFICATION
+     ======================================================= */
+
+  function isAdminRole(data) {
+
+    const role =
+      text(data.role)
+        .toLowerCase();
+
+    return (
+      role === "admin" ||
+      role.indexOf("admin") !== -1
+    );
+  }
+
+  function verifyAdminWhatsApp() {
+
+    /*
+     * Browser security does not allow a website to read
+     * the WhatsApp account currently logged into the phone.
+     *
+     * Therefore the admin must explicitly confirm that
+     * WhatsApp is active with the configured admin number.
+     */
+
+    const message =
+      "Admin WhatsApp verification\n\n" +
+      "Please confirm that WhatsApp is currently active " +
+      "with Admin number " +
+      ADMIN_WHATSAPP +
+      ".\n\n" +
+      "If this number is not the active WhatsApp account, " +
+      "the quotation will NOT be shared.";
+
+    return window.confirm(
+      message
+    );
+  }
+
+  /* =======================================================
+     RECIPIENT NUMBER
+     ======================================================= */
+
+  function getAdminRecipient() {
+
+    const recipient =
+      window.prompt(
+        "Enter recipient WhatsApp mobile number:",
+        ""
+      );
+
+    if (
+      recipient === null
+    ) {
+      return "";
     }
 
-    else {
+    const mobile =
+      cleanMobile(
+        recipient
+      );
 
-        init();
+    if (
+      mobile.length !== 10
+    ) {
+
+      alert(
+        "Please enter a valid 10-digit recipient mobile number."
+      );
+
+      return "";
 
     }
+
+    return mobile;
+  }
+
+  function getBuyerSupplierRecipient() {
+
+    return ADMIN_WHATSAPP;
+  }
+
+  /* =======================================================
+     WHATSAPP MESSAGE
+     ======================================================= */
+
+  function quotationMessage(
+    data
+  ) {
+
+    let message =
+      "Hello,\n\n" +
+
+      "Please find the quotation details below.\n\n" +
+
+      "AMAL ENTERPRISES\n" +
+
+      "Quotation No: " +
+      data.quoteNo +
+      "\n" +
+
+      "Date: " +
+      data.date +
+      "\n\n" +
+
+      "Name: " +
+      data.name +
+      "\n" +
+
+      "Company: " +
+      data.company +
+      "\n" +
+
+      "Product: " +
+      data.product +
+      "\n" +
+
+      "Quantity: " +
+      data.quantity +
+      " " +
+      data.unit +
+      "\n" +
+
+      "Unit Price: ₹" +
+      data.price +
+      " / " +
+      data.unit +
+      "\n" +
+
+      "Estimated Total: ₹" +
+      data.total +
+      "\n\n" +
+
+      "Quotation Status: " +
+      data.status +
+      "\n";
+
+
+    if (
+      data.status ===
+      "Negotiable"
+    ) {
+
+      message +=
+        "\nPrice is subject to negotiation and commercial discussion.\n";
+
+    }
+
+
+    message +=
+      "\nThank you.\n" +
+      "AMAL ENTERPRISES";
+
+
+    return message;
+  }
+
+  /* =======================================================
+     WHATSAPP SHARE
+     ======================================================= */
+
+  function shareQuotationWhatsApp(
+    data
+  ) {
+
+    const errors =
+      validateQuotation(
+        data
+      );
+
+    if (
+      errors.length
+    ) {
+
+      alert(
+        errors.join("\n")
+      );
+
+      return;
+
+    }
+
+
+    let recipient = "";
+
+
+    /*
+     * Admin can send to ANY recipient.
+     */
+
+    if (
+      isAdminRole(data)
+    ) {
+
+      /*
+       * Require explicit confirmation that the
+       * configured admin WhatsApp number is active.
+       */
+
+      const verified =
+        verifyAdminWhatsApp();
+
+
+      if (!verified) {
+
+        alert(
+          "Quotation sharing cancelled."
+        );
+
+        return;
+
+      }
+
+
+      recipient =
+        getAdminRecipient();
+
+
+      if (!recipient) {
+
+        return;
+
+      }
+
+    } else {
+
+      /*
+       * Buyer / Supplier -> Admin
+       */
+
+      recipient =
+        getBuyerSupplierRecipient();
+
+    }
+
+
+    const encodedMessage =
+      encodeURIComponent(
+        quotationMessage(data)
+      );
+
+
+    const url =
+      "https://wa.me/" +
+      whatsappNumber(
+        recipient
+      ) +
+      "?text=" +
+      encodedMessage;
+
+
+    /*
+     * Open WhatsApp.
+     *
+     * The actual WhatsApp account used is determined by
+     * the WhatsApp account active on the Admin's device.
+     */
+
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
+
+  /* =======================================================
+     FORM SUBMIT
+     ======================================================= */
+
+  function handleFormSubmit(
+    event
+  ) {
+
+    /*
+     * Do not interfere with normal form submission if
+     * this is not the quotation form.
+     */
+
+    const form =
+      event.currentTarget;
+
+
+    if (
+      !form
+    ) {
+      return;
+    }
+
+
+    const data =
+      collectQuotationData();
+
+
+    const errors =
+      validateQuotation(
+        data
+      );
+
+
+    if (
+      errors.length
+    ) {
+
+      event.preventDefault();
+
+      alert(
+        errors.join("\n")
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * We always show preview before final processing.
+     */
+
+    event.preventDefault();
+
+
+    showPreview(
+      data
+    );
+
+  }
+
+  /* =======================================================
+     FIND QUOTATION FORM
+     ======================================================= */
+
+  function findQuotationForm() {
+
+    const possibleSelectors = [
+
+      "#quotationForm",
+
+      "#quoteForm",
+
+      "form[data-quotation-form]",
+
+      "form[data-form-type='quotation']",
+
+      ".quotation-form",
+
+      "form"
+
+    ];
+
+
+    for (
+      const selector of possibleSelectors
+    ) {
+
+      const form =
+        document.querySelector(
+          selector
+        );
+
+      if (form) {
+
+        /*
+         * Prefer a form that contains a product
+         * or quotation related field.
+         */
+
+        const hasQuotationField =
+          form.querySelector(
+            '[name="product"],' +
+            '[name="productName"],' +
+            '#product,' +
+            '#productName,' +
+            '[name="quotationNo"],' +
+            '#quotationNo'
+          );
+
+
+        if (
+          hasQuotationField ||
+          selector !== "form"
+        ) {
+
+          return form;
+
+        }
+
+      }
+
+    }
+
+    return null;
+  }
+
+  /* =======================================================
+     ADD STATUS UI IF NEEDED
+     ======================================================= */
+
+  function ensureStatusField() {
+
+    const existing =
+      document.querySelector(
+        'input[name="quotationStatus"],' +
+        'select[name="quotationStatus"],' +
+        '#quotationStatus'
+      );
+
+    if (existing) {
+      return;
+    }
+
+
+    const form =
+      findQuotationForm();
+
+    if (!form) {
+      return;
+    }
+
+
+    const wrapper =
+      document.createElement(
+        "div"
+      );
+
+    wrapper.setAttribute(
+      "data-quotation-status",
+      "true"
+    );
+
+    wrapper.style.margin =
+      "12px 0";
+
+    wrapper.innerHTML = `
+
+      <label
+        style="
+          display:block;
+          font-weight:600;
+          margin-bottom:8px;
+        "
+      >
+        Quotation Type
+      </label>
+
+      <label
+        style="
+          margin-right:18px;
+          cursor:pointer;
+        "
+      >
+
+        <input
+          type="radio"
+          name="quotationStatus"
+          value="Final Quotation"
+          checked
+        >
+
+        Final Quotation
+
+      </label>
+
+      <label
+        style="
+          cursor:pointer;
+        "
+      >
+
+        <input
+          type="radio"
+          name="quotationStatus"
+          value="Negotiable"
+        >
+
+        Negotiable
+
+      </label>
+
+    `;
+
+
+    /*
+     * Put it immediately before submit button.
+     */
+
+    const submit =
+      form.querySelector(
+        'button[type="submit"],' +
+        'input[type="submit"]'
+      );
+
+
+    if (submit) {
+
+      submit.parentNode.insertBefore(
+        wrapper,
+        submit
+      );
+
+    } else {
+
+      form.appendChild(
+        wrapper
+      );
+
+    }
+
+  }
+
+  /* =======================================================
+     TITLE
+     ======================================================= */
+
+  function setupTitle() {
+
+    const title =
+      document.querySelector(
+        "#quotationTitle," +
+        "[data-quotation-title]"
+      );
+
+    if (title) {
+
+      title.textContent =
+        "Create Quotation";
+
+      return;
+
+    }
+
+
+    const headings =
+      $$(
+        "h1,h2,h3,h4"
+      );
+
+
+    headings.forEach(
+      function (heading) {
+
+        const value =
+          text(
+            heading.textContent
+          )
+          .toLowerCase();
+
+
+        if (
+          value.indexOf(
+            "create quotation"
+          ) !== -1 ||
+          value === "quotation"
+        ) {
+
+          heading.textContent =
+            "Create Quotation";
+
+        }
+
+      }
+    );
+
+  }
+
+  /* =======================================================
+     HIDE OLD BUYER / SUPPLIER GOOGLE FORM LINKS
+     ======================================================= */
+
+  function hideOldGoogleFormLinks() {
+
+    const elements =
+      $$(
+        "a,button"
+      );
+
+
+    elements.forEach(
+      function (element) {
+
+        const value =
+          text(
+            element.textContent
+          )
+          .toLowerCase();
+
+
+        const href =
+          text(
+            element.getAttribute(
+              "href"
+            )
+          )
+          .toLowerCase();
+
+
+        if (
+          value.indexOf(
+            "google form"
+          ) !== -1 ||
+          href.indexOf(
+            "docs.google.com/forms"
+          ) !== -1
+        ) {
+
+          element.style.display =
+            "none";
+
+        }
+
+      }
+    );
+
+  }
+
+  /* =======================================================
+     INITIALIZE
+     ======================================================= */
+
+  function initialize() {
+
+    try {
+
+      setupTitle();
+
+      makeEmailOptional();
+
+      setupCategoryDefaults();
+
+      setupUnitDefaults();
+
+      setupQuotationStatus();
+
+      ensureStatusField();
+
+      setupCalculation();
+
+      hideOldGoogleFormLinks();
+
+
+      const form =
+        findQuotationForm();
+
+
+      if (form) {
+
+        /*
+         * Prevent duplicate listeners.
+         */
+
+        if (
+          form.dataset.amalQuotationReady !==
+          "1"
+        ) {
+
+          form.dataset.amalQuotationReady =
+            "1";
+
+          form.addEventListener(
+            "submit",
+            handleFormSubmit
+          );
+
+        }
+
+      }
+
+
+      calculateTotal();
+
+
+      console.log(
+        "AMAL ENTERPRISES quotation system initialized."
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Quotation system initialization error:",
+        error
+      );
+
+    }
+
+  }
+
+  /* =======================================================
+     START
+     ======================================================= */
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize
+    );
+
+  } else {
+
+    initialize();
+
+  }
+
+
+  /*
+   * Google Sites / embedded content may load dynamically.
+   */
+
+  window.setTimeout(
+    initialize,
+    1000
+  );
+
+  window.setTimeout(
+    initialize,
+    2500
+  );
+
+
+  /* =======================================================
+     PUBLIC API
+     ======================================================= */
+
+  window.AmalQuotation = {
+
+    collect:
+      collectQuotationData,
+
+    preview:
+      showPreview,
+
+    save:
+      saveFinalQuotation,
+
+    whatsapp:
+      shareQuotationWhatsApp,
+
+    calculate:
+      calculateTotal
+
+  };
 
 })();
