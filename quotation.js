@@ -1904,3 +1904,42 @@ ${COMPANY_NAME}`;
     }
 
 })();
+/* ================= GOOGLE SHEET + PDF ================= */
+
+function saveFinalQuotation(data, quoteNo) {
+    const status = document.getElementById("aeSaveStatus");
+
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
+        status.textContent = "Quotation created. Google Sheet is not connected yet.";
+        return;
+    }
+
+    status.textContent = "Saving final quotation...";
+
+    // 🛠️ FIX: Use URLSearchParams instead of FormData to transmit clean parameters under no-cors
+    const payload = new URLSearchParams();
+    payload.append("token", API_TOKEN);
+    payload.append("mobile", data.mobile);
+    payload.append("email", data.email || "");
+    payload.append("name", data.name);
+    payload.append("category", data.category);
+    payload.append("pdfUrl", ""); // Add explicit file string variables if configured
+
+    fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", // Safely circumvents cross-origin context blocking
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: payload.toString()
+    })
+    .then(function() {
+        status.textContent = "Final quotation submitted to backend registry system.";
+        status.style.color = "green";
+    })
+    .catch(function(error) {
+        console.error("Submission error:", error);
+        status.textContent = "Quotation created, but database submission failed.";
+        status.style.color = "red";
+    });
+}
