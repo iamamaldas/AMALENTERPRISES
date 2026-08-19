@@ -1,87 +1,203 @@
 /* =========================================================
    AMAL ENTERPRISES
-   FINAL QUOTATION CSS
-   No main theme/layout changes
+   SMART QUOTATION SYSTEM
+   PREMIUM DARK THEME
 ========================================================= */
+
+.amal-smart-quotation {
+
+    position: relative;
+
+    width: 100%;
+
+    background:
+        linear-gradient(
+            180deg,
+            #080d19,
+            #070b15
+        );
+
+    border-top:
+        1px solid rgba(75,105,137,.18);
+
+    border-bottom:
+        1px solid rgba(75,105,137,.18);
+
+    padding:
+        35px 22px 45px;
+
+}
+
+
+.amal-quote-container {
+
+    max-width: 1100px;
+
+    margin: auto;
+
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.amal-quote-heading {
+
+    margin-bottom: 22px;
+
+}
+
+
+.amal-quote-kicker {
+
+    display: block;
+
+    color: #6f8292;
+
+    font-size: 10px;
+
+    letter-spacing: 1.1px;
+
+    margin-bottom: 7px;
+
+}
+
+
+.amal-quote-heading h2 {
+
+    margin: 0;
+
+    color: #d7dce2;
+
+    font-size: 24px;
+
+    font-weight: 500;
+
+}
+
+
+.amal-quote-heading p {
+
+    margin-top: 5px;
+
+    color: #777f8b;
+
+    font-size: 11px;
+
+}
 
 
 /* =========================================================
    ROLE SELECT
 ========================================================= */
 
-.amal-field-group {
-    margin-bottom: 6px;
+.amal-role-card {
+
+    padding: 16px;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #131e2b,
+            #0e1722
+        );
+
+    border:
+        1px solid rgba(89,115,136,.18);
+
+    margin-bottom: 15px;
+
 }
 
-.amal-label {
+
+.amal-role-card label,
+.amal-admin-login label,
+.amal-field label,
+#amalAdminRecipientWrap label {
+
     display: block;
 
-    color: #858c96;
+    color: #7d8792;
 
     font-size: 9px;
 
-    margin-bottom: 4px;
-}
-
-.amal-role {
-    width: 100%;
-
-    padding: 7px;
-
-    outline: none;
-
-    border-radius: 5px;
-
-    border: 1px solid #263846;
-
-    background: #101923;
-
-    color: #9ca4ae;
-
-    font-size: 9px;
-}
-
-.amal-role:focus {
-    border-color: #3e7097;
-}
-
-.amal-role-hint {
-    margin-top: 4px;
-
-    color: #687481;
-
-    font-size: 8px;
-
-    line-height: 1.35;
-}
-
-
-/* =========================================================
-   MOBILE / WHATSAPP NUMBER
-========================================================= */
-
-.amal-mobile {
-    width: 100%;
-
-    padding: 7px;
+    letter-spacing: .4px;
 
     margin-bottom: 6px;
 
-    outline: none;
-
-    border-radius: 5px;
-
-    border: 1px solid #263846;
-
-    background: #101923;
-
-    color: #9ca4ae;
-
-    font-size: 9px;
 }
 
-.amal-mobile:focus {
-    border-color: #3e7097;
+
+.amal-role-buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+}
+
+
+.amal-role-btn {
+
+    border:
+        1px solid #263b4e;
+
+    background:
+        linear-gradient(
+            145deg,
+            #172432,
+            #101923
+        );
+
+    color: #9da8b3;
+
+    border-radius: 7px;
+
+    padding: 11px;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    transition: .2s;
+
+}
+
+
+.amal-role-btn:hover {
+
+    border-color:
+        #3d7098;
+
+    color: #d0dce7;
+
+}
+
+
+.amal-role-btn.active {
+
+    background:
+        linear-gradient(
+            145deg,
+            #245783,
+            #183d5d
+        );
+
+    border-color:
+        #4d88b5;
+
+    color: #e0edf7;
+
+    box-shadow:
+        0 5px 18px
+        rgba(25,100,160,.18);
+
 }
 
 
@@ -89,125 +205,830 @@
    ADMIN LOGIN
 ========================================================= */
 
-.amal-admin-box {
+.amal-admin-login {
 
-    margin-bottom: 7px;
-
-    padding: 9px;
-
-    border-radius: 7px;
-
-    background:
-        rgba(24,38,53,.75);
-
-    border:
-        1px solid rgba(82,123,157,.25);
+    margin-bottom: 15px;
 
 }
 
-.amal-admin-title {
 
-    color: #aeb8c2;
+.amal-login-box {
+
+    max-width: 420px;
+
+    margin: auto;
+
+    padding: 18px;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #151f2c,
+            #0f1721
+        );
+
+    border:
+        1px solid rgba(89,115,136,.2);
+
+    box-shadow:
+        0 12px 35px
+        rgba(0,0,0,.22);
+
+}
+
+
+.amal-login-title {
+
+    color: #d3d9df;
+
+    font-size: 14px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.amal-login-box p {
+
+    color: #777f8b;
 
     font-size: 10px;
 
-    margin-bottom: 7px;
+    margin-bottom: 12px;
 
 }
 
-.amal-admin-box input {
+
+.amal-login-box input {
 
     width: 100%;
 
-    padding: 7px;
+    padding: 10px;
 
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+
+    border:
+        1px solid #263846;
+
+    border-radius: 6px;
 
     outline: none;
 
-    border-radius: 5px;
+    background: #0d151e;
 
-    border: 1px solid #263846;
+    color: #c7d0d9;
 
-    background: #101923;
-
-    color: #cbd2da;
-
-    font-size: 9px;
+    font-size: 11px;
 
 }
 
-.amal-admin-box input:focus {
 
-    border-color: #3e7097;
+.amal-login-box input:focus {
+
+    border-color:
+        #3c729b;
 
 }
 
-.amal-admin-login {
+
+#amalLoginBtn {
 
     width: 100%;
 
-    padding: 7px;
+    padding: 9px;
 
     border: none;
 
-    border-radius: 5px;
-
-    background: #244a70;
-
-    color: #dce8f2;
-
-    font-size: 9px;
+    border-radius: 6px;
 
     cursor: pointer;
 
-    transition: .2s;
+    background:
+        linear-gradient(
+            180deg,
+            #347bb8,
+            #265f91
+        );
+
+    color: #e7f1f8;
+
+    font-size: 10px;
 
 }
 
-.amal-admin-login:hover {
 
-    background: #2c5c88;
+.amal-login-message {
 
-}
+    margin-top: 8px;
 
-.amal-admin-status {
-
-    margin-top: 5px;
-
-    font-size: 8px;
+    font-size: 9px;
 
 }
 
-.amal-admin-status.success {
 
-    color: #72b88b;
+.amal-login-message.success {
+
+    color: #66b986;
 
 }
 
-.amal-admin-status.error {
 
-    color: #cf7c7c;
+.amal-login-message.error {
+
+    color: #d47777;
 
 }
 
 
 /* =========================================================
-   ADMIN COMPANY INFORMATION
+   WORK AREA
 ========================================================= */
 
-.amal-admin-preview {
+.amal-quote-work {
 
-    margin-bottom: 8px;
+    padding: 18px;
 
-    padding: 7px 8px;
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #111b27,
+            #0c141f
+        );
+
+    border:
+        1px solid rgba(89,115,136,.18);
+
+    box-shadow:
+        0 12px 30px
+        rgba(0,0,0,.18);
+
+}
+
+
+.amal-work-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom: 15px;
+
+}
+
+
+.amal-current-role {
+
+    display: inline-block;
+
+    color: #5f9bca;
+
+    font-size: 9px;
+
+    letter-spacing: .7px;
+
+    margin-bottom: 4px;
+
+}
+
+
+.amal-work-header h3 {
+
+    margin: 0;
+
+    color: #cdd2d9;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+}
+
+
+.amal-logout-btn {
+
+    padding: 7px 11px;
+
+    border:
+        1px solid #49363c;
+
+    border-radius: 5px;
+
+    background: #24181c;
+
+    color: #bf8f9a;
+
+    cursor: pointer;
+
+    font-size: 9px;
+
+}
+
+
+/* =========================================================
+   ADMIN RECIPIENT
+========================================================= */
+
+#amalAdminRecipientWrap {
+
+    margin-bottom: 12px;
+
+}
+
+
+#amalAdminRecipient {
+
+    width: 100%;
+
+    padding: 9px;
+
+    border:
+        1px solid #263846;
 
     border-radius: 6px;
 
-    background:
-        rgba(255,255,255,.08);
+    outline: none;
 
-    color: #d9e5ee;
+    background: #0d151e;
+
+    color: #b8c1cb;
+
+    font-size: 10px;
+
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.amal-form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+}
+
+
+.amal-field {
+
+    min-width: 0;
+
+}
+
+
+.amal-field.full {
+
+    margin-top: 10px;
+
+}
+
+
+.amal-field input,
+.amal-field select,
+.amal-field textarea {
+
+    width: 100%;
+
+    padding: 9px;
+
+    border:
+        1px solid #263846;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    background: #0d151e;
+
+    color: #bfc7d0;
+
+    font-size: 10px;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+}
+
+
+.amal-field input:focus,
+.amal-field select:focus,
+.amal-field textarea:focus {
+
+    border-color:
+        #3b7099;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(47,116,167,.08);
+
+}
+
+
+.amal-field textarea {
+
+    resize: vertical;
+
+    min-height: 75px;
+
+}
+
+
+/* =========================================================
+   CALCULATION
+========================================================= */
+
+.amal-calculation {
+
+    min-height: 40px;
+
+    margin-top: 12px;
+
+    padding: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    border-radius: 7px;
+
+    border:
+        1px solid rgba(75,105,137,.18);
+
+    background: #0b131d;
+
+    color: #717b86;
+
+    font-size: 10px;
+
+    text-align: center;
+
+}
+
+
+.amal-calculation.valid {
+
+    border-color:
+        rgba(60,119,158,.3);
+
+    color: #a9b8c5;
+
+}
+
+
+.amal-calculation strong {
+
+    color: #75b0dc;
+
+    font-size: 13px;
+
+}
+
+
+.amal-calc-arrow {
+
+    color: #526b7e;
+
+}
+
+
+/* =========================================================
+   GENERATE
+========================================================= */
+
+.amal-generate-btn {
+
+    width: 100%;
+
+    margin-top: 12px;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            180deg,
+            #347dbb,
+            #255f91
+        );
+
+    color: #e4eff8;
+
+    font-size: 11px;
+
+    box-shadow:
+        0 5px 16px
+        rgba(24,92,145,.18);
+
+}
+
+
+.amal-generate-btn:hover {
+
+    background:
+        linear-gradient(
+            180deg,
+            #3d89c7,
+            #2a6da1
+        );
+
+}
+
+
+/* =========================================================
+   PREVIEW OVERLAY
+========================================================= */
+
+.amal-preview-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 18px;
+
+    background:
+        rgba(2,6,14,.78);
+
+    backdrop-filter:
+        blur(7px);
+
+    overflow-y: auto;
+
+}
+
+
+.amal-preview-modal {
+
+    position: relative;
+
+    width: min(
+        650px,
+        100%
+    );
+
+    max-height:
+        calc(100vh - 30px);
+
+    overflow-y: auto;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #111b27,
+            #0b131d
+        );
+
+    border:
+        1px solid rgba(90,119,145,.28);
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.55);
+
+}
+
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.amal-preview-close {
+
+    position: absolute;
+
+    top: 8px;
+
+    right: 9px;
+
+    z-index: 2;
+
+    width: 30px;
+
+    height: 30px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(20,30,42,.9);
+
+    color: #9ca6b0;
+
+    cursor: pointer;
+
+    font-size: 20px;
+
+    line-height: 1;
+
+}
+
+
+/* =========================================================
+   QUOTATION PAPER
+========================================================= */
+
+.amal-quotation-paper {
+
+    background: #ffffff;
+
+    color: #1b2630;
+
+    border-radius: 5px;
+
+    padding: 28px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+}
+
+
+.amal-paper-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+
+    gap: 15px;
+
+}
+
+
+.amal-paper-company {
+
+    color: #182d42;
+
+    font-size: 23px;
+
+    font-weight: 700;
+
+    letter-spacing: .2px;
+
+}
+
+
+.amal-paper-msme {
+
+    margin-top: 5px;
+
+    color: #69737d;
+
+    font-size: 10px;
+
+}
+
+
+.amal-paper-type {
+
+    padding: 6px 9px;
+
+    border-radius: 4px;
+
+    background: #edf4f9;
+
+    color: #285a7d;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: .5px;
+
+}
+
+
+.amal-paper-line {
+
+    height: 1px;
+
+    margin: 17px 0;
+
+    background: #d8dfe4;
+
+}
+
+
+.amal-paper-meta {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+
+}
+
+
+.amal-paper-meta div {
+
+    padding: 8px;
+
+    background: #f5f7f8;
+
+    border-radius: 4px;
+
+}
+
+
+.amal-paper-meta span {
+
+    display: block;
+
+    color: #7a848e;
+
+    font-size: 8px;
+
+    margin-bottom: 3px;
+
+}
+
+
+.amal-paper-meta strong {
+
+    color: #26343f;
+
+    font-size: 10px;
+
+}
+
+
+.amal-paper-section {
+
+    margin-top: 15px;
+
+}
+
+
+.amal-paper-section-title {
+
+    margin-bottom: 6px;
+
+    padding-bottom: 5px;
+
+    border-bottom:
+        1px solid #dce2e6;
+
+    color: #456276;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: .6px;
+
+}
+
+
+.amal-paper-row {
+
+    display: grid;
+
+    grid-template-columns:
+        38% 62%;
+
+    gap: 8px;
+
+    padding: 5px 0;
+
+    border-bottom:
+        1px solid #edf0f2;
+
+}
+
+
+.amal-paper-row span {
+
+    color: #7b858e;
+
+    font-size: 9px;
+
+}
+
+
+.amal-paper-row strong {
+
+    color: #26343f;
+
+    font-size: 9px;
+
+    text-align: right;
+
+    word-break: break-word;
+
+}
+
+
+.amal-paper-total {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-top: 9px;
+
+    padding: 10px;
+
+    border-radius: 4px;
+
+    background: #eaf3f9;
+
+    color: #315e7b;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}
+
+
+.amal-paper-total strong {
+
+    font-size: 14px;
+
+}
+
+
+.amal-paper-details {
+
+    min-height: 45px;
+
+    padding: 9px;
+
+    border-radius: 4px;
+
+    background: #f7f8f9;
+
+    color: #4d5861;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+    white-space: pre-wrap;
+
+}
+
+
+.amal-paper-footer {
+
+    margin-top: 18px;
+
+    padding-top: 9px;
+
+    border-top:
+        1px solid #dce2e6;
+
+    color: #8a939b;
 
     font-size: 8px;
 
@@ -215,245 +1036,56 @@
 
 }
 
-.amal-company-name {
 
-    color: #ffffff;
+/* =========================================================
+   PREVIEW BUTTONS
+========================================================= */
 
-    font-size: 10px;
+.amal-preview-actions {
 
-    font-weight: 600;
+    display: grid;
 
-    margin-bottom: 2px;
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 12px;
 
 }
 
 
-/* =========================================================
-   QUOTATION PREVIEW
-========================================================= */
+.amal-preview-actions button {
 
-.quote-preview {
-
-    position: relative;
-
-    overflow: hidden;
-
-}
-
-
-/* =========================================================
-   PREVIEW BUTTON AREA
-========================================================= */
-
-.preview-buttons {
-
-    display: flex;
-
-    gap: 7px;
-
-    margin-top: 9px;
-
-}
-
-
-/* =========================================================
-   WHATSAPP BUTTON
-========================================================= */
-
-.amal-whatsapp-button {
-
-    flex: 1;
-
-    padding: 7px;
+    padding: 10px;
 
     border: none;
-
-    border-radius: 5px;
-
-    background: #153d62;
-
-    color: #dbe8f4;
-
-    font-size: 10px;
-
-    cursor: pointer;
-
-    transition: .2s;
-
-}
-
-.amal-whatsapp-button:hover {
-
-    background: #1d527f;
-
-    transform: translateY(-1px);
-
-}
-
-
-/* =========================================================
-   SAVE PDF BUTTON
-========================================================= */
-
-.amal-pdf-button {
-
-    flex: 1;
-
-    padding: 7px;
-
-    border: none;
-
-    border-radius: 5px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #315b78,
-            #244762
-        );
-
-    color: #e0ebf2;
-
-    font-size: 10px;
-
-    cursor: pointer;
-
-    transition: .2s;
-
-}
-
-.amal-pdf-button:hover {
-
-    background:
-        linear-gradient(
-            180deg,
-            #3d6d8e,
-            #2c536f
-        );
-
-    transform: translateY(-1px);
-
-}
-
-
-/* =========================================================
-   PREVIEW FLASH MESSAGE
-========================================================= */
-
-.amal-preview-flash {
-
-    position: absolute;
-
-    left: 10px;
-
-    right: 10px;
-
-    bottom: 10px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    padding: 8px 10px;
 
     border-radius: 6px;
 
-    background:
-        rgba(8,24,38,.97);
-
-    border:
-        1px solid rgba(111,177,215,.45);
-
-    color: #dcecf6;
-
-    font-size: 9px;
-
-    line-height: 1.3;
-
-    text-align: center;
-
-    box-shadow:
-        0 5px 18px rgba(0,0,0,.30);
-
-    opacity: 0;
-
-    transform:
-        translateY(12px);
-
-    transition:
-        opacity .25s ease,
-        transform .25s ease;
-
-    z-index: 50;
-
-    pointer-events: none;
-
-}
-
-.amal-preview-flash.show {
-
-    opacity: 1;
-
-    transform:
-        translateY(0);
-
-}
-
-
-/* =========================================================
-   FLASH ICON
-========================================================= */
-
-.amal-flash-icon {
-
-    flex-shrink: 0;
-
-    width: 18px;
-
-    height: 18px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background:
-        rgba(82,154,111,.25);
-
-    color: #82c596;
+    cursor: pointer;
 
     font-size: 10px;
 
-    font-weight: 600;
-
 }
 
 
-/* =========================================================
-   ERROR FLASH
-========================================================= */
-
-.amal-preview-flash.error {
-
-    border-color:
-        rgba(190,105,105,.50);
-
-}
-
-.amal-preview-flash.error
-.amal-flash-icon {
+.amal-whatsapp-btn {
 
     background:
-        rgba(190,105,105,.20);
+        #1e6848;
 
-    color: #e39a9a;
+    color: #e4f7ed;
+
+}
+
+
+.amal-pdf-btn {
+
+    background:
+        #285b84;
+
+    color: #e8f2f8;
 
 }
 
@@ -462,61 +1094,133 @@
    MOBILE
 ========================================================= */
 
-@media(max-width:620px) {
+@media(max-width:700px){
 
-    .preview-buttons {
+    .amal-smart-quotation {
 
-        gap: 6px;
-
-    }
-
-    .amal-whatsapp-button,
-    .amal-pdf-button {
-
-        font-size: 9px;
-
-        padding: 7px 5px;
+        padding:
+            28px 14px 35px;
 
     }
 
-    .amal-preview-flash {
 
-        left: 8px;
+    .amal-role-buttons {
 
-        right: 8px;
-
-        bottom: 8px;
-
-        padding: 7px 8px;
-
-        font-size: 8px;
+        grid-template-columns: 1fr;
 
     }
 
-    .amal-flash-icon {
 
-        width: 17px;
+    .amal-form-grid {
 
-        height: 17px;
+        grid-template-columns: 1fr;
 
-        font-size: 9px;
+    }
+
+
+    .amal-quote-work {
+
+        padding: 13px;
+
+    }
+
+
+    .amal-work-header h3 {
+
+        font-size: 14px;
+
+    }
+
+
+    .amal-quotation-paper {
+
+        padding: 18px;
+
+    }
+
+
+    .amal-paper-company {
+
+        font-size: 19px;
+
+    }
+
+
+    .amal-paper-header {
+
+        flex-direction: column;
+
+    }
+
+
+    .amal-paper-type {
+
+        align-self:
+            flex-start;
+
+    }
+
+
+    .amal-paper-meta {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .amal-preview-modal {
+
+        padding: 8px;
+
+        border-radius: 9px;
+
+    }
+
+
+    .amal-preview-actions {
+
+        grid-template-columns: 1fr;
 
     }
 
 }
 
 
-/* =========================================================
-   PRINT SAFETY
-========================================================= */
+@media(max-width:400px){
 
-@media print {
+    .amal-paper-company {
 
-    .amal-preview-flash,
-    .amal-whatsapp-button,
-    .amal-pdf-button {
+        font-size: 17px;
 
-        display: none !important;
+    }
+
+
+    .amal-paper-row {
+
+        grid-template-columns:
+            42% 58%;
+
+    }
+
+
+    .amal-paper-row span,
+    .amal-paper-row strong {
+
+        font-size: 8px;
+
+    }
+
+
+    .amal-paper-total {
+
+        font-size: 9px;
+
+    }
+
+
+    .amal-paper-total strong {
+
+        font-size: 12px;
 
     }
 
