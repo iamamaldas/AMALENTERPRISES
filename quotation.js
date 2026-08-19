@@ -24,7 +24,7 @@
 
     // Google Apps Script Web App URL
     const APPS_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycby1xYE853B-z_EJAL9YC8MX6DWwsxOwzlGIxhZBjSb7x89vslTF3cjd8QMarOwwbYk07A/exec";
+        "https://script.google.com/macros/s/AKfycby5Laifn1XVxLbKUFriCzaOTj9gqNBFJWG4IPIV18Qa_bD2EWFC_nRFpG2_bi6qWXITqw/exec";
 
     // Must match Code.gs
     const API_TOKEN =
