@@ -1,8 +1,9 @@
 /* =========================================================
    AMAL ENTERPRISES
-   SMART QUOTATION SYSTEM
-   Loaded automatically by fix.js
-   No index.html editing required
+   FINAL QUOTATION SYSTEM
+   ---------------------------------------------------------
+   DO NOT EDIT index.html
+   DO NOT EDIT fix.js
 ========================================================= */
 
 (function () {
@@ -13,10 +14,10 @@
        CONFIGURATION
     ===================================================== */
 
-    const ADMIN_LOGIN_ID = "office.amaldas@gmail.com";
+    const ADMIN_LOGIN = "office.amaldas@gmail.com";
     const ADMIN_PASSWORD = "amal0706";
 
-    const ADMIN_WHATSAPP = "916296471636";
+    const WHATSAPP_NUMBER = "916296471636";
 
     const COMPANY_NAME = "AMAL ENTERPRISES";
     const MSME_NUMBER = "XXXX";
@@ -24,149 +25,50 @@
     let currentRole = "";
     let adminLoggedIn = false;
 
-    let lastQuotation = null;
+
+    /* =====================================================
+       UNIT DEFINITIONS
+    ===================================================== */
+
+    const UNITS = [
+        "mg",
+        "g",
+        "kg",
+        "tonne",
+        "ml",
+        "litre",
+        "piece",
+        "box",
+        "carton",
+        "packet",
+        "bag",
+        "set",
+        "metre",
+        "cm",
+        "dozen"
+    ];
 
 
     /* =====================================================
-       UNIT SYSTEM
-       factor = value in base unit
+       SAFE NUMBER
     ===================================================== */
 
-    const UNIT_GROUPS = {
+    function numberValue(value) {
 
-        mass: {
-            label: "Weight",
-            base: "mg",
+        const number = parseFloat(value);
 
-            units: {
-                mg: {
-                    name: "Milligram (mg)",
-                    factor: 1
-                },
+        return Number.isFinite(number) && number >= 0
+            ? number
+            : 0;
 
-                g: {
-                    name: "Gram (g)",
-                    factor: 1000
-                },
-
-                kg: {
-                    name: "Kilogram (kg)",
-                    factor: 1000000
-                },
-
-                tonne: {
-                    name: "Metric Tonne (t)",
-                    factor: 1000000000
-                }
-            }
-        },
-
-        volume: {
-            label: "Volume",
-            base: "ml",
-
-            units: {
-
-                ml: {
-                    name: "Millilitre (ml)",
-                    factor: 1
-                },
-
-                litre: {
-                    name: "Litre (L)",
-                    factor: 1000
-                }
-            }
-        },
-
-        length: {
-            label: "Length",
-            base: "mm",
-
-            units: {
-
-                mm: {
-                    name: "Millimetre (mm)",
-                    factor: 1
-                },
-
-                cm: {
-                    name: "Centimetre (cm)",
-                    factor: 10
-                },
-
-                metre: {
-                    name: "Metre (m)",
-                    factor: 1000
-                }
-            }
-        },
-
-        count: {
-            label: "Count",
-            base: "piece",
-
-            units: {
-
-                piece: {
-                    name: "Piece",
-                    factor: 1
-                },
-
-                pair: {
-                    name: "Pair",
-                    factor: 2
-                },
-
-                dozen: {
-                    name: "Dozen",
-                    factor: 12
-                }
-            }
-        },
-
-        packaging: {
-            label: "Packaging Unit",
-            base: null,
-
-            units: {
-
-                pack: {
-                    name: "Pack",
-                    factor: 1
-                },
-
-                box: {
-                    name: "Box",
-                    factor: 1
-                },
-
-                set: {
-                    name: "Set",
-                    factor: 1
-                }
-            }
-        }
-
-    };
-
-
-    /* =====================================================
-       HELPERS
-    ===================================================== */
-
-    function esc(value) {
-
-        return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
     }
 
 
-    function money(value) {
+    /* =====================================================
+       FORMAT MONEY
+    ===================================================== */
+
+    function formatMoney(value) {
 
         return "₹" + Number(value || 0).toLocaleString(
             "en-IN",
@@ -179,9 +81,17 @@
     }
 
 
-    function numberFormat(value) {
+    /* =====================================================
+       FORMAT QUANTITY
+    ===================================================== */
 
-        return Number(value).toLocaleString(
+    function formatQuantity(value) {
+
+        const n = numberValue(value);
+
+        if (!n) return "0";
+
+        return n.toLocaleString(
             "en-IN",
             {
                 maximumFractionDigits: 6
@@ -191,87 +101,11 @@
     }
 
 
-    function getUnitInfo(unit) {
+    /* =====================================================
+       DATE
+    ===================================================== */
 
-        for (const groupKey in UNIT_GROUPS) {
-
-            const group = UNIT_GROUPS[groupKey];
-
-            if (group.units[unit]) {
-
-                return {
-                    group: groupKey,
-                    groupLabel: group.label,
-                    base: group.base,
-                    factor: group.units[unit].factor,
-                    name: group.units[unit].name
-                };
-
-            }
-
-        }
-
-        return null;
-
-    }
-
-
-    function areCompatibleUnits(unit1, unit2) {
-
-        const a = getUnitInfo(unit1);
-        const b = getUnitInfo(unit2);
-
-        if (!a || !b) {
-            return false;
-        }
-
-        return a.group === b.group;
-
-    }
-
-
-    /*
-       Converts quantity from selected quantity unit
-       into selected price unit.
-    */
-
-    function convertQuantity(quantity, fromUnit, toUnit) {
-
-        const from = getUnitInfo(fromUnit);
-        const to = getUnitInfo(toUnit);
-
-        if (!from || !to) {
-            return null;
-        }
-
-        if (from.group !== to.group) {
-            return null;
-        }
-
-        /*
-           Packaging units such as Pack / Box / Set
-           cannot automatically convert between each other.
-        */
-
-        if (
-            from.group === "packaging" &&
-            fromUnit !== toUnit
-        ) {
-
-            return null;
-
-        }
-
-        return (
-            quantity *
-            from.factor /
-            to.factor
-        );
-
-    }
-
-
-    function getToday() {
+    function getDate() {
 
         return new Date().toLocaleDateString(
             "en-IN",
@@ -285,147 +119,145 @@
     }
 
 
-    function getTimeStamp() {
+    /* =====================================================
+       ESCAPE HTML
+    ===================================================== */
 
-        const now = new Date();
+    function escapeHTML(value) {
 
-        return now.toLocaleString(
-            "en-IN",
-            {
-                dateStyle: "medium",
-                timeStyle: "short"
-            }
-        );
-
-    }
-
-
-    function generateQuotationNumber() {
-
-        const d = new Date();
-
-        const date =
-            d.getFullYear().toString() +
-            String(d.getMonth() + 1).padStart(2, "0") +
-            String(d.getDate()).padStart(2, "0");
-
-        const random =
-            Math.floor(
-                1000 +
-                Math.random() * 9000
-            );
-
-        return "AE-" + date + "-" + random;
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
     }
 
 
     /* =====================================================
-       CREATE NEW QUOTATION SECTION
+       WHATSAPP
     ===================================================== */
 
-    function createQuotationSection() {
+    function openWhatsApp(message) {
 
-        if (
-            document.querySelector(
-                ".amal-smart-quotation"
-            )
-        ) {
+        const url =
+            "https://wa.me/" +
+            WHATSAPP_NUMBER +
+            "?text=" +
+            encodeURIComponent(message);
 
-            return;
+        window.open(url, "_blank");
 
-        }
-
-
-        /*
-           Hide original quotation builder
-           from index.html.
-        */
-
-        const oldQuotation =
-            document.getElementById("quotation");
-
-        if (oldQuotation) {
-
-            oldQuotation.style.display = "none";
-
-        }
+    }
 
 
-        const buyerSupplier =
-            document.getElementById(
-                "buyer-supplier"
+    /* =====================================================
+       CREATE QUOTATION NUMBER
+    ===================================================== */
+
+    function quotationNumber() {
+
+        const now = new Date();
+
+        const year =
+            now.getFullYear();
+
+        const month =
+            String(now.getMonth() + 1)
+                .padStart(2, "0");
+
+        const day =
+            String(now.getDate())
+                .padStart(2, "0");
+
+        const random =
+            Math.floor(
+                1000 + Math.random() * 9000
             );
 
+        return "AE-" +
+            year +
+            month +
+            day +
+            "-" +
+            random;
 
-        const section =
-            document.createElement("section");
-
-        section.className =
-            "amal-smart-quotation";
-
-        section.id =
-            "smart-quotation";
+    }
 
 
-        section.innerHTML = `
+    /* =====================================================
+       MAIN HTML
+    ===================================================== */
 
-            <div class="amal-quote-container">
+    function createQuotationSystem() {
 
-                <div class="amal-quote-heading">
+        const quotationArea =
+            document.getElementById("quotation");
 
-                    <span class="amal-quote-kicker">
-                        BUSINESS QUOTATION
-                    </span>
+        if (!quotationArea) return;
 
-                    <h2>
-                        Smart Quotation
-                    </h2>
+        quotationArea.innerHTML = `
 
-                    <p>
-                        Select your role first, then enter
-                        the required details.
-                    </p>
+            <div class="ae-quotation-wrapper">
+
+                <div class="ae-quotation-header">
+
+                    <div>
+                        <div class="ae-small-label">
+                            B2B COMMERCIAL TOOL
+                        </div>
+
+                        <h2>Create Quotation</h2>
+
+                        <p>
+                            Prepare, negotiate and share
+                            quotations directly through WhatsApp.
+                        </p>
+                    </div>
+
+                    <div class="ae-admin-status"
+                         id="aeAdminStatus">
+                        Admin Locked
+                    </div>
 
                 </div>
 
 
-                <!-- ROLE SELECT -->
+                <!-- ROLE -->
 
-                <div class="amal-role-card">
+                <div class="ae-role-box">
 
-                    <label>
-                        QUOTATION PREPARED BY
-                    </label>
+                    <div class="ae-field-label">
+                        Select Role
+                    </div>
 
-                    <div class="amal-role-buttons">
+                    <div class="ae-role-buttons">
 
                         <button
                             type="button"
-                            class="amal-role-btn"
+                            class="ae-role-btn"
                             data-role="buyer">
 
-                            👤 Buyer
+                            Buyer
 
                         </button>
 
-
                         <button
                             type="button"
-                            class="amal-role-btn"
+                            class="ae-role-btn"
                             data-role="supplier">
 
-                            🏭 Supplier
+                            Supplier
 
                         </button>
 
-
                         <button
                             type="button"
-                            class="amal-role-btn"
+                            class="ae-role-btn"
                             data-role="admin">
 
-                            🔐 Admin
+                            Admin
 
                         </button>
 
@@ -437,748 +269,268 @@
                 <!-- ADMIN LOGIN -->
 
                 <div
-                    class="amal-admin-login"
-                    id="amalAdminLogin"
-                    style="display:none;">
+                    class="ae-admin-login"
+                    id="aeAdminLogin"
+                    hidden>
 
-                    <div class="amal-login-box">
+                    <div class="ae-field-label">
+                        Admin Login
+                    </div>
 
-                        <div class="amal-login-title">
-                            🔐 Admin Login
-                        </div>
+                    <input
+                        type="email"
+                        id="aeAdminEmail"
+                        placeholder="Login ID">
 
-                        <p>
-                            Admin access is required to
-                            create negotiated quotations.
-                        </p>
+                    <input
+                        type="password"
+                        id="aeAdminPassword"
+                        placeholder="Password">
 
+                    <button
+                        type="button"
+                        class="ae-login-btn"
+                        id="aeLoginBtn">
 
-                        <input
-                            type="email"
-                            id="amalAdminId"
-                            placeholder="Login ID"
-                            autocomplete="username"
-                        >
+                        Admin Login
 
+                    </button>
 
-                        <input
-                            type="password"
-                            id="amalAdminPassword"
-                            placeholder="Password"
-                            autocomplete="current-password"
-                        >
-
-
-                        <button
-                            type="button"
-                            id="amalLoginBtn">
-
-                            Login as Admin
-
-                        </button>
-
-
-                        <div
-                            id="amalLoginMessage"
-                            class="amal-login-message">
-                        </div>
-
+                    <div
+                        class="ae-login-message"
+                        id="aeLoginMessage">
                     </div>
 
                 </div>
 
 
-                <!-- QUOTATION WORK AREA -->
+                <!-- FORM -->
 
                 <div
-                    class="amal-quote-work"
-                    id="amalQuoteWork"
-                    style="display:none;">
+                    class="ae-form-panel"
+                    id="aeFormPanel"
+                    hidden>
 
-                    <div class="amal-work-header">
-
-                        <div>
-
-                            <span
-                                class="amal-current-role"
-                                id="amalCurrentRole">
-                            </span>
-
-                            <h3 id="amalFormTitle">
-                                Quotation Details
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="amal-logout-btn"
-                            id="amalLogoutBtn"
-                            style="display:none;">
-
-                            Logout
-
-                        </button>
-
+                    <div class="ae-form-role-title"
+                         id="aeRoleTitle">
                     </div>
 
 
-                    <!-- ADMIN RECIPIENT TYPE -->
+                    <div class="ae-form-grid">
 
-                    <div
-                        id="amalAdminRecipientWrap"
-                        style="display:none;">
+                        <div class="ae-field">
 
-                        <label>
-                            SEND QUOTATION TO
-                        </label>
-
-                        <select
-                            id="amalAdminRecipient">
-
-                            <option value="Buyer">
-                                Buyer
-                            </option>
-
-                            <option value="Supplier">
-                                Supplier
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="amal-form-grid">
-
-                        <!-- NAME -->
-
-                        <div class="amal-field">
-
-                            <label>
-                                Name *
-                            </label>
+                            <label>Name</label>
 
                             <input
+                                id="aeName"
                                 type="text"
-                                id="amalName"
-                                placeholder="Enter name"
-                            >
+                                placeholder="Enter name">
 
                         </div>
 
 
-                        <!-- COMPANY -->
+                        <div class="ae-field">
 
-                        <div class="amal-field">
-
-                            <label>
-                                Company Name
-                            </label>
+                            <label>Company Name</label>
 
                             <input
+                                id="aeCompany"
                                 type="text"
-                                id="amalCompany"
-                                placeholder="Enter company name"
-                            >
+                                placeholder="Enter company name">
 
                         </div>
 
 
-                        <!-- MOBILE -->
+                        <div class="ae-field">
 
-                        <div class="amal-field">
-
-                            <label>
-                                WhatsApp Mobile Number *
-                            </label>
+                            <label>Mobile Number</label>
 
                             <input
+                                id="aeMobile"
                                 type="tel"
-                                id="amalMobile"
                                 inputmode="numeric"
-                                maxlength="15"
-                                placeholder="10 digit mobile number"
-                            >
+                                maxlength="10"
+                                placeholder="10 digit mobile number">
 
                         </div>
 
 
-                        <!-- PRODUCT -->
+                        <div class="ae-field">
 
-                        <div class="amal-field">
-
-                            <label>
-                                Product / Material *
-                            </label>
-
-                            <select id="amalProduct">
-
-                                <option value="">
-                                    Select product
-                                </option>
-
-                                <option>
-                                    Biodegradable Bags
-                                </option>
-
-                                <option>
-                                    Compostable Bags
-                                </option>
-
-                                <option>
-                                    Polyethylene Carry Bags
-                                </option>
-
-                                <option>
-                                    Corrugated Carton Boxes
-                                </option>
-
-                                <option>
-                                    Packaging Materials
-                                </option>
-
-                                <option>
-                                    Jute / Natural Fibre Bags
-                                </option>
-
-                                <option>
-                                    Other
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <!-- QUANTITY -->
-
-                        <div class="amal-field">
-
-                            <label>
-                                Quantity *
-                            </label>
+                            <label>Product / Material</label>
 
                             <input
-                                type="number"
-                                id="amalQuantity"
-                                min="0"
-                                step="any"
-                                placeholder="Enter quantity"
-                            >
+                                id="aeProduct"
+                                type="text"
+                                placeholder="Product or material">
 
                         </div>
 
-
-                        <!-- QUANTITY UNIT -->
-
-                        <div class="amal-field">
-
-                            <label>
-                                Quantity Unit *
-                            </label>
-
-                            <select
-                                id="amalQuantityUnit">
-
-                                <optgroup label="Weight">
-
-                                    <option value="mg">
-                                        Milligram (mg)
-                                    </option>
-
-                                    <option value="g">
-                                        Gram (g)
-                                    </option>
-
-                                    <option value="kg" selected>
-                                        Kilogram (kg)
-                                    </option>
-
-                                    <option value="tonne">
-                                        Metric Tonne (t)
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Volume">
-
-                                    <option value="ml">
-                                        Millilitre (ml)
-                                    </option>
-
-                                    <option value="litre">
-                                        Litre (L)
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Length">
-
-                                    <option value="mm">
-                                        Millimetre (mm)
-                                    </option>
-
-                                    <option value="cm">
-                                        Centimetre (cm)
-                                    </option>
-
-                                    <option value="metre">
-                                        Metre (m)
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Count">
-
-                                    <option value="piece">
-                                        Piece
-                                    </option>
-
-                                    <option value="pair">
-                                        Pair
-                                    </option>
-
-                                    <option value="dozen">
-                                        Dozen
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Packaging">
-
-                                    <option value="pack">
-                                        Pack
-                                    </option>
-
-                                    <option value="box">
-                                        Box
-                                    </option>
-
-                                    <option value="set">
-                                        Set
-                                    </option>
-
-                                </optgroup>
-
-                            </select>
-
-                        </div>
-
-
-                        <!-- PRICE -->
-
-                        <div class="amal-field">
-
-                            <label>
-                                Unit Price *
-                            </label>
-
-                            <input
-                                type="number"
-                                id="amalPrice"
-                                min="0"
-                                step="any"
-                                placeholder="Enter unit price"
-                            >
-
-                        </div>
-
-
-                        <!-- PRICE UNIT -->
-
-                        <div class="amal-field">
-
-                            <label>
-                                Price Per Unit *
-                            </label>
-
-                            <select
-                                id="amalPriceUnit">
-
-                                <optgroup label="Weight">
-
-                                    <option value="mg">
-                                        Per mg
-                                    </option>
-
-                                    <option value="g">
-                                        Per g
-                                    </option>
-
-                                    <option value="kg" selected>
-                                        Per kg
-                                    </option>
-
-                                    <option value="tonne">
-                                        Per tonne
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Volume">
-
-                                    <option value="ml">
-                                        Per ml
-                                    </option>
-
-                                    <option value="litre">
-                                        Per litre
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Length">
-
-                                    <option value="mm">
-                                        Per mm
-                                    </option>
-
-                                    <option value="cm">
-                                        Per cm
-                                    </option>
-
-                                    <option value="metre">
-                                        Per metre
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Count">
-
-                                    <option value="piece">
-                                        Per piece
-                                    </option>
-
-                                    <option value="pair">
-                                        Per pair
-                                    </option>
-
-                                    <option value="dozen">
-                                        Per dozen
-                                    </option>
-
-                                </optgroup>
-
-
-                                <optgroup label="Packaging">
-
-                                    <option value="pack">
-                                        Per pack
-                                    </option>
-
-                                    <option value="box">
-                                        Per box
-                                    </option>
-
-                                    <option value="set">
-                                        Per set
-                                    </option>
-
-                                </optgroup>
-
-                            </select>
-
-                        </div>
 
                     </div>
 
 
-                    <!-- SPECIFICATION -->
+                    <div class="ae-field">
 
-                    <div class="amal-field full">
-
-                        <label>
-                            Product Specification / Requirement
-                        </label>
+                        <label>Product Specification</label>
 
                         <textarea
-                            id="amalDetails"
-                            rows="4"
-                            placeholder="Size, material, thickness, colour, printing, delivery requirement etc."
-                        ></textarea>
+                            id="aeSpecification"
+                            rows="3"
+                            placeholder="Size, colour, thickness, GSM, quality, packing requirement etc."></textarea>
 
                     </div>
 
 
-                    <!-- CALCULATION STATUS -->
+                    <!-- QUANTITY -->
 
-                    <div
-                        class="amal-calculation"
-                        id="amalCalculation">
+                    <div class="ae-quantity-row">
 
-                        Enter quantity and price to calculate.
+                        <div class="ae-field">
+
+                            <label>Quantity</label>
+
+                            <input
+                                id="aeQuantity"
+                                type="number"
+                                min="0"
+                                step="any"
+                                placeholder="Enter quantity">
+
+                        </div>
+
+
+                        <div class="ae-field">
+
+                            <label>Unit</label>
+
+                            <select id="aeUnit">
+
+                                <option value="">
+                                    Select Unit
+                                </option>
+
+                                ${UNITS.map(unit => `
+                                    <option value="${unit}">
+                                        ${unit}
+                                    </option>
+                                `).join("")}
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="ae-field">
+
+                            <label>Unit Price</label>
+
+                            <input
+                                id="aePrice"
+                                type="number"
+                                min="0"
+                                step="any"
+                                placeholder="Price per selected unit">
+
+                        </div>
 
                     </div>
 
 
-                    <!-- ACTION -->
+                    <!-- STATUS -->
+
+                    <div class="ae-status-section">
+
+                        <div class="ae-field-label">
+                            Quotation Status
+                        </div>
+
+                        <div class="ae-status-options">
+
+                            <label class="ae-status-option">
+
+                                <input
+                                    type="radio"
+                                    name="aeQuotationStatus"
+                                    value="Final Quotation">
+
+                                <span>
+                                    Final Quotation
+                                </span>
+
+                            </label>
+
+
+                            <label class="ae-status-option">
+
+                                <input
+                                    type="radio"
+                                    name="aeQuotationStatus"
+                                    value="Negotiable">
+
+                                <span>
+                                    Negotiable
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="ae-negotiation-note"
+                         id="aeNegotiationNote">
+
+                        Negotiable quotations may be discussed
+                        directly between the relevant parties.
+
+                    </div>
+
 
                     <button
                         type="button"
-                        class="amal-generate-btn"
-                        id="amalGenerateBtn">
+                        class="ae-generate-btn"
+                        id="aeGenerateBtn">
 
-                        🧾 Generate Quotation
+                        Generate Quotation
 
                     </button>
 
                 </div>
 
+            </div>
 
-                <!-- FLASH PREVIEW -->
 
-                <div
-                    class="amal-preview-overlay"
-                    id="amalPreviewOverlay"
-                    style="display:none;">
+            <!-- FLASH PREVIEW -->
 
-                    <div class="amal-preview-modal">
+            <div
+                class="ae-modal-overlay"
+                id="aeModal"
+                hidden>
 
-                        <button
-                            type="button"
-                            class="amal-preview-close"
-                            id="amalPreviewClose">
+                <div class="ae-modal-card">
 
-                            ×
+                    <button
+                        type="button"
+                        class="ae-close-btn"
+                        id="aeCloseModal">
 
-                        </button>
+                        ×
 
+                    </button>
 
-                        <div
-                            class="amal-quotation-paper"
-                            id="amalQuotationPaper">
 
-                            <div class="amal-paper-header">
+                    <div
+                        class="ae-preview-document"
+                        id="aePreviewDocument">
 
-                                <div>
+                    </div>
 
-                                    <div
-                                        class="amal-paper-company">
 
-                                        AMAL ENTERPRISES
-
-                                    </div>
-
-                                    <div
-                                        class="amal-paper-msme">
-
-                                        MSME Registration No:
-                                        <strong>
-                                            XXXX
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div
-                                    class="amal-paper-type"
-                                    id="amalPreviewRole">
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="amal-paper-line"></div>
-
-
-                            <div class="amal-paper-meta">
-
-                                <div>
-                                    <span>
-                                        Quotation No.
-                                    </span>
-
-                                    <strong
-                                        id="previewQuoteNo">
-                                    </strong>
-                                </div>
-
-
-                                <div>
-                                    <span>
-                                        Date
-                                    </span>
-
-                                    <strong
-                                        id="previewDate">
-                                    </strong>
-                                </div>
-
-                            </div>
-
-
-                            <div class="amal-paper-section">
-
-                                <div class="amal-paper-section-title">
-                                    DETAILS
-                                </div>
-
-
-                                <div class="amal-paper-row">
-
-                                    <span>Name</span>
-
-                                    <strong
-                                        id="previewName">
-                                    </strong>
-
-                                </div>
-
-
-                                <div class="amal-paper-row">
-
-                                    <span>Company</span>
-
-                                    <strong
-                                        id="previewCompany">
-                                    </strong>
-
-                                </div>
-
-
-                                <div class="amal-paper-row">
-
-                                    <span>WhatsApp</span>
-
-                                    <strong
-                                        id="previewMobile">
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="amal-paper-section">
-
-                                <div class="amal-paper-section-title">
-                                    PRODUCT & PRICE
-                                </div>
-
-
-                                <div class="amal-paper-row">
-
-                                    <span>Product</span>
-
-                                    <strong
-                                        id="previewProduct2">
-                                    </strong>
-
-                                </div>
-
-
-                                <div class="amal-paper-row">
-
-                                    <span>Quantity</span>
-
-                                    <strong
-                                        id="previewQuantity2">
-                                    </strong>
-
-                                </div>
-
-
-                                <div class="amal-paper-row">
-
-                                    <span>Unit Price</span>
-
-                                    <strong
-                                        id="previewUnitPrice2">
-                                    </strong>
-
-                                </div>
-
-
-                                <div class="amal-paper-row">
-
-                                    <span>Price Basis</span>
-
-                                    <strong
-                                        id="previewPriceUnit2">
-                                    </strong>
-
-                                </div>
-
-
-                                <div class="amal-paper-total">
-
-                                    <span>
-                                        ESTIMATED TOTAL
-                                    </span>
-
-                                    <strong
-                                        id="previewTotal2">
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="amal-paper-section">
-
-                                <div class="amal-paper-section-title">
-                                    SPECIFICATION
-                                </div>
-
-                                <div
-                                    class="amal-paper-details"
-                                    id="previewDetails">
-                                </div>
-
-                            </div>
-
-
-                            <div class="amal-paper-footer">
-
-                                This quotation is subject to
-                                final commercial confirmation
-                                and mutually agreed terms.
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- PREVIEW ACTIONS -->
-
-                        <div class="amal-preview-actions">
-
-                            <button
-                                type="button"
-                                id="amalWhatsappBtn"
-                                class="amal-whatsapp-btn">
-
-                                <i class="fa-brands fa-whatsapp"></i>
-                                WhatsApp
-
-                            </button>
-
-
-                            <button
-                                type="button"
-                                id="amalPdfBtn"
-                                class="amal-pdf-btn"
-                                style="display:none;">
-
-                                📄 Save PDF
-
-                            </button>
-
-                        </div>
-
+                    <div class="ae-action-buttons"
+                         id="aeActionButtons">
 
                     </div>
 
@@ -1189,49 +541,29 @@
         `;
 
 
-        /*
-           Place quotation section AFTER
-           Buyer / Supplier Google Form section.
-        */
-
-        if (buyerSupplier) {
-
-            buyerSupplier.insertAdjacentElement(
-                "afterend",
-                section
-            );
-
-        } else {
-
-            document.body.appendChild(section);
-
-        }
-
-
         bindEvents();
 
     }
 
 
     /* =====================================================
-       EVENT BINDING
+       ROLE BUTTONS
     ===================================================== */
 
     function bindEvents() {
 
         document
-            .querySelectorAll(
-                ".amal-role-btn"
-            )
+            .querySelectorAll(".ae-role-btn")
             .forEach(function (button) {
 
                 button.addEventListener(
                     "click",
                     function () {
 
-                        selectRole(
-                            button.dataset.role
-                        );
+                        const role =
+                            button.dataset.role;
+
+                        selectRole(role);
 
                     }
                 );
@@ -1240,9 +572,7 @@
 
 
         document
-            .getElementById(
-                "amalLoginBtn"
-            )
+            .getElementById("aeLoginBtn")
             .addEventListener(
                 "click",
                 adminLogin
@@ -1250,19 +580,7 @@
 
 
         document
-            .getElementById(
-                "amalLogoutBtn"
-            )
-            .addEventListener(
-                "click",
-                adminLogout
-            );
-
-
-        document
-            .getElementById(
-                "amalGenerateBtn"
-            )
+            .getElementById("aeGenerateBtn")
             .addEventListener(
                 "click",
                 generateQuotation
@@ -1270,9 +588,7 @@
 
 
         document
-            .getElementById(
-                "amalPreviewClose"
-            )
+            .getElementById("aeCloseModal")
             .addEventListener(
                 "click",
                 closePreview
@@ -1280,64 +596,13 @@
 
 
         document
-            .getElementById(
-                "amalWhatsappBtn"
-            )
-            .addEventListener(
-                "click",
-                sendWhatsApp
-            );
-
-
-        document
-            .getElementById(
-                "amalPdfBtn"
-            )
-            .addEventListener(
-                "click",
-                savePDF
-            );
-
-
-        [
-            "amalQuantity",
-            "amalPrice",
-            "amalQuantityUnit",
-            "amalPriceUnit"
-        ]
-        .forEach(function (id) {
-
-            const el =
-                document.getElementById(id);
-
-            el.addEventListener(
-                "input",
-                updateCalculation
-            );
-
-            el.addEventListener(
-                "change",
-                updateCalculation
-            );
-
-        });
-
-
-        /*
-           Close preview by clicking outside.
-        */
-
-        document
-            .getElementById(
-                "amalPreviewOverlay"
-            )
+            .getElementById("aeModal")
             .addEventListener(
                 "click",
                 function (event) {
 
                     if (
-                        event.target ===
-                        this
+                        event.target === this
                     ) {
 
                         closePreview();
@@ -1348,106 +613,84 @@
             );
 
 
-        /*
-           Escape closes preview.
-        */
+        [
+            "aeQuantity",
+            "aePrice",
+            "aeUnit"
+        ].forEach(function (id) {
 
-        document.addEventListener(
-            "keydown",
-            function (event) {
+            const element =
+                document.getElementById(id);
 
-                if (
-                    event.key === "Escape"
-                ) {
+            element.addEventListener(
+                "input",
+                updateLiveCalculation
+            );
 
-                    closePreview();
+            element.addEventListener(
+                "change",
+                updateLiveCalculation
+            );
 
-                }
-
-            }
-        );
+        });
 
     }
 
 
     /* =====================================================
-       ROLE SELECTION
+       SELECT ROLE
     ===================================================== */
 
     function selectRole(role) {
 
         currentRole = role;
 
-
         document
-            .querySelectorAll(
-                ".amal-role-btn"
-            )
-            .forEach(function (btn) {
+            .querySelectorAll(".ae-role-btn")
+            .forEach(function (button) {
 
-                btn.classList.toggle(
-                    "active",
-                    btn.dataset.role === role
+                button.classList.toggle(
+                    "selected",
+                    button.dataset.role === role
                 );
 
             });
 
 
-        const login =
-            document.getElementById(
-                "amalAdminLogin"
-            );
+        const loginBox =
+            document.getElementById("aeAdminLogin");
 
-        const work =
-            document.getElementById(
-                "amalQuoteWork"
-            );
+        const form =
+            document.getElementById("aeFormPanel");
 
 
         if (role === "admin") {
 
-            /*
-               Admin always requires fresh login.
-            */
+            form.hidden = true;
+
+            loginBox.hidden =
+                adminLoggedIn;
+
+            if (adminLoggedIn) {
+
+                showForm("Admin");
+
+            }
+
+        }
+        else {
+
+            loginBox.hidden = true;
 
             adminLoggedIn = false;
 
-            login.style.display =
-                "block";
-
-            work.style.display =
-                "none";
-
-            document
-                .getElementById(
-                    "amalAdminId"
-                )
-                .value = "";
-
-            document
-                .getElementById(
-                    "amalAdminPassword"
-                )
-                .value = "";
-
-            document
-                .getElementById(
-                    "amalLoginMessage"
-                )
-                .textContent = "";
-
-            return;
+            showForm(
+                role === "buyer"
+                    ? "Buyer"
+                    : "Supplier"
+            );
 
         }
-
-
-        login.style.display =
-            "none";
-
-        work.style.display =
-            "block";
-
-        configureRoleUI();
 
     }
 
@@ -1458,71 +701,57 @@
 
     function adminLogin() {
 
-        const id =
+        const email =
             document
-                .getElementById(
-                    "amalAdminId"
-                )
+                .getElementById("aeAdminEmail")
                 .value
                 .trim();
 
-
         const password =
             document
-                .getElementById(
-                    "amalAdminPassword"
-                )
+                .getElementById("aeAdminPassword")
                 .value;
 
 
         const message =
-            document
-                .getElementById(
-                    "amalLoginMessage"
-                );
+            document.getElementById(
+                "aeLoginMessage"
+            );
 
 
         if (
-            id === ADMIN_LOGIN_ID &&
+            email === ADMIN_LOGIN &&
             password === ADMIN_PASSWORD
         ) {
 
             adminLoggedIn = true;
 
             message.textContent =
-                "✓ Admin verified successfully.";
+                "Admin login successful.";
 
             message.className =
-                "amal-login-message success";
+                "ae-login-message success";
 
 
             document
                 .getElementById(
-                    "amalAdminLogin"
+                    "aeAdminLogin"
                 )
-                .style.display =
-                "none";
+                .hidden = true;
 
 
-            document
-                .getElementById(
-                    "amalQuoteWork"
-                )
-                .style.display =
-                "block";
+            showForm("Admin");
 
-
-            configureRoleUI();
-
-        } else {
+        }
+        else {
 
             adminLoggedIn = false;
 
             message.textContent =
-                "Invalid Admin Login ID or Password.";
+                "Invalid Admin login details.";
 
             message.className =
-                "amal-login-message error";
+                "ae-login-message error";
 
         }
 
@@ -1530,374 +759,220 @@
 
 
     /* =====================================================
-       ADMIN LOGOUT
+       SHOW FORM
     ===================================================== */
 
-    function adminLogout() {
+    function showForm(roleName) {
 
-        adminLoggedIn = false;
+        const form =
+            document.getElementById(
+                "aeFormPanel"
+            );
 
-        currentRole = "";
-
-
-        /*
-           Hide entire quotation work area.
-        */
-
-        document
-            .getElementById(
-                "amalQuoteWork"
-            )
-            .style.display =
-            "none";
+        form.hidden = false;
 
 
         document
-            .getElementById(
-                "amalAdminLogin"
-            )
-            .style.display =
-            "none";
+            .getElementById("aeRoleTitle")
+            .textContent =
+            roleName + " Quotation";
 
 
-        document
-            .querySelectorAll(
-                ".amal-role-btn"
-            )
-            .forEach(function (btn) {
-
-                btn.classList.remove(
-                    "active"
-                );
-
-            });
+        const status =
+            document.getElementById(
+                "aeAdminStatus"
+            );
 
 
-        clearForm();
+        if (roleName === "Admin") {
 
+            status.textContent =
+                "Admin Unlocked";
 
-        window.scrollTo({
-            top:
-                document
-                    .getElementById(
-                        "smart-quotation"
-                    )
-                    .offsetTop - 70,
+            status.classList.add(
+                "unlocked"
+            );
 
-            behavior: "smooth"
-        });
+        }
+        else {
+
+            status.textContent =
+                roleName + " Mode";
+
+            status.classList.remove(
+                "unlocked"
+            );
+
+        }
 
     }
 
 
     /* =====================================================
-       ROLE UI
+       LIVE CALCULATION
     ===================================================== */
 
-    function configureRoleUI() {
-
-        const work =
-            document.getElementById(
-                "amalQuoteWork"
-            );
-
-
-        const title =
-            document.getElementById(
-                "amalFormTitle"
-            );
-
-
-        const current =
-            document.getElementById(
-                "amalCurrentRole"
-            );
-
-
-        const logout =
-            document.getElementById(
-                "amalLogoutBtn"
-            );
-
-
-        const recipient =
-            document.getElementById(
-                "amalAdminRecipientWrap"
-            );
-
-
-        if (currentRole === "buyer") {
-
-            current.textContent =
-                "BUYER";
-
-            title.textContent =
-                "Buyer Quotation";
-
-            logout.style.display =
-                "none";
-
-            recipient.style.display =
-                "none";
-
-        }
-
-
-        else if (currentRole === "supplier") {
-
-            current.textContent =
-                "SUPPLIER";
-
-            title.textContent =
-                "Supplier Quotation";
-
-            logout.style.display =
-                "none";
-
-            recipient.style.display =
-                "none";
-
-        }
-
-
-        else if (
-            currentRole === "admin" &&
-            adminLoggedIn
-        ) {
-
-            current.textContent =
-                "ADMIN";
-
-            title.textContent =
-                "Admin Negotiation / Quotation";
-
-            logout.style.display =
-                "inline-flex";
-
-            recipient.style.display =
-                "block";
-
-        }
-
-
-        work.style.display =
-            "block";
-
-    }
-
-
-    /* =====================================================
-       CALCULATION
-    ===================================================== */
-
-    function calculateTotal() {
+    function updateLiveCalculation() {
 
         const quantity =
-            parseFloat(
-                document
-                    .getElementById(
-                        "amalQuantity"
-                    )
-                    .value
+            numberValue(
+                document.getElementById(
+                    "aeQuantity"
+                ).value
+            );
+
+        const price =
+            numberValue(
+                document.getElementById(
+                    "aePrice"
+                ).value
+            );
+
+        const total =
+            quantity * price;
+
+
+        const note =
+            document.getElementById(
+                "aeNegotiationNote"
+            );
+
+
+        const selected =
+            document.querySelector(
+                'input[name="aeQuotationStatus"]:checked'
+            );
+
+
+        if (
+            selected &&
+            selected.value === "Negotiable"
+        ) {
+
+            note.style.display = "block";
+
+        }
+        else {
+
+            note.style.display = "none";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       GET FORM DATA
+    ===================================================== */
+
+    function getFormData() {
+
+        const status =
+            document.querySelector(
+                'input[name="aeQuotationStatus"]:checked'
+            );
+
+
+        const quantity =
+            numberValue(
+                document.getElementById(
+                    "aeQuantity"
+                ).value
             );
 
 
         const price =
-            parseFloat(
-                document
-                    .getElementById(
-                        "amalPrice"
-                    )
-                    .value
+            numberValue(
+                document.getElementById(
+                    "aePrice"
+                ).value
             );
-
-
-        const quantityUnit =
-            document
-                .getElementById(
-                    "amalQuantityUnit"
-                )
-                .value;
-
-
-        const priceUnit =
-            document
-                .getElementById(
-                    "amalPriceUnit"
-                )
-                .value;
-
-
-        if (
-            !Number.isFinite(quantity) ||
-            quantity <= 0 ||
-            !Number.isFinite(price) ||
-            price < 0
-        ) {
-
-            return {
-                valid: false
-            };
-
-        }
-
-
-        const convertedQuantity =
-            convertQuantity(
-                quantity,
-                quantityUnit,
-                priceUnit
-            );
-
-
-        if (
-            convertedQuantity === null
-        ) {
-
-            return {
-                valid: false,
-                error:
-                    "Quantity Unit and Price Unit are not compatible."
-            };
-
-        }
-
-
-        const total =
-            convertedQuantity * price;
 
 
         return {
 
-            valid: true,
+            role:
+                currentRole,
 
-            quantity,
+            roleName:
+                currentRole === "admin"
+                    ? "Admin"
+                    : currentRole === "buyer"
+                        ? "Buyer"
+                        : "Supplier",
 
-            price,
+            name:
+                document
+                    .getElementById("aeName")
+                    .value
+                    .trim(),
 
-            quantityUnit,
+            company:
+                document
+                    .getElementById("aeCompany")
+                    .value
+                    .trim(),
 
-            priceUnit,
+            mobile:
+                document
+                    .getElementById("aeMobile")
+                    .value
+                    .trim(),
 
-            convertedQuantity,
+            product:
+                document
+                    .getElementById("aeProduct")
+                    .value
+                    .trim(),
 
-            total
+            specification:
+                document
+                    .getElementById("aeSpecification")
+                    .value
+                    .trim(),
+
+            quantity:
+                quantity,
+
+            unit:
+                document
+                    .getElementById("aeUnit")
+                    .value,
+
+            price:
+                price,
+
+            total:
+                quantity * price,
+
+            status:
+                status
+                    ? status.value
+                    : ""
 
         };
 
     }
 
 
-    function updateCalculation() {
-
-        const box =
-            document.getElementById(
-                "amalCalculation"
-            );
-
-
-        const result =
-            calculateTotal();
-
-
-        if (!result.valid) {
-
-            box.textContent =
-                result.error ||
-                "Enter quantity and price to calculate.";
-
-            box.classList.remove(
-                "valid"
-            );
-
-            return;
-
-        }
-
-
-        box.classList.add(
-            "valid"
-        );
-
-
-        box.innerHTML = `
-
-            <span>
-                ${numberFormat(result.quantity)}
-                ${esc(result.quantityUnit)}
-            </span>
-
-            <span class="amal-calc-arrow">
-                →
-            </span>
-
-            <span>
-                ${numberFormat(result.convertedQuantity)}
-                ${esc(result.priceUnit)}
-            </span>
-
-            <strong>
-                ${money(result.total)}
-            </strong>
-
-        `;
-
-    }
-
-
     /* =====================================================
-       VALIDATE FORM
+       VALIDATION
     ===================================================== */
 
-    function validateForm() {
+    function validateData(data) {
 
-        const name =
-            document
-                .getElementById(
-                    "amalName"
-                )
-                .value
-                .trim();
+        if (!data.name) {
 
+            alert("Please enter Name.");
 
-        const mobile =
-            document
-                .getElementById(
-                    "amalMobile"
-                )
-                .value
-                .replace(/\D/g, "");
+            return false;
+
+        }
 
 
-        const product =
-            document
-                .getElementById(
-                    "amalProduct"
-                )
-                .value;
+        if (!data.company) {
 
-
-        const quantity =
-            document
-                .getElementById(
-                    "amalQuantity"
-                )
-                .value;
-
-
-        const price =
-            document
-                .getElementById(
-                    "amalPrice"
-                )
-                .value;
-
-
-        if (!name) {
-
-            alert(
-                "Please enter Name."
-            );
+            alert("Please enter Company Name.");
 
             return false;
 
@@ -1905,11 +980,13 @@
 
 
         if (
-            mobile.length < 10
+            !/^[0-9]{10}$/.test(
+                data.mobile.replace(/\D/g, "")
+            )
         ) {
 
             alert(
-                "Please enter a valid WhatsApp mobile number."
+                "Please enter a valid 10 digit mobile number."
             );
 
             return false;
@@ -1917,10 +994,10 @@
         }
 
 
-        if (!product) {
+        if (!data.product) {
 
             alert(
-                "Please select Product / Material."
+                "Please enter Product / Material."
             );
 
             return false;
@@ -1928,45 +1005,37 @@
         }
 
 
-        if (
-            !quantity ||
-            Number(quantity) <= 0
-        ) {
+        if (!data.quantity || data.quantity <= 0) {
 
-            alert(
-                "Please enter a valid Quantity."
-            );
+            alert("Please enter a valid quantity.");
 
             return false;
 
         }
 
 
-        if (
-            price === "" ||
-            Number(price) < 0
-        ) {
+        if (!data.unit) {
 
-            alert(
-                "Please enter Unit Price."
-            );
+            alert("Please select a unit.");
 
             return false;
 
         }
 
 
-        const calculation =
-            calculateTotal();
+        if (!data.price || data.price < 0) {
+
+            alert("Please enter a valid unit price.");
+
+            return false;
+
+        }
 
 
-        if (
-            !calculation.valid
-        ) {
+        if (!data.status) {
 
             alert(
-                calculation.error ||
-                "Please check Quantity and Price Unit."
+                "Please select Final Quotation or Negotiable."
             );
 
             return false;
@@ -1980,7 +1049,7 @@
 
 
     /* =====================================================
-       GENERATE QUOTATION
+       GENERATE
     ===================================================== */
 
     function generateQuotation() {
@@ -1990,8 +1059,17 @@
             !adminLoggedIn
         ) {
 
+            alert("Please login as Admin first.");
+
+            return;
+
+        }
+
+
+        if (!currentRole) {
+
             alert(
-                "Admin login is required."
+                "Please select Buyer, Supplier or Admin first."
             );
 
             return;
@@ -1999,317 +1077,723 @@
         }
 
 
-        if (!validateForm()) {
+        const data =
+            getFormData();
 
+
+        if (!validateData(data)) {
             return;
-
         }
 
 
-        const name =
-            document
-                .getElementById(
-                    "amalName"
-                )
-                .value
-                .trim();
+        const quoteNo =
+            quotationNumber();
 
 
-        const company =
-            document
-                .getElementById(
-                    "amalCompany"
-                )
-                .value
-                .trim();
-
-
-        const mobile =
-            document
-                .getElementById(
-                    "amalMobile"
-                )
-                .value
-                .replace(/\D/g, "");
-
-
-        const product =
-            document
-                .getElementById(
-                    "amalProduct"
-                )
-                .value;
-
-
-        const quantity =
-            parseFloat(
-                document
-                    .getElementById(
-                        "amalQuantity"
-                    )
-                    .value
-            );
-
-
-        const quantityUnit =
-            document
-                .getElementById(
-                    "amalQuantityUnit"
-                )
-                .value;
-
-
-        const price =
-            parseFloat(
-                document
-                    .getElementById(
-                        "amalPrice"
-                    )
-                    .value
-            );
-
-
-        const priceUnit =
-            document
-                .getElementById(
-                    "amalPriceUnit"
-                )
-                .value;
-
-
-        const details =
-            document
-                .getElementById(
-                    "amalDetails"
-                )
-                .value
-                .trim();
-
-
-        const calculation =
-            calculateTotal();
-
-
-        let recipientRole =
-            currentRole;
-
-
-        if (currentRole === "admin") {
-
-            recipientRole =
-                document
-                    .getElementById(
-                        "amalAdminRecipient"
-                    )
-                    .value;
-
-        }
-
-
-        const quoteNumber =
-            generateQuotationNumber();
-
-
-        lastQuotation = {
-
-            quoteNumber,
-
-            date: getToday(),
-
-            timestamp:
-                getTimeStamp(),
-
-            role: currentRole,
-
-            recipientRole,
-
-            name,
-
-            company:
-                company || "—",
-
-            mobile,
-
-            product,
-
-            quantity,
-
-            quantityUnit,
-
-            price,
-
-            priceUnit,
-
-            convertedQuantity:
-                calculation.convertedQuantity,
-
-            total:
-                calculation.total,
-
-            details:
-                details || "—"
-
-        };
-
-
-        fillPreview(
-            lastQuotation
+        showPreview(
+            data,
+            quoteNo
         );
-
-
-        /*
-           Admin gets PDF button.
-           Buyer/Supplier do not.
-        */
-
-        const pdfBtn =
-            document.getElementById(
-                "amalPdfBtn"
-            );
-
-
-        if (
-            currentRole === "admin" &&
-            adminLoggedIn
-        ) {
-
-            pdfBtn.style.display =
-                "inline-flex";
-
-        } else {
-
-            pdfBtn.style.display =
-                "none";
-
-        }
-
-
-        /*
-           Flash preview modal.
-        */
-
-        document
-            .getElementById(
-                "amalPreviewOverlay"
-            )
-            .style.display =
-            "flex";
 
     }
 
 
     /* =====================================================
-       FILL PREVIEW
+       PREVIEW
     ===================================================== */
 
-    function fillPreview(data) {
+    function showPreview(
+        data,
+        quoteNo
+    ) {
 
-        const roleTitle =
-            currentRole === "admin"
-                ? "ADMIN QUOTATION"
-                : currentRole.toUpperCase() +
-                  " QUOTATION";
+        const documentBox =
+            document.getElementById(
+                "aePreviewDocument"
+            );
+
+
+        const roleLabel =
+            escapeHTML(
+                data.roleName
+            );
+
+
+        documentBox.innerHTML = `
+
+            <div class="ae-preview-top">
+
+                <div>
+
+                    <div class="ae-preview-company">
+                        ${COMPANY_NAME}
+                    </div>
+
+                    ${
+                        data.roleName === "Admin"
+                            ? `
+                                <div class="ae-preview-msme">
+                                    MSME Registration No.:
+                                    ${MSME_NUMBER}
+                                </div>
+                              `
+                            : ""
+                    }
+
+                </div>
+
+                <div class="ae-preview-quote-info">
+
+                    <strong>
+                        QUOTATION
+                    </strong>
+
+                    <span>
+                        ${quoteNo}
+                    </span>
+
+                    <span>
+                        ${getDate()}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="ae-preview-role">
+
+                ${roleLabel} Quotation
+
+            </div>
+
+
+            <div class="ae-preview-contact-grid">
+
+                <div>
+
+                    <small>
+                        Name
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(data.name)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        Company
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(data.company)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        Mobile
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(data.mobile)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="ae-preview-table">
+
+                <div class="ae-preview-table-head">
+
+                    <span>Product</span>
+                    <span>Qty</span>
+                    <span>Unit Price</span>
+                    <span>Total</span>
+
+                </div>
+
+
+                <div class="ae-preview-table-row">
+
+                    <span>
+                        ${escapeHTML(data.product)}
+                    </span>
+
+                    <span>
+                        ${formatQuantity(data.quantity)}
+                        ${escapeHTML(data.unit)}
+                    </span>
+
+                    <span>
+                        ${formatMoney(data.price)}
+                        / ${escapeHTML(data.unit)}
+                    </span>
+
+                    <strong>
+                        ${formatMoney(data.total)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            ${
+                data.specification
+                    ? `
+                        <div class="ae-preview-spec">
+
+                            <small>
+                                Specification
+                            </small>
+
+                            <p>
+                                ${escapeHTML(
+                                    data.specification
+                                )}
+                            </p>
+
+                        </div>
+                      `
+                    : ""
+            }
+
+
+            <div class="ae-preview-bottom">
+
+                <div>
+
+                    <small>
+                        Quotation Status
+                    </small>
+
+                    <strong
+                        class="${
+                            data.status === "Negotiable"
+                                ? "negotiable"
+                                : "final"
+                        }">
+
+                        ${escapeHTML(data.status)}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="ae-preview-total">
+
+                    <small>
+                        Estimated Total
+                    </small>
+
+                    <strong>
+                        ${formatMoney(data.total)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            ${
+                data.status === "Negotiable"
+                    ? `
+                        <div class="ae-preview-note">
+
+                            Price is subject to negotiation
+                            and commercial discussion.
+
+                        </div>
+                      `
+                    : ""
+            }
+
+        `;
+
+
+        createActionButtons(
+            data,
+            quoteNo
+        );
+
+
+        const modal =
+            document.getElementById(
+                "aeModal"
+            );
+
+        modal.hidden = false;
+
+        document.body.classList.add(
+            "ae-modal-open"
+        );
+
+    }
+
+
+    /* =====================================================
+       ACTION BUTTONS
+    ===================================================== */
+
+    function createActionButtons(
+        data,
+        quoteNo
+    ) {
+
+        const buttons =
+            document.getElementById(
+                "aeActionButtons"
+            );
+
+
+        let html = `
+
+            <button
+                type="button"
+                class="ae-whatsapp-btn"
+                id="aeWhatsAppBtn">
+
+                <i class="fa-brands fa-whatsapp"></i>
+                WhatsApp
+
+            </button>
+
+        `;
+
+
+        if (
+            data.roleName === "Admin"
+        ) {
+
+            html += `
+
+                <button
+                    type="button"
+                    class="ae-pdf-btn"
+                    id="aePdfBtn">
+
+                    Save PDF
+
+                </button>
+
+            `;
+
+        }
+
+
+        html += `
+
+            <button
+                type="button"
+                class="ae-secondary-btn"
+                id="aeCloseActionBtn">
+
+                Close
+
+            </button>
+
+        `;
+
+
+        buttons.innerHTML = html;
+
+
+        document
+            .getElementById("aeWhatsAppBtn")
+            .addEventListener(
+                "click",
+                function () {
+
+                    openWhatsApp(
+                        createWhatsAppMessage(
+                            data,
+                            quoteNo
+                        )
+                    );
+
+                }
+            );
+
+
+        const pdfButton =
+            document.getElementById(
+                "aePdfBtn"
+            );
+
+
+        if (pdfButton) {
+
+            pdfButton.addEventListener(
+                "click",
+                function () {
+
+                    savePDF(
+                        data,
+                        quoteNo
+                    );
+
+                }
+            );
+
+        }
 
 
         document
             .getElementById(
-                "amalPreviewRole"
+                "aeCloseActionBtn"
             )
-            .textContent =
-            roleTitle;
+            .addEventListener(
+                "click",
+                closePreview
+            );
+
+    }
 
 
-        document
-            .getElementById(
-                "previewQuoteNo"
-            )
-            .textContent =
-            data.quoteNumber;
+    /* =====================================================
+       WHATSAPP MESSAGE
+    ===================================================== */
+
+    function createWhatsAppMessage(
+        data,
+        quoteNo
+    ) {
+
+        let message =
+
+`*${COMPANY_NAME}*
+*Quotation*
+
+Quotation No: ${quoteNo}
+Date: ${getDate()}
+
+Role: ${data.roleName}
+
+Name: ${data.name}
+Company: ${data.company}
+Mobile: ${data.mobile}
+
+Product: ${data.product}
+Quantity: ${formatQuantity(data.quantity)} ${data.unit}
+Unit Price: ${formatMoney(data.price)} / ${data.unit}
+Estimated Total: ${formatMoney(data.total)}
+
+Quotation Status: *${data.status}*`;
 
 
-        document
-            .getElementById(
-                "previewDate"
-            )
-            .textContent =
-            data.date;
+        if (data.specification) {
+
+            message +=
+
+`
+
+Specification:
+${data.specification}`;
+
+        }
 
 
-        document
-            .getElementById(
-                "previewName"
-            )
-            .textContent =
-            data.name;
+        if (
+            data.status ===
+            "Negotiable"
+        ) {
+
+            message +=
+
+`
+
+Price is negotiable.
+Commercial terms can be discussed.`
+
+        }
 
 
-        document
-            .getElementById(
-                "previewCompany"
-            )
-            .textContent =
-            data.company;
+        if (
+            data.roleName ===
+            "Supplier"
+        ) {
+
+            message +=
+
+`
+
+Please share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.`;
+
+        }
 
 
-        document
-            .getElementById(
-                "previewMobile"
-            )
-            .textContent =
-            data.mobile;
+        if (
+            data.roleName ===
+            "Buyer"
+        ) {
+
+            message +=
+
+`
+
+Please confirm the requirement and commercial terms.`;
+
+        }
 
 
-        document
-            .getElementById(
-                "previewProduct2"
-            )
-            .textContent =
-            data.product;
+        if (
+            data.roleName ===
+            "Admin"
+        ) {
+
+            message +=
+
+`
+
+Prepared by:
+AMAL ENTERPRISES
+MSME Registration No.: ${MSME_NUMBER}`;
+
+        }
 
 
-        document
-            .getElementById(
-                "previewQuantity2"
-            )
-            .textContent =
-            numberFormat(
-                data.quantity
-            ) +
-            " " +
-            data.quantityUnit;
+        return message;
+
+    }
 
 
-        document
-            .getElementById(
-                "previewUnitPrice2"
-            )
-            .textContent =
-            money(data.price);
+    /* =====================================================
+       SAVE PDF
+       Uses browser print dialog → Save as PDF
+       No external library required.
+    ===================================================== */
+
+    function savePDF(
+        data,
+        quoteNo
+    ) {
+
+        const preview =
+            document.getElementById(
+                "aePreviewDocument"
+            );
 
 
-        document
-            .getElementById(
-                "previewPriceUnit2"
-            )
-            .textContent =
-            "Per " +
-            data.priceUnit;
+        const printWindow =
+            window.open(
+                "",
+                "_blank",
+                "width=900,height=900"
+            );
 
 
-        document
-            .getElementById(
-                "previewTotal2"
-            )
-            .textContent =
-            money(data.total);
+        if (!printWindow) {
+
+            alert(
+                "Please allow pop-ups to save the PDF."
+            );
+
+            return;
+
+        }
 
 
-        document
-            .getElementById(
-                "previewDetails"
-            )
-            .textContent =
-            data.details;
+        printWindow.document.write(`
+
+            <!DOCTYPE html>
+
+            <html>
+
+            <head>
+
+                <title>
+                    ${COMPANY_NAME} - ${quoteNo}
+                </title>
+
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0">
+
+                <style>
+
+                    * {
+                        box-sizing:border-box;
+                    }
+
+                    body {
+                        margin:0;
+                        padding:35px;
+                        font-family:
+                            Arial,
+                            Helvetica,
+                            sans-serif;
+                        color:#222;
+                        background:#fff;
+                    }
+
+                    .pdf-page {
+                        max-width:850px;
+                        margin:auto;
+                    }
+
+                    .ae-preview-top {
+                        display:flex;
+                        justify-content:space-between;
+                        border-bottom:2px solid #222;
+                        padding-bottom:18px;
+                    }
+
+                    .ae-preview-company {
+                        font-size:25px;
+                        font-weight:700;
+                    }
+
+                    .ae-preview-msme {
+                        margin-top:6px;
+                        font-size:12px;
+                        color:#555;
+                    }
+
+                    .ae-preview-quote-info {
+                        text-align:right;
+                        display:flex;
+                        flex-direction:column;
+                        gap:4px;
+                        font-size:12px;
+                    }
+
+                    .ae-preview-quote-info strong {
+                        font-size:18px;
+                    }
+
+                    .ae-preview-role {
+                        margin:20px 0;
+                        font-size:16px;
+                        font-weight:700;
+                    }
+
+                    .ae-preview-contact-grid {
+                        display:grid;
+                        grid-template-columns:
+                            repeat(3,1fr);
+                        gap:15px;
+                        margin-bottom:25px;
+                    }
+
+                    .ae-preview-contact-grid div {
+                        border:1px solid #ddd;
+                        padding:12px;
+                    }
+
+                    small {
+                        display:block;
+                        color:#777;
+                        font-size:10px;
+                        margin-bottom:5px;
+                    }
+
+                    .ae-preview-table {
+                        border:1px solid #ccc;
+                    }
+
+                    .ae-preview-table-head,
+                    .ae-preview-table-row {
+                        display:grid;
+                        grid-template-columns:
+                            2fr 1fr 1.3fr 1.2fr;
+                    }
+
+                    .ae-preview-table-head span,
+                    .ae-preview-table-row span,
+                    .ae-preview-table-row strong {
+                        padding:12px;
+                        border-right:1px solid #ddd;
+                    }
+
+                    .ae-preview-table-head {
+                        background:#eee;
+                        font-weight:700;
+                    }
+
+                    .ae-preview-spec {
+                        margin-top:20px;
+                        border:1px solid #ddd;
+                        padding:12px;
+                    }
+
+                    .ae-preview-spec p {
+                        margin:0;
+                        white-space:pre-wrap;
+                        line-height:1.5;
+                    }
+
+                    .ae-preview-bottom {
+                        display:flex;
+                        justify-content:space-between;
+                        margin-top:25px;
+                        padding-top:18px;
+                        border-top:1px solid #ccc;
+                    }
+
+                    .ae-preview-total {
+                        text-align:right;
+                    }
+
+                    .ae-preview-total strong {
+                        font-size:20px;
+                    }
+
+                    .ae-preview-note {
+                        margin-top:18px;
+                        padding:12px;
+                        border:1px solid #ccc;
+                        font-size:12px;
+                    }
+
+                    @media print {
+
+                        body {
+                            padding:0;
+                        }
+
+                    }
+
+                </style>
+
+            </head>
+
+            <body>
+
+                <div class="pdf-page">
+
+                    ${preview.innerHTML}
+
+                </div>
+
+                <script>
+
+                    window.onload = function () {
+                        setTimeout(function () {
+                            window.print();
+                        }, 300);
+                    };
+
+                <\/script>
+
+            </body>
+
+            </html>
+
+        `);
+
+
+        printWindow.document.close();
 
     }
 
@@ -2320,353 +1804,52 @@
 
     function closePreview() {
 
-        const overlay =
+        const modal =
             document.getElementById(
-                "amalPreviewOverlay"
+                "aeModal"
             );
 
-        if (overlay) {
+        if (!modal) return;
 
-            overlay.style.display =
-                "none";
+        modal.hidden = true;
 
-        }
-
-    }
-
-
-    /* =====================================================
-       WHATSAPP
-    ===================================================== */
-
-    function sendWhatsApp() {
-
-        if (!lastQuotation) {
-
-            return;
-
-        }
-
-
-        let targetNumber;
-
-
-        /*
-           Buyer / Supplier:
-           Message goes to AMAL ENTERPRISES admin.
-        */
-
-        if (
-            currentRole === "buyer" ||
-            currentRole === "supplier"
-        ) {
-
-            targetNumber =
-                ADMIN_WHATSAPP;
-
-        }
-
-
-        /*
-           Admin:
-           Message goes to entered
-           Buyer/Supplier WhatsApp number.
-        */
-
-        else if (
-            currentRole === "admin" &&
-            adminLoggedIn
-        ) {
-
-            targetNumber =
-                lastQuotation.mobile;
-
-        }
-
-
-        if (!targetNumber) {
-
-            alert(
-                "WhatsApp number not available."
-            );
-
-            return;
-
-        }
-
-
-        let message = "";
-
-
-        if (
-            currentRole === "admin"
-        ) {
-
-            message =
-
-`*${COMPANY_NAME}*
-MSME Registration No: ${MSME_NUMBER}
-
-*${lastQuotation.recipientRole.toUpperCase()} QUOTATION*
-
-Quotation No: ${lastQuotation.quoteNumber}
-Date: ${lastQuotation.date}
-
-Name: ${lastQuotation.name}
-Company: ${lastQuotation.company}
-
-Product: ${lastQuotation.product}
-
-Quantity: ${numberFormat(lastQuotation.quantity)} ${lastQuotation.quantityUnit}
-
-Unit Price: ${money(lastQuotation.price)}
-Price Basis: Per ${lastQuotation.priceUnit}
-
-*Estimated Total: ${money(lastQuotation.total)}*
-
-Specification:
-${lastQuotation.details}
-
-This quotation is subject to final commercial confirmation and mutually agreed terms.
-
-Regards,
-${COMPANY_NAME}`;
-
-        }
-
-
-        else {
-
-            message =
-
-`*AMAL ENTERPRISES - ${currentRole.toUpperCase()}*
-
-Name: ${lastQuotation.name}
-Company: ${lastQuotation.company}
-
-Product: ${lastQuotation.product}
-
-Quantity: ${numberFormat(lastQuotation.quantity)} ${lastQuotation.quantityUnit}
-
-Price: ${money(lastQuotation.price)} per ${lastQuotation.priceUnit}
-
-Estimated Total: ${money(lastQuotation.total)}
-
-Specification:
-${lastQuotation.details}
-
-I would like to discuss / confirm the above quotation.
-
-Thank you.`;
-
-        }
-
-
-        const url =
-            "https://wa.me/" +
-            targetNumber +
-            "?text=" +
-            encodeURIComponent(
-                message
-            );
-
-
-        window.open(
-            url,
-            "_blank"
+        document.body.classList.remove(
+            "ae-modal-open"
         );
 
     }
 
 
     /* =====================================================
-       LOAD HTML2PDF
+       ADMIN LOGOUT WHEN PAGE/QUOTATION WINDOW IS CLOSED
     ===================================================== */
 
-    function loadPDFLibrary(callback) {
+    window.addEventListener(
+        "beforeunload",
+        function () {
 
-        if (
-            typeof html2pdf !==
-            "undefined"
-        ) {
-
-            callback();
-
-            return;
+            adminLoggedIn = false;
+            currentRole = "";
 
         }
-
-
-        const script =
-            document.createElement(
-                "script"
-            );
-
-
-        script.src =
-            "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-
-
-        script.onload =
-            callback;
-
-
-        script.onerror =
-            function () {
-
-                alert(
-                    "PDF library could not be loaded. Please check your internet connection."
-                );
-
-            };
-
-
-        document.body.appendChild(
-            script
-        );
-
-    }
+    );
 
 
     /* =====================================================
-       SAVE ADMIN PDF
+       INITIALIZE
     ===================================================== */
 
-    function savePDF() {
+    function init() {
 
         if (
-            currentRole !== "admin" ||
-            !adminLoggedIn
-        ) {
-
-            alert(
-                "Only Admin can save quotation PDF."
-            );
-
-            return;
-
-        }
-
-
-        if (!lastQuotation) {
-
-            alert(
-                "Please generate a quotation first."
-            );
-
-            return;
-
-        }
-
-
-        loadPDFLibrary(
-            function () {
-
-                const element =
-                    document.getElementById(
-                        "amalQuotationPaper"
-                    );
-
-
-                const filename =
-                    "AMAL-ENTERPRISES-" +
-                    lastQuotation.quoteNumber +
-                    ".pdf";
-
-
-                const options = {
-
-                    margin: 0,
-
-                    filename,
-
-                    image: {
-                        type: "jpeg",
-                        quality: 0.98
-                    },
-
-                    html2canvas: {
-
-                        scale: 2,
-
-                        useCORS: true,
-
-                        backgroundColor:
-                            "#ffffff"
-
-                    },
-
-                    jsPDF: {
-
-                        unit: "mm",
-
-                        format: "a4",
-
-                        orientation:
-                            "portrait"
-
-                    }
-
-                };
-
-
-                html2pdf()
-                    .set(options)
-                    .from(element)
-                    .save();
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       CLEAR FORM
-    ===================================================== */
-
-    function clearForm() {
-
-        [
-            "amalName",
-            "amalCompany",
-            "amalMobile",
-            "amalProduct",
-            "amalQuantity",
-            "amalPrice",
-            "amalDetails"
-        ]
-        .forEach(function (id) {
-
-            const el =
-                document.getElementById(id);
-
-            if (el) {
-
-                el.value = "";
-
-            }
-
-        });
-
-
-        document
-            .getElementById(
-                "amalCalculation"
+            document.getElementById(
+                "quotation"
             )
-            .textContent =
-            "Enter quantity and price to calculate.";
+        ) {
 
-    }
+            createQuotationSystem();
 
-
-    /* =====================================================
-       START
-    ===================================================== */
-
-    function initQuotationSystem() {
-
-        createQuotationSection();
+        }
 
     }
 
@@ -2678,13 +1861,15 @@ Thank you.`;
 
         document.addEventListener(
             "DOMContentLoaded",
-            initQuotationSystem
+            init
         );
 
-    } else {
+    }
+    else {
 
-        initQuotationSystem();
+        init();
 
     }
+
 
 })();
