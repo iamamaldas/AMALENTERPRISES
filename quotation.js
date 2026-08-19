@@ -24,7 +24,7 @@
 
     // Google Apps Script Web App URL
     const APPS_SCRIPT_URL =
-        "PASTE_YOUR_WEB_APP_EXEC_URL_HERE";
+        "https://script.google.com/macros/s/AKfycby1xYE853B-z_EJAL9YC8MX6DWwsxOwzlGIxhZBjSb7x89vslTF3cjd8QMarOwwbYk07A/exec";
 
     // Must match Code.gs
     const API_TOKEN =
