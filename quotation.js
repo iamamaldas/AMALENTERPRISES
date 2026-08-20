@@ -1,6 +1,6 @@
 /* =========================================================
    AMAL ENTERPRISES
-   FINAL QUOTATION SYSTEM
+   FINAL QUOTATION SYSTEM - PRODUCTION
    =========================================================
    - No Login
    - No MSME
@@ -8,161 +8,274 @@
    - Buyer / Supplier / AMAL ENTERPRISES
    - AMAL ENTERPRISES can WhatsApp any recipient
    - Buyer / Supplier -> AMAL ENTERPRISES WhatsApp
-   - Final quotation -> Google Sheet + Latest PDF
+   - Final quotation -> Google Sheet + PDF
    - Negotiable -> Preview + WhatsApp only
 ========================================================= */
 
 (function () {
+
     "use strict";
 
-    /* ================= CONFIG ================= */
+
+    /* =====================================================
+       CONFIGURATION
+    ===================================================== */
 
     const COMPANY_NAME = "AMAL ENTERPRISES";
 
-    // AMAL ENTERPRISES WhatsApp / default recipient
+
+    /*
+     * AMAL ENTERPRISES WhatsApp number
+     * India country code included.
+     */
     const ADMIN_WHATSAPP = "916296471636";
 
-    // Google Apps Script Web App URL
-    const APPS_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycby5Laifn1XVxLbKUFriCzaOTj9gqNBFJWG4IPIV18Qa_bD2EWFC_nRFpG2_bi6qWXITqw/exec";
 
-    // Must match Code.gs
+    /*
+     * YOUR CURRENT GOOGLE APPS SCRIPT WEB APP URL
+     */
+    const APPS_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxofnaJBIaGnZHVJcsYiuH5UPi1qG_lUypxErfQlrbmpf3V76n6MQlXKz6wdOvANuPISA/exec";
+
+
+    /*
+     * MUST MATCH YOUR APPS SCRIPT TOKEN
+     */
     const API_TOKEN =
         "AmalQuotation2026_9x7Qm2";
+
 
     let currentRole = "";
 
 
-    /* ================= PRODUCT CATEGORIES ================= */
+    /* =====================================================
+       PRODUCT CATEGORIES
+    ===================================================== */
 
     const PRODUCT_CATEGORIES = [
+
         "Corrugated Carton Boxes",
+
         "Packaging Materials",
+
         "Polyethylene Carry Bags",
+
         "Biodegradable & Compostable Bags",
+
+        "Jute / Natural Fibre Bags",
+
+        "Cotton / Canvas Bags",
+
         "Other / Custom Product"
+
     ];
 
 
-    /* ================= UNITS ================= */
+    /* =====================================================
+       UNITS
+    ===================================================== */
 
     const UNITS = [
+
         "mg",
+
         "g",
+
         "kg",
+
         "tonne",
+
         "ml",
+
         "litre",
+
         "piece",
+
         "box",
+
         "carton",
+
         "packet",
+
         "bag",
+
         "set",
+
         "metre",
+
         "cm",
+
         "dozen"
+
     ];
 
 
-    /* ================= HELPERS ================= */
+    /* =====================================================
+       HELPERS
+    ===================================================== */
 
     function numberValue(value) {
 
-        const n = Number.parseFloat(value);
+        const n =
+            Number.parseFloat(value);
 
-        return Number.isFinite(n) && n >= 0
+        return (
+            Number.isFinite(n) &&
+            n >= 0
+        )
             ? n
             : 0;
+
     }
 
 
     function formatMoney(value) {
 
         return "₹" +
-            numberValue(value).toLocaleString(
-                "en-IN",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            );
+            numberValue(value)
+                .toLocaleString(
+                    "en-IN",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                );
+
     }
 
 
     function formatQuantity(value) {
 
-        return numberValue(value).toLocaleString(
-            "en-IN",
-            {
-                maximumFractionDigits: 6
-            }
-        );
+        return numberValue(value)
+            .toLocaleString(
+                "en-IN",
+                {
+                    maximumFractionDigits: 6
+                }
+            );
+
     }
 
 
     function getDate() {
 
-        return new Date().toLocaleDateString(
-            "en-IN",
-            {
-                day: "2-digit",
-                month: "short",
-                year: "numeric"
-            }
-        );
+        return new Date()
+            .toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
     }
 
 
     function escapeHTML(value) {
 
         return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
     }
 
 
     function quotationNumber() {
 
-        const now = new Date();
+        const now =
+            new Date();
+
 
         const date =
+
             now.getFullYear() +
-            String(now.getMonth() + 1).padStart(2, "0") +
-            String(now.getDate()).padStart(2, "0");
+
+            String(
+                now.getMonth() + 1
+            ).padStart(2, "0") +
+
+            String(
+                now.getDate()
+            ).padStart(2, "0");
+
 
         const random =
+
             Math.floor(
-                1000 + Math.random() * 9000
+                1000 +
+                Math.random() * 9000
             );
 
-        return "AE-" + date + "-" + random;
+
+        return (
+            "AE-" +
+            date +
+            "-" +
+            random
+        );
+
     }
 
 
-    /* ================= WHATSAPP ================= */
+    /* =====================================================
+       WHATSAPP
+    ===================================================== */
 
     function normalizeMobile(value) {
 
         let number =
             String(value || "")
-                .replace(/\D/g, "");
+                .replace(
+                    /\D/g,
+                    ""
+                );
 
-        if (number.length === 10) {
+
+        if (
+            number.length === 10
+        ) {
+
             return "91" + number;
+
         }
+
 
         if (
             number.length === 12 &&
             number.startsWith("91")
         ) {
+
             return number;
+
         }
 
+
         return "";
+
     }
 
 
@@ -172,7 +285,10 @@
     ) {
 
         const mobile =
-            normalizeMobile(recipient);
+            normalizeMobile(
+                recipient
+            );
+
 
         if (!mobile) {
 
@@ -181,14 +297,21 @@
             );
 
             return;
+
         }
 
 
         const url =
+
             "https://wa.me/" +
+
             mobile +
+
             "?text=" +
-            encodeURIComponent(message);
+
+            encodeURIComponent(
+                message
+            );
 
 
         window.open(
@@ -196,17 +319,31 @@
             "_blank",
             "noopener"
         );
+
     }
 
 
-    /* ================= MAIN HTML ================= */
+    /* =====================================================
+       MAIN HTML
+    ===================================================== */
 
     function createQuotationSystem() {
 
         const quotationArea =
-            document.getElementById("quotation");
+            document.getElementById(
+                "quotation"
+            );
 
-        if (!quotationArea) return;
+
+        if (!quotationArea) {
+
+            console.warn(
+                "AMAL ENTERPRISES: #quotation element not found."
+            );
+
+            return;
+
+        }
 
 
         quotationArea.innerHTML = `
@@ -224,8 +361,8 @@
                         <h2>Create Quotation</h2>
 
                         <p>
-                            Prepare, review and share
-                            quotations directly through WhatsApp.
+                            Create, review and share B2B quotations directly through WhatsApp.
+                            Final quotations are automatically registered and saved as PDF.
                         </p>
 
                     </div>
@@ -378,16 +515,22 @@
 
                                 ${
                                     PRODUCT_CATEGORIES
-                                        .map(function (item) {
+                                        .map(
+                                            function (item) {
 
-                                            return `
-                                                <option value="${escapeHTML(item)}">
-                                                    ${escapeHTML(item)}
-                                                </option>
-                                            `;
+                                                return `
+                                                    <option
+                                                        value="${escapeHTML(item)}">
 
-                                        })
+                                                        ${escapeHTML(item)}
+
+                                                    </option>
+                                                `;
+
+                                            }
+                                        )
                                         .join("")
+
                                 }
 
                             </select>
@@ -411,7 +554,7 @@
                     </div>
 
 
-                    <!-- RECIPIENT -->
+                    <!-- ADMIN RECIPIENT -->
 
                     <div
                         class="ae-field"
@@ -484,16 +627,22 @@
 
                                 ${
                                     UNITS
-                                        .map(function (unit) {
+                                        .map(
+                                            function (unit) {
 
-                                            return `
-                                                <option value="${escapeHTML(unit)}">
-                                                    ${escapeHTML(unit)}
-                                                </option>
-                                            `;
+                                                return `
+                                                    <option
+                                                        value="${escapeHTML(unit)}">
 
-                                        })
+                                                        ${escapeHTML(unit)}
+
+                                                    </option>
+                                                `;
+
+                                            }
+                                        )
                                         .join("")
+
                                 }
 
                             </select>
@@ -602,7 +751,7 @@
             </div>
 
 
-            <!-- FLASH PREVIEW -->
+            <!-- PREVIEW MODAL -->
 
             <div
                 class="ae-modal-overlay"
@@ -640,33 +789,43 @@
 
 
         bindEvents();
+
     }
 
 
-    /* ================= EVENTS ================= */
+    /* =====================================================
+       EVENTS
+    ===================================================== */
 
     function bindEvents() {
 
-        document
-            .querySelectorAll(".ae-role-btn")
-            .forEach(function (button) {
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        selectRole(
-                            button.dataset.role
-                        );
-
-                    }
-                );
-
-            });
-
 
         document
-            .getElementById("aeGenerateBtn")
+            .querySelectorAll(
+                ".ae-role-btn"
+            )
+            .forEach(
+                function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            selectRole(
+                                button.dataset.role
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+
+        document
+            .getElementById(
+                "aeGenerateBtn"
+            )
             .addEventListener(
                 "click",
                 generateQuotation
@@ -674,7 +833,9 @@
 
 
         document
-            .getElementById("aeCloseModal")
+            .getElementById(
+                "aeCloseModal"
+            )
             .addEventListener(
                 "click",
                 closePreview
@@ -682,7 +843,9 @@
 
 
         document
-            .getElementById("aeModal")
+            .getElementById(
+                "aeModal"
+            )
             .addEventListener(
                 "click",
                 function (event) {
@@ -704,82 +867,112 @@
             "aeQuantity",
             "aePrice",
             "aeUnit"
-        ].forEach(function (id) {
+        ]
+        .forEach(
+            function (id) {
 
-            const element =
-                document.getElementById(id);
+                const element =
+                    document.getElementById(
+                        id
+                    );
 
-            element.addEventListener(
-                "input",
-                updateLiveCalculation
-            );
 
-            element.addEventListener(
-                "change",
-                updateLiveCalculation
-            );
+                element.addEventListener(
+                    "input",
+                    updateLiveCalculation
+                );
 
-        });
+
+                element.addEventListener(
+                    "change",
+                    updateLiveCalculation
+                );
+
+            }
+        );
 
 
         document
             .querySelectorAll(
                 'input[name="aeQuotationStatus"]'
             )
-            .forEach(function (radio) {
+            .forEach(
+                function (radio) {
 
-                radio.addEventListener(
-                    "change",
-                    updateLiveCalculation
-                );
+                    radio.addEventListener(
+                        "change",
+                        updateLiveCalculation
+                    );
 
-            });
+                }
+            );
 
     }
 
 
-    /* ================= ROLE ================= */
+    /* =====================================================
+       ROLE
+    ===================================================== */
 
     function selectRole(role) {
 
-        currentRole = role;
+        currentRole =
+            role;
 
 
         document
-            .querySelectorAll(".ae-role-btn")
-            .forEach(function (button) {
+            .querySelectorAll(
+                ".ae-role-btn"
+            )
+            .forEach(
+                function (button) {
 
-                button.classList.toggle(
-                    "selected",
-                    button.dataset.role === role
-                );
+                    button.classList.toggle(
+                        "selected",
+                        button.dataset.role ===
+                        role
+                    );
 
-            });
+                }
+            );
 
 
         const roleName =
+
             role === "buyer"
+
                 ? "Buyer"
+
                 : role === "supplier"
+
                     ? "Supplier"
+
                     : "AMAL ENTERPRISES";
 
 
         document
-            .getElementById("aeAdminStatus")
+            .getElementById(
+                "aeAdminStatus"
+            )
             .textContent =
             roleName + " Mode";
 
 
         document
-            .getElementById("aeRoleTitle")
+            .getElementById(
+                "aeRoleTitle"
+            )
             .textContent =
-            roleName + " Quotation";
+            roleName +
+            " Quotation";
 
 
         document
-            .getElementById("aeFormPanel")
-            .hidden = false;
+            .getElementById(
+                "aeFormPanel"
+            )
+            .hidden =
+            false;
 
 
         const adminRecipientBox =
@@ -788,29 +981,37 @@
             );
 
 
-        if (role === "admin") {
+        if (
+            role === "admin"
+        ) {
 
-            adminRecipientBox.hidden = false;
+            adminRecipientBox.hidden =
+                false;
 
         }
 
         else {
 
-            adminRecipientBox.hidden = true;
+            adminRecipientBox.hidden =
+                true;
 
         }
 
     }
 
 
-    /* ================= CALCULATION ================= */
+    /* =====================================================
+       CALCULATION
+    ===================================================== */
 
     function updateLiveCalculation() {
 
         const quantity =
             numberValue(
                 document
-                    .getElementById("aeQuantity")
+                    .getElementById(
+                        "aeQuantity"
+                    )
                     .value
             );
 
@@ -818,7 +1019,9 @@
         const price =
             numberValue(
                 document
-                    .getElementById("aePrice")
+                    .getElementById(
+                        "aePrice"
+                    )
                     .value
             );
 
@@ -828,8 +1031,11 @@
 
 
         document
-            .getElementById("aeLiveTotal")
+            .getElementById(
+                "aeLiveTotal"
+            )
             .textContent =
+
             "Estimated Total: " +
             formatMoney(total);
 
@@ -841,9 +1047,10 @@
 
 
         document
-            .getElementById("aeNegotiationNote")
-            .hidden =
-            !(
+            .getElementById(
+                "aeNegotiationNote"
+            )
+            .hidden = !(
                 selected &&
                 selected.value ===
                 "Negotiable"
@@ -852,7 +1059,9 @@
     }
 
 
-    /* ================= DATA ================= */
+    /* =====================================================
+       FORM DATA
+    ===================================================== */
 
     function getFormData() {
 
@@ -865,7 +1074,9 @@
         const quantity =
             numberValue(
                 document
-                    .getElementById("aeQuantity")
+                    .getElementById(
+                        "aeQuantity"
+                    )
                     .value
             );
 
@@ -873,25 +1084,43 @@
         const price =
             numberValue(
                 document
-                    .getElementById("aePrice")
+                    .getElementById(
+                        "aePrice"
+                    )
                     .value
             );
 
 
         const mobile =
             document
-                .getElementById("aeMobile")
+                .getElementById(
+                    "aeMobile"
+                )
                 .value
-                .replace(/\D/g, "")
-                .slice(0, 10);
+                .replace(
+                    /\D/g,
+                    ""
+                )
+                .slice(
+                    0,
+                    10
+                );
 
 
         const recipient =
             document
-                .getElementById("aeRecipientMobile")
+                .getElementById(
+                    "aeRecipientMobile"
+                )
                 .value
-                .replace(/\D/g, "")
-                .slice(0, 10);
+                .replace(
+                    /\D/g,
+                    ""
+                )
+                .slice(
+                    0,
+                    10
+                );
 
 
         return {
@@ -900,68 +1129,100 @@
                 currentRole,
 
             roleName:
+
                 currentRole === "buyer"
+
                     ? "Buyer"
+
                     : currentRole === "supplier"
+
                         ? "Supplier"
+
                         : "AMAL ENTERPRISES",
+
 
             name:
                 document
-                    .getElementById("aeName")
+                    .getElementById(
+                        "aeName"
+                    )
                     .value
                     .trim(),
 
+
             company:
                 document
-                    .getElementById("aeCompany")
+                    .getElementById(
+                        "aeCompany"
+                    )
                     .value
                     .trim(),
+
 
             mobile:
                 mobile,
 
+
             email:
                 document
-                    .getElementById("aeEmail")
+                    .getElementById(
+                        "aeEmail"
+                    )
                     .value
                     .trim(),
+
 
             category:
                 document
-                    .getElementById("aeCategory")
+                    .getElementById(
+                        "aeCategory"
+                    )
                     .value,
+
 
             product:
                 document
-                    .getElementById("aeProduct")
+                    .getElementById(
+                        "aeProduct"
+                    )
                     .value
                     .trim(),
 
+
             specification:
                 document
-                    .getElementById("aeSpecification")
+                    .getElementById(
+                        "aeSpecification"
+                    )
                     .value
                     .trim(),
+
 
             quantity:
                 quantity,
 
+
             unit:
                 document
-                    .getElementById("aeUnit")
+                    .getElementById(
+                        "aeUnit"
+                    )
                     .value,
+
 
             price:
                 price,
 
+
             total:
                 quantity * price,
+
 
             status:
                 status
                     ? status.value
                     : "",
+
 
             recipient:
                 recipient
@@ -971,9 +1232,12 @@
     }
 
 
-    /* ================= VALIDATION ================= */
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
 
     function validateData(data) {
+
 
         if (!data.role) {
 
@@ -982,6 +1246,7 @@
             );
 
             return false;
+
         }
 
 
@@ -992,6 +1257,7 @@
             );
 
             return false;
+
         }
 
 
@@ -1002,13 +1268,15 @@
             );
 
             return false;
+
         }
 
 
         if (
-            !/^[0-9]{10}$/.test(
-                data.mobile
-            )
+            !/^[0-9]{10}$/
+                .test(
+                    data.mobile
+                )
         ) {
 
             alert(
@@ -1016,13 +1284,16 @@
             );
 
             return false;
+
         }
 
 
         if (
             data.email &&
             !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                .test(data.email)
+                .test(
+                    data.email
+                )
         ) {
 
             alert(
@@ -1030,6 +1301,7 @@
             );
 
             return false;
+
         }
 
 
@@ -1040,6 +1312,7 @@
             );
 
             return false;
+
         }
 
 
@@ -1050,6 +1323,7 @@
             );
 
             return false;
+
         }
 
 
@@ -1060,6 +1334,7 @@
             );
 
             return false;
+
         }
 
 
@@ -1070,6 +1345,7 @@
             );
 
             return false;
+
         }
 
 
@@ -1080,6 +1356,7 @@
             );
 
             return false;
+
         }
 
 
@@ -1090,19 +1367,21 @@
             );
 
             return false;
+
         }
 
 
         /*
-         * AMAL ENTERPRISES must choose recipient.
+         * AMAL ENTERPRISES recipient validation
          */
 
         if (
             data.roleName ===
             "AMAL ENTERPRISES" &&
-            !/^[0-9]{10}$/.test(
-                data.recipient
-            )
+            !/^[0-9]{10}$/
+                .test(
+                    data.recipient
+                )
         ) {
 
             alert(
@@ -1110,16 +1389,21 @@
             );
 
             return false;
+
         }
 
 
         return true;
+
     }
 
 
-    /* ================= GENERATE ================= */
+    /* =====================================================
+       GENERATE QUOTATION
+    ===================================================== */
 
     function generateQuotation() {
+
 
         if (!currentRole) {
 
@@ -1128,6 +1412,7 @@
             );
 
             return;
+
         }
 
 
@@ -1135,8 +1420,12 @@
             getFormData();
 
 
-        if (!validateData(data)) {
+        if (
+            !validateData(data)
+        ) {
+
             return;
+
         }
 
 
@@ -1150,7 +1439,13 @@
         );
 
 
-        /* FINAL ONLY -> DATABASE */
+        /*
+         * ONLY FINAL QUOTATION
+         * goes to Google Sheet + PDF.
+         *
+         * Negotiable stays
+         * Preview + WhatsApp only.
+         */
 
         if (
             data.status ===
@@ -1167,12 +1462,15 @@
     }
 
 
-    /* ================= PREVIEW ================= */
+    /* =====================================================
+       PREVIEW
+    ===================================================== */
 
     function showPreview(
         data,
         quoteNo
     ) {
+
 
         const box =
             document.getElementById(
@@ -1187,7 +1485,9 @@
                 <div>
 
                     <div class="ae-preview-company">
+
                         ${COMPANY_NAME}
+
                     </div>
 
                 </div>
@@ -1263,7 +1563,9 @@
 
                 ${
                     data.email
+
                         ? `
+
                             <div>
 
                                 <small>
@@ -1275,7 +1577,9 @@
                                 </strong>
 
                             </div>
-                        `
+
+                          `
+
                         : ""
                 }
 
@@ -1310,11 +1614,15 @@
                     <span>
 
                         <small>
-                            ${escapeHTML(data.category)}
+                            ${escapeHTML(
+                                data.category
+                            )}
                         </small>
 
                         <b>
-                            ${escapeHTML(data.product)}
+                            ${escapeHTML(
+                                data.product
+                            )}
                         </b>
 
                     </span>
@@ -1322,24 +1630,37 @@
 
                     <span>
 
-                        ${formatQuantity(data.quantity)}
-                        ${escapeHTML(data.unit)}
+                        ${formatQuantity(
+                            data.quantity
+                        )}
+
+                        ${escapeHTML(
+                            data.unit
+                        )}
 
                     </span>
 
 
                     <span>
 
-                        ${formatMoney(data.price)}
+                        ${formatMoney(
+                            data.price
+                        )}
+
                         /
-                        ${escapeHTML(data.unit)}
+
+                        ${escapeHTML(
+                            data.unit
+                        )}
 
                     </span>
 
 
                     <strong>
 
-                        ${formatMoney(data.total)}
+                        ${formatMoney(
+                            data.total
+                        )}
 
                     </strong>
 
@@ -1350,7 +1671,9 @@
 
             ${
                 data.specification
+
                     ? `
+
                         <div class="ae-preview-spec">
 
                             <small>
@@ -1364,7 +1687,9 @@
                             </p>
 
                         </div>
-                    `
+
+                      `
+
                     : ""
             }
 
@@ -1381,11 +1706,15 @@
                         class="${
                             data.status ===
                             "Negotiable"
+
                                 ? "negotiable"
+
                                 : "final"
                         }">
 
-                        ${escapeHTML(data.status)}
+                        ${escapeHTML(
+                            data.status
+                        )}
 
                     </strong>
 
@@ -1399,7 +1728,11 @@
                     </small>
 
                     <strong>
-                        ${formatMoney(data.total)}
+
+                        ${formatMoney(
+                            data.total
+                        )}
+
                     </strong>
 
                 </div>
@@ -1410,14 +1743,18 @@
             ${
                 data.status ===
                 "Negotiable"
+
                     ? `
+
                         <div class="ae-preview-note">
 
                             Price is subject to negotiation
                             and commercial discussion.
 
                         </div>
-                    `
+
+                      `
+
                     : ""
             }
 
@@ -1431,23 +1768,31 @@
 
 
         document
-            .getElementById("aeModal")
-            .hidden = false;
+            .getElementById(
+                "aeModal"
+            )
+            .hidden =
+            false;
 
 
         document.body
             .classList
-            .add("ae-modal-open");
+            .add(
+                "ae-modal-open"
+            );
 
     }
 
 
-    /* ================= ACTION BUTTONS ================= */
+    /* =====================================================
+       ACTION BUTTONS
+    ===================================================== */
 
     function createActionButtons(
         data,
         quoteNo
     ) {
+
 
         const buttons =
             document.getElementById(
@@ -1461,8 +1806,6 @@
                 type="button"
                 class="ae-whatsapp-btn"
                 id="aeWhatsAppBtn">
-
-                <i class="fa-brands fa-whatsapp"></i>
 
                 WhatsApp
 
@@ -1482,10 +1825,13 @@
 
 
         document
-            .getElementById("aeWhatsAppBtn")
+            .getElementById(
+                "aeWhatsAppBtn"
+            )
             .addEventListener(
                 "click",
                 function () {
+
 
                     let recipient;
 
@@ -1521,7 +1867,9 @@
 
 
         document
-            .getElementById("aeCloseActionBtn")
+            .getElementById(
+                "aeCloseActionBtn"
+            )
             .addEventListener(
                 "click",
                 closePreview
@@ -1530,12 +1878,15 @@
     }
 
 
-    /* ================= WHATSAPP MESSAGE ================= */
+    /* =====================================================
+       WHATSAPP MESSAGE
+    ===================================================== */
 
     function createWhatsAppMessage(
         data,
         quoteNo
     ) {
+
 
         let message =
 
@@ -1638,15 +1989,19 @@ ${COMPANY_NAME}`;
 
 
         return message;
+
     }
 
 
-    /* ================= GOOGLE SHEET + PDF ================= */
+    /* =====================================================
+       GOOGLE SHEET + PDF
+    ===================================================== */
 
     function saveFinalQuotation(
         data,
         quoteNo
     ) {
+
 
         const status =
             document.getElementById(
@@ -1655,22 +2010,26 @@ ${COMPANY_NAME}`;
 
 
         if (
-            !APPS_SCRIPT_URL ||
-            APPS_SCRIPT_URL.includes(
-                "PASTE_YOUR"
-            )
+            !APPS_SCRIPT_URL
         ) {
 
             status.textContent =
-                "Quotation created. Google Sheet is not connected yet.";
+                "Quotation created, but Apps Script URL is missing.";
 
             return;
+
         }
 
 
         status.textContent =
             "Saving final quotation...";
 
+
+        /*
+         * Hidden iframe is used so that
+         * the quotation page does not leave
+         * the website when submitting to Apps Script.
+         */
 
         const iframeName =
             "aeQuotationFrame_" +
@@ -1717,6 +2076,10 @@ ${COMPANY_NAME}`;
         form.style.display =
             "none";
 
+
+        /*
+         * Exact backend payload
+         */
 
         const payload = {
 
@@ -1769,13 +2132,17 @@ ${COMPANY_NAME}`;
                 data.total,
 
             status:
-                data.status
+                "Final Quotation"
 
         };
 
 
-        Object.keys(payload)
-            .forEach(function (key) {
+        Object.keys(
+            payload
+        )
+        .forEach(
+            function (key) {
+
 
                 const input =
                     document.createElement(
@@ -1801,7 +2168,8 @@ ${COMPANY_NAME}`;
                     input
                 );
 
-            });
+            }
+        );
 
 
         document.body.appendChild(
@@ -1815,28 +2183,48 @@ ${COMPANY_NAME}`;
 
 
             status.textContent =
-                "Final quotation submitted. Latest PDF is being saved.";
+                "✓ Final quotation submitted. Google Sheet and PDF are being updated.";
+
 
         }
 
         catch (error) {
 
             console.error(
+                "Quotation submission error:",
                 error
             );
 
 
             status.textContent =
-                "Quotation created, but database submission failed.";
+                "Quotation created, but submission failed.";
 
         }
 
 
+        /*
+         * Cleanup after submission.
+         */
+
         setTimeout(
             function () {
 
-                form.remove();
-                iframe.remove();
+                try {
+
+                    form.remove();
+
+                    iframe.remove();
+
+                }
+
+                catch (e) {
+
+                    console.warn(
+                        "Cleanup warning:",
+                        e
+                    );
+
+                }
 
             },
             10000
@@ -1845,9 +2233,12 @@ ${COMPANY_NAME}`;
     }
 
 
-    /* ================= CLOSE ================= */
+    /* =====================================================
+       CLOSE PREVIEW
+    ===================================================== */
 
     function closePreview() {
+
 
         const modal =
             document.getElementById(
@@ -1855,32 +2246,47 @@ ${COMPANY_NAME}`;
             );
 
 
-        if (!modal) return;
+        if (!modal) {
+
+            return;
+
+        }
 
 
-        modal.hidden = true;
+        modal.hidden =
+            true;
 
 
         document.body
             .classList
-            .remove("ae-modal-open");
+            .remove(
+                "ae-modal-open"
+            );
 
     }
 
 
-    /* ================= INIT ================= */
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
 
     function init() {
 
-        if (
+
+        const quotation =
             document.getElementById(
                 "quotation"
-            )
-        ) {
+            );
 
-            createQuotationSystem();
+
+        if (!quotation) {
+
+            return;
 
         }
+
+
+        createQuotationSystem();
 
     }
 
@@ -1904,42 +2310,3 @@ ${COMPANY_NAME}`;
     }
 
 })();
-/* ================= GOOGLE SHEET + PDF ================= */
-
-function saveFinalQuotation(data, quoteNo) {
-    const status = document.getElementById("aeSaveStatus");
-
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
-        status.textContent = "Quotation created. Google Sheet is not connected yet.";
-        return;
-    }
-
-    status.textContent = "Saving final quotation...";
-
-    // 🛠️ FIX: Use URLSearchParams instead of FormData to transmit clean parameters under no-cors
-    const payload = new URLSearchParams();
-    payload.append("token", API_TOKEN);
-    payload.append("mobile", data.mobile);
-    payload.append("email", data.email || "");
-    payload.append("name", data.name);
-    payload.append("category", data.category);
-    payload.append("pdfUrl", ""); // Add explicit file string variables if configured
-
-    fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors", // Safely circumvents cross-origin context blocking
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: payload.toString()
-    })
-    .then(function() {
-        status.textContent = "Final quotation submitted to backend registry system.";
-        status.style.color = "green";
-    })
-    .catch(function(error) {
-        console.error("Submission error:", error);
-        status.textContent = "Quotation created, but database submission failed.";
-        status.style.color = "red";
-    });
-}
