@@ -254,7 +254,7 @@
             </div>
             <div class="hero-card">
                 <div class="hero-card-item"><i class="fas fa-handshake"></i><span>Business Model</span><strong>Commission-Based</strong></div>
-                <div class="hero-card-item"><i class="fas fa-users"></i><span>Roles</span><strong>Workshop / Supplier / Admin</strong></div>
+                <div class="hero-card-item"><i class="fas fa-users"></i><span>Roles</span><strong>Buyer / Supplier / Admin</strong></div>
                 <div class="hero-card-item"><i class="fab fa-whatsapp"></i><span>Communication</span><strong>WhatsApp Integrated</strong></div>
                 <div class="hero-card-item"><i class="fas fa-file-invoice"></i><span>Quotation</span><strong>100% Free to Create</strong></div>
             </div>
@@ -279,7 +279,7 @@
         <h2 class="section-title">How It Works</h2>
         <p class="section-subtitle">Create a free quotation in 4 easy steps</p>
         <div class="steps-grid">
-            <div class="step-card"><div class="step-number">STEP 01</div><i class="fas fa-user-tag"></i><h4>Select Role</h4><p>Choose Workshop, Supplier, or AMAL ENTERPRISES.</p></div>
+            <div class="step-card"><div class="step-number">STEP 01</div><i class="fas fa-user-tag"></i><h4>Select Role</h4><p>Choose Buyer, Supplier, or Admin.</p></div>
             <div class="step-card"><div class="step-number">STEP 02</div><i class="fas fa-edit"></i><h4>Fill Product Details</h4><p>Enter product name, material grade, quantity, and price.</p></div>
             <div class="step-card"><div class="step-number">STEP 03</div><i class="fas fa-file-invoice"></i><h4>Generate Quotation</h4><p>Preview with Final or Negotiable status.</p></div>
             <div class="step-card"><div class="step-number">STEP 04</div><i class="fab fa-whatsapp"></i><h4>Share & Deliver</h4><p>AMAL ENTERPRISES connects you with the right supplier and ensures delivery.</p></div>
@@ -439,27 +439,33 @@
                         <div class="ae-role-box">
                             <div class="ae-field-label" style="font-size:14px; color:#a0acbd; margin-bottom:8px;">Choose Your Role</div>
                             <div class="ae-role-buttons">
-                                <button type="button" class="ae-role-btn" data-role="buyer">Workshop / Industry</button>
-                                <button type="button" class="ae-role-btn" data-role="supplier">Supplier / Stockist</button>
+                                <button type="button" class="ae-role-btn" data-role="buyer">Buyer</button>
+                                <button type="button" class="ae-role-btn" data-role="supplier">Supplier</button>
                                 <button type="button" class="ae-role-btn" data-role="admin">Admin</button>
                             </div>
                         </div>
                         <div class="ae-form-panel" id="aeFormPanel" hidden>
                             <div class="ae-form-role-title" id="aeRoleTitle"></div>
                             <div class="ae-form-grid">
-                                <div class="ae-field"><label>Full Name *</label><input id="aeName" type="text" placeholder="Enter your full name"></div>
-                                <div class="ae-field"><label>Company / Workshop Name *</label><input id="aeCompany" type="text" placeholder="Enter company or workshop name"></div>
+                                <!-- একক ফিল্ড: Name/Industry -->
+                                <div class="ae-field"><label>Name / Industry *</label><input id="aeNameIndustry" type="text" placeholder="Enter your name or industry name"></div>
                                 <div class="ae-field"><label>Mobile Number *</label><input id="aeMobile" type="tel" maxlength="10" placeholder="10-digit mobile"></div>
                                 <div class="ae-field"><label>Email (Optional)</label><input id="aeEmail" type="email" placeholder="Email address"></div>
                                 <div class="ae-field"><label>Product Category *</label><select id="aeCategory"><option value="">Select Product Category</option>${PRODUCT_CATEGORIES.map(i => `<option value="${escapeHTML(i)}">${escapeHTML(i)}</option>`).join("")}</select></div>
                                 <div class="ae-field"><label>Product Name / Size *</label><input id="aeProduct" type="text" placeholder="e.g. M12 Bolt, #8 Screw, Tap Die Set"></div>
                             </div>
                             
-                            <!-- ✅ Admin Recipient Box (Only visible for Admin) -->
-                            <div class="ae-field" id="aeAdminRecipientBox" hidden>
-                                <label>Recipient WhatsApp Number *</label>
-                                <input id="aeRecipientMobile" type="tel" maxlength="10" placeholder="10-digit mobile">
-                                <small style="color:#7e8a9a; display:block; margin-top:4px;">This number will be saved in Google Sheet.</small>
+                            <!-- ✅ Admin এর জন্য Recipient Name + WhatsApp (শুধু Google Sheet & WhatsApp এর জন্য, Quotation-এ দেখাবে না) -->
+                            <div id="aeAdminRecipientBox" hidden>
+                                <div class="ae-field" style="margin-bottom:10px;">
+                                    <label>Recipient Name (For WhatsApp & Sheet)</label>
+                                    <input id="aeRecipientName" type="text" placeholder="Enter recipient name">
+                                </div>
+                                <div class="ae-field">
+                                    <label>Recipient WhatsApp Number *</label>
+                                    <input id="aeRecipientMobile" type="tel" maxlength="10" placeholder="10-digit mobile">
+                                    <small style="color:#7e8a9a; display:block; margin-top:4px;">This number will receive the quotation via WhatsApp and be saved in Google Sheet.</small>
+                                </div>
                             </div>
 
                             <div class="ae-field"><label>Specification / Material Grade *</label><textarea id="aeSpecification" rows="3" placeholder="e.g. SS304, High Tensile, Thread Size M12, Weight 2kg, Hardness HRC..."></textarea></div>
@@ -510,32 +516,27 @@
             function selectRole(role) {
                 currentRole = role;
                 document.querySelectorAll(".ae-role-btn").forEach(b => b.classList.toggle("selected", b.dataset.role === role));
-                const name = role === "buyer" ? "Workshop / Industry" : role === "supplier" ? "Supplier / Stockist" : "Admin";
+                const name = role === "buyer" ? "Buyer" : role === "supplier" ? "Supplier" : "Admin";
                 document.getElementById("aeAdminStatus").textContent = name + " Mode";
                 document.getElementById("aeRoleTitle").textContent = name + " Quotation";
                 document.getElementById("aeFormPanel").hidden = false;
                 document.getElementById("aeAdminRecipientBox").hidden = role !== "admin";
 
-                // Auto-fill and lock for Admin mode
-                const nameField = document.getElementById("aeName");
-                const companyField = document.getElementById("aeCompany");
+                // Admin mode: Name/Industry ফিল্ড লক করে দেওয়া হবে (AMAL ENTERPRISES)
+                const nameIndustryField = document.getElementById("aeNameIndustry");
                 const mobileField = document.getElementById("aeMobile");
                 const emailField = document.getElementById("aeEmail");
 
                 if (role === "admin") {
-                    nameField.value = "AMAL ENTERPRISES";
-                    nameField.disabled = true;
-                    companyField.value = "AMAL ENTERPRISES";
-                    companyField.disabled = true;
+                    nameIndustryField.value = "AMAL ENTERPRISES";
+                    nameIndustryField.disabled = true;
                     mobileField.value = "6296471636";
                     mobileField.disabled = true;
                     emailField.value = "info@amalenterprises.in";
                     emailField.disabled = true;
                 } else {
-                    nameField.value = "";
-                    nameField.disabled = false;
-                    companyField.value = "";
-                    companyField.disabled = false;
+                    nameIndustryField.value = "";
+                    nameIndustryField.disabled = false;
                     mobileField.value = "";
                     mobileField.disabled = false;
                     emailField.value = "";
@@ -559,9 +560,8 @@
                 const r = document.getElementById("aeRecipientMobile").value.replace(/\D/g, "").slice(0, 10);
                 return {
                     role: currentRole,
-                    roleName: currentRole === "buyer" ? "Workshop / Industry" : currentRole === "supplier" ? "Supplier / Stockist" : "Admin",
-                    name: document.getElementById("aeName").value.trim(),
-                    company: document.getElementById("aeCompany").value.trim(),
+                    roleName: currentRole === "buyer" ? "Buyer" : currentRole === "supplier" ? "Supplier" : "Admin",
+                    nameIndustry: document.getElementById("aeNameIndustry").value.trim(),
                     mobile: m,
                     email: document.getElementById("aeEmail").value.trim(),
                     category: document.getElementById("aeCategory").value,
@@ -572,14 +572,14 @@
                     price: p,
                     total: q * p,
                     status: status ? status.value : "",
-                    recipient: r
+                    recipientName: document.getElementById("aeRecipientName").value.trim(),
+                    recipientMobile: r
                 };
             }
 
             function validateData(data) {
                 if (!data.role) { alert("Please select a role first."); return false; }
-                if (!data.name) { alert("Please enter your full name."); return false; }
-                if (!data.company) { alert("Please enter your company or workshop name."); return false; }
+                if (!data.nameIndustry) { alert("Please enter your name or industry name."); return false; }
                 if (!/^[0-9]{10}$/.test(data.mobile)) { alert("Please enter a valid 10-digit mobile number."); return false; }
                 if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { alert("Please enter a valid email or leave blank."); return false; }
                 if (!data.category) { alert("Please select a product category."); return false; }
@@ -588,7 +588,7 @@
                 if (!data.unit) { alert("Please select a unit."); return false; }
                 if (!(data.price > 0)) { alert("Please enter a valid unit price."); return false; }
                 if (!data.status) { alert("Please select a quotation status."); return false; }
-                if (data.roleName === "Admin" && !/^[0-9]{10}$/.test(data.recipient)) { alert("Please enter the recipient's 10-digit mobile number."); return false; }
+                if (data.roleName === "Admin" && !/^[0-9]{10}$/.test(data.recipientMobile)) { alert("Please enter the recipient's 10-digit mobile number."); return false; }
                 return true;
             }
 
@@ -609,6 +609,7 @@
 
             function showPreview(data, quoteNo) {
                 const box = document.getElementById("aePreviewDocument");
+                // Admin হলে Recipient Name/Mobile দেখাবে না (শুধু Quotation ডেটা)
                 box.innerHTML = `
                     <div style="display:flex; justify-content:space-between; border-bottom:1px solid #dce2ea; padding-bottom:12px; margin-bottom:12px;">
                         <div style="font-size:22px; font-weight:700; color:#111a2a;">${COMPANY_NAME}</div>
@@ -616,8 +617,7 @@
                     </div>
                     <div style="font-size:14px; font-weight:600; color:#2b7be4; margin:8px 0 16px;">${escapeHTML(data.roleName)} Quotation</div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
-                        <div style="background:#eef2f7; padding:10px; border-radius:6px;"><small style="font-size:11px; color:#5a6a7a;">Name</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.name)}</strong></div>
-                        <div style="background:#eef2f7; padding:10px; border-radius:6px;"><small style="font-size:11px; color:#5a6a7a;">Company</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.company)}</strong></div>
+                        <div style="background:#eef2f7; padding:10px; border-radius:6px;"><small style="font-size:11px; color:#5a6a7a;">Name / Industry</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.nameIndustry)}</strong></div>
                         <div style="background:#eef2f7; padding:10px; border-radius:6px;"><small style="font-size:11px; color:#5a6a7a;">Mobile</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.mobile)}</strong></div>
                         ${data.email ? `<div style="background:#eef2f7; padding:10px; border-radius:6px;"><small style="font-size:11px; color:#5a6a7a;">Email</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.email)}</strong></div>` : ''}
                     </div>
@@ -654,17 +654,20 @@
                     <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                 `;
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    // ✅ Correct WhatsApp Logic:
-                    // Admin -> Always sends to ADMIN_WHATSAPP (Recipient number is only for Google Sheet)
-                    // Buyer/Supplier -> Sends to ADMIN_WHATSAPP
-                    let recipient = ADMIN_WHATSAPP; 
+                    // ✅ WhatsApp Logic:
+                    // Admin: Recipient Mobile থেকে মেসেজ পাঠাবে (যদি দেওয়া থাকে)
+                    // Buyer/Supplier: ADMIN_WHATSAPP-এ পাঠাবে
+                    let recipient = ADMIN_WHATSAPP;
+                    if (data.roleName === "Admin" && data.recipientMobile) {
+                        recipient = data.recipientMobile;
+                    }
                     openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
                 });
                 document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
             }
 
             function createWhatsAppMessage(data, quoteNo) {
-                let msg = `*${COMPANY_NAME}*\n*Quotation*\n\nQuotation No: ${quoteNo}\nDate: ${getDate()}\n\nRole: ${data.roleName}\n\nName: ${data.name}\nCompany: ${data.company}\nMobile: ${data.mobile}`;
+                let msg = `*${COMPANY_NAME}*\n*Quotation*\n\nQuotation No: ${quoteNo}\nDate: ${getDate()}\n\nRole: ${data.roleName}\n\nName/Industry: ${data.nameIndustry}\nMobile: ${data.mobile}`;
                 if (data.email) msg += `\nEmail: ${data.email}`;
                 msg += `\n\nProduct Category: ${data.category}\nProduct: ${data.product}\nQuantity: ${formatQuantity(data.quantity)} ${data.unit}\nUnit Price: ${formatMoney(data.price)} / ${data.unit}\nEstimated Total: ${formatMoney(data.total)}\n\nQuotation Status: *${data.status}*`;
                 if (data.specification) msg += `\n\nDescription / Specification:\n${data.specification}`;
@@ -688,8 +691,7 @@
                     quoteNo: quoteNo,
                     date: getDate(),
                     role: data.roleName,
-                    name: data.name,
-                    company: data.company,
+                    nameIndustry: data.nameIndustry,
                     mobile: data.mobile,
                     email: data.email || "",
                     category: data.category,
@@ -700,7 +702,8 @@
                     price: data.price,
                     total: data.total,
                     status: data.status,
-                    recipient: data.recipient || ""
+                    recipientName: data.recipientName || "",
+                    recipientMobile: data.recipientMobile || ""
                 };
                 
                 fetch(APPS_SCRIPT_URL, {
