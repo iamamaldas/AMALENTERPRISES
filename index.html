@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>AMAL ENTERPRISES | Industrial Tools & Spare Parts</title>
+    <title>AMAL ENTERPRISES | Industrial Tools, Auto Spare Parts & Engineering Fasteners</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/logo.png">
     
-    <link rel="stylesheet" href="style.css?v=2.5">
+    <link rel="stylesheet" href="style.css?v=2.6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <style>
@@ -72,16 +72,15 @@
         .nav-links a:hover, .nav-links a.active { color: #6db3f2; }
         .menu-button { display: none; cursor: pointer; font-size: 22px; color: #b0b9c5; }
 
-        /* HERO (Desktop faka space komano hoyeche) */
+        /* HERO - Smaller Gap & Tools Related Background */
         .hero {
-            margin-top: 68px; 
-            min-height: 65vh; /* Height komano hoyeche */
-            display: flex; align-items: center;
+            margin-top: 68px; min-height: 70vh; display: flex; align-items: center;
             justify-content: center; position: relative; overflow: hidden;
-            background: linear-gradient(135deg, rgba(8, 13, 26, 0.85) 0%, rgba(13, 26, 46, 0.75) 50%, rgba(8, 13, 26, 0.95) 100%),
+            background: linear-gradient(135deg, rgba(8, 13, 26, 0.80) 0%, rgba(13, 26, 46, 0.70) 50%, rgba(8, 13, 26, 0.90) 100%),
                         url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
+            padding: 10px 0;
         }
         .hero-glow {
             position: absolute; width: 500px; height: 500px;
@@ -89,7 +88,7 @@
             top: -200px; right: -100px; border-radius: 50%; pointer-events: none;
         }
         .hero-content {
-            max-width: 1200px; padding: 40px 24px; position: relative;
+            max-width: 1200px; padding: 20px 24px; position: relative;
             display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
             width: 100%;
         }
@@ -321,7 +320,6 @@
     <footer>
         <div class="footer-inner">
             <div>
-                <!-- ✅ কপিরাইট টেক্সটে "All Rights Reserved" যুক্ত করা হয়েছে -->
                 <div class="copyright">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
                 <div class="legal-links">
                     <a href="#" onclick="openLegalModal('disclaimer')">Disclaimer</a> |
@@ -355,7 +353,6 @@
             document.getElementById("navLinks").classList.toggle("show");
         }
         
-        // অটোমেটিক কপিরাইট ইয়ার
         document.getElementById("currentYear").textContent = new Date().getFullYear();
 
         document.querySelectorAll(".nav-links a").forEach(link => {
@@ -393,22 +390,21 @@
             document.body.style.overflow = "auto";
         }
 
-        // Close modal when clicking outside
         document.getElementById("legalModal").addEventListener("click", function(e) {
             if (e.target === this) closeLegalModal();
         });
 
-        // --- COMPLETE QUOTATION SYSTEM ---
+        // --- COMPLETE QUOTATION SYSTEM (Flash Window + WhatsApp Logic) ---
         (function() {
             "use strict";
 
             const COMPANY_NAME = "AMAL ENTERPRISES";
             const ADMIN_WHATSAPP = "916296471636";
+            const ADMIN_EMAIL = "info@amalenterprises.in";
             const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5Laifn1XVxLbKUFriCzaOTj9gqNBFJWG4IPIV18Qa_bD2EWFC_nRFpG2_bi6qWXITqw/exec";
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
             let currentRole = "";
 
-            /* Product Categories */
             const PRODUCT_CATEGORIES = [
                 "Engineering Fasteners",
                 "Auto & Engineering Spare Parts",
@@ -417,10 +413,6 @@
                 "Other / Custom Product"
             ];
             const UNITS = ["piece", "set", "box", "kg", "metre", "dozen", "pair", "pack"];
-
-            // Contact Info from the page (Auto-fill for Admin)
-            const CONTACT_PHONE = "916296471636";
-            const CONTACT_EMAIL = "info@amalenterprises.in";
 
             function numberValue(v) { const n = Number.parseFloat(v); return Number.isFinite(n) && n >= 0 ? n : 0; }
             function formatMoney(v) { return "₹" + numberValue(v).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2}); }
@@ -449,7 +441,7 @@
                             <div class="ae-role-buttons">
                                 <button type="button" class="ae-role-btn" data-role="buyer">Workshop / Industry</button>
                                 <button type="button" class="ae-role-btn" data-role="supplier">Supplier / Stockist</button>
-                                <button type="button" class="ae-role-btn" data-role="admin">AMAL ENTERPRISES</button>
+                                <button type="button" class="ae-role-btn" data-role="admin">Admin</button>
                             </div>
                         </div>
                         <div class="ae-form-panel" id="aeFormPanel" hidden>
@@ -462,7 +454,14 @@
                                 <div class="ae-field"><label>Product Category *</label><select id="aeCategory"><option value="">Select Product Category</option>${PRODUCT_CATEGORIES.map(i => `<option value="${escapeHTML(i)}">${escapeHTML(i)}</option>`).join("")}</select></div>
                                 <div class="ae-field"><label>Product Name / Size *</label><input id="aeProduct" type="text" placeholder="e.g. M12 Bolt, #8 Screw, Tap Die Set"></div>
                             </div>
-                            <div class="ae-field" id="aeAdminRecipientBox" hidden><label>Send To Mobile (Recipient) *</label><input id="aeRecipientMobile" type="tel" maxlength="10" placeholder="10-digit mobile"></div>
+                            
+                            <!-- ✅ Admin Recipient Box (Only visible for Admin) -->
+                            <div class="ae-field" id="aeAdminRecipientBox" hidden>
+                                <label>Recipient WhatsApp Number *</label>
+                                <input id="aeRecipientMobile" type="tel" maxlength="10" placeholder="10-digit mobile">
+                                <small style="color:#7e8a9a; display:block; margin-top:4px;">This number will be saved in Google Sheet.</small>
+                            </div>
+
                             <div class="ae-field"><label>Specification / Material Grade *</label><textarea id="aeSpecification" rows="3" placeholder="e.g. SS304, High Tensile, Thread Size M12, Weight 2kg, Hardness HRC..."></textarea></div>
                             <div class="ae-quantity-row">
                                 <div class="ae-field"><label>Quantity *</label><input id="aeQuantity" type="number" min="0.000001" step="any" placeholder="Quantity"></div>
@@ -479,9 +478,11 @@
                             </div>
                             <div id="aeNegotiationNote" style="display:none; background:rgba(255,200,50,0.1); border-left:3px solid #f0b040; padding:10px; border-radius:6px; color:#f0d080; font-size:14px; margin-bottom:12px;">Price and delivery terms are negotiable.</div>
                             <button type="button" class="ae-generate-btn" id="aeGenerateBtn"><i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation</button>
-                            <div id="aeSaveStatus" style="margin-top:12px; text-align:center; font-size:14px;"></div>
+                            <div id="aeSaveStatus" style="margin-top:12px; text-align:center; font-size:14px; display:none;"></div>
                         </div>
                     </div>
+                    
+                    <!-- ✅ Flash Preview Modal (Windows Style) -->
                     <div class="ae-modal-overlay" id="aeModal" hidden>
                         <div class="ae-modal-card">
                             <button class="ae-close-btn" id="aeCloseModal">×</button>
@@ -509,27 +510,36 @@
             function selectRole(role) {
                 currentRole = role;
                 document.querySelectorAll(".ae-role-btn").forEach(b => b.classList.toggle("selected", b.dataset.role === role));
-                const name = role === "buyer" ? "Workshop / Industry" : role === "supplier" ? "Supplier / Stockist" : "AMAL ENTERPRISES";
+                const name = role === "buyer" ? "Workshop / Industry" : role === "supplier" ? "Supplier / Stockist" : "Admin";
                 document.getElementById("aeAdminStatus").textContent = name + " Mode";
                 document.getElementById("aeRoleTitle").textContent = name + " Quotation";
                 document.getElementById("aeFormPanel").hidden = false;
-                
-                // ✅ Admin role select korle Contact info auto fill hobe
-                const nameInput = document.getElementById("aeName");
-                const mobileInput = document.getElementById("aeMobile");
-                const emailInput = document.getElementById("aeEmail");
-                const recipientBox = document.getElementById("aeAdminRecipientBox");
+                document.getElementById("aeAdminRecipientBox").hidden = role !== "admin";
+
+                // Auto-fill and lock for Admin mode
+                const nameField = document.getElementById("aeName");
+                const companyField = document.getElementById("aeCompany");
+                const mobileField = document.getElementById("aeMobile");
+                const emailField = document.getElementById("aeEmail");
 
                 if (role === "admin") {
-                    recipientBox.hidden = false;
-                    nameInput.placeholder = "AMAL ENTERPRISES (Auto-filled)";
-                    mobileInput.placeholder = "916296471636 (Auto-filled)";
-                    emailInput.placeholder = "info@amalenterprises.in (Auto-filled)";
+                    nameField.value = "AMAL ENTERPRISES";
+                    nameField.disabled = true;
+                    companyField.value = "AMAL ENTERPRISES";
+                    companyField.disabled = true;
+                    mobileField.value = "6296471636";
+                    mobileField.disabled = true;
+                    emailField.value = "info@amalenterprises.in";
+                    emailField.disabled = true;
                 } else {
-                    recipientBox.hidden = true;
-                    nameInput.placeholder = "Enter your full name";
-                    mobileInput.placeholder = "10-digit mobile";
-                    emailInput.placeholder = "Email address";
+                    nameField.value = "";
+                    nameField.disabled = false;
+                    companyField.value = "";
+                    companyField.disabled = false;
+                    mobileField.value = "";
+                    mobileField.disabled = false;
+                    emailField.value = "";
+                    emailField.disabled = false;
                 }
             }
 
@@ -549,7 +559,7 @@
                 const r = document.getElementById("aeRecipientMobile").value.replace(/\D/g, "").slice(0, 10);
                 return {
                     role: currentRole,
-                    roleName: currentRole === "buyer" ? "Workshop / Industry" : currentRole === "supplier" ? "Supplier / Stockist" : "AMAL ENTERPRISES",
+                    roleName: currentRole === "buyer" ? "Workshop / Industry" : currentRole === "supplier" ? "Supplier / Stockist" : "Admin",
                     name: document.getElementById("aeName").value.trim(),
                     company: document.getElementById("aeCompany").value.trim(),
                     mobile: m,
@@ -578,7 +588,7 @@
                 if (!data.unit) { alert("Please select a unit."); return false; }
                 if (!(data.price > 0)) { alert("Please enter a valid unit price."); return false; }
                 if (!data.status) { alert("Please select a quotation status."); return false; }
-                if (data.roleName === "AMAL ENTERPRISES" && !/^[0-9]{10}$/.test(data.recipient)) { alert("Please enter the recipient's 10-digit mobile number."); return false; }
+                if (data.roleName === "Admin" && !/^[0-9]{10}$/.test(data.recipient)) { alert("Please enter the recipient's 10-digit mobile number."); return false; }
                 return true;
             }
 
@@ -587,8 +597,14 @@
                 const data = getFormData();
                 if (!validateData(data)) return;
                 const quoteNo = quotationNumber();
+                
+                // Show Flash Window (Preview)
                 showPreview(data, quoteNo);
-                if (data.status === "Final Quotation") saveFinalQuotation(data, quoteNo);
+                
+                // Final Quotation হলে ব্যাকগ্রাউন্ডে সেভ হবে (কোনো মেসেজ দেখাবে না)
+                if (data.status === "Final Quotation") {
+                    saveFinalQuotation(data, quoteNo);
+                }
             }
 
             function showPreview(data, quoteNo) {
@@ -638,8 +654,10 @@
                     <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                 `;
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    // ✅ Sending WhatsApp based on Role
-                    let recipient = data.roleName === "AMAL ENTERPRISES" ? data.recipient : ADMIN_WHATSAPP;
+                    // ✅ Correct WhatsApp Logic:
+                    // Admin -> Always sends to ADMIN_WHATSAPP (Recipient number is only for Google Sheet)
+                    // Buyer/Supplier -> Sends to ADMIN_WHATSAPP
+                    let recipient = ADMIN_WHATSAPP; 
                     openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
                 });
                 document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
@@ -653,20 +671,17 @@
                 if (data.status === "Negotiable") msg += `\n\nPrice is negotiable. Commercial terms can be discussed.`;
                 if (data.roleName === "Supplier") msg += `\n\nPlease share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.`;
                 if (data.roleName === "Buyer") msg += `\n\nPlease confirm the requirement and commercial terms.`;
-                if (data.roleName === "AMAL ENTERPRISES") msg += `\n\nPrepared by:\n${COMPANY_NAME}`;
+                if (data.roleName === "Admin") msg += `\n\nPrepared by:\n${COMPANY_NAME}`;
                 msg += `\n\n✅ This quotation was created 100% FREE on AMAL ENTERPRISES platform.`;
                 return msg;
             }
 
             function saveFinalQuotation(data, quoteNo) {
-                const status = document.getElementById("aeSaveStatus");
+                // Silent save (No UI messages)
                 if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
-                    status.textContent = "Quotation created. Google Sheet is not connected yet.";
-                    status.style.color = "#f0d080";
-                    return;
+                    return; 
                 }
-                status.textContent = "Saving final quotation...";
-                status.style.color = "#6db3f2";
+                
                 const payload = {
                     token: API_TOKEN,
                     action: "saveFinalQuotation",
@@ -684,23 +699,16 @@
                     unit: data.unit,
                     price: data.price,
                     total: data.total,
-                    status: data.status
+                    status: data.status,
+                    recipient: data.recipient || ""
                 };
+                
                 fetch(APPS_SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams(payload).toString()
-                })
-                .then(() => {
-                    status.textContent = "✅ Final quotation saved to Google Sheet. PDF is being generated.";
-                    status.style.color = "#4caf50";
-                })
-                .catch((error) => {
-                    console.error("Submission error:", error);
-                    status.textContent = "⚠️ Quotation created, but database submission failed.";
-                    status.style.color = "#f44336";
-                });
+                }).catch(() => {});
             }
 
             function closePreview() {
