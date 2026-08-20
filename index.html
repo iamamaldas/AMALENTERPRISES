@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>AMAL ENTERPRISES | Nuts, Bolts, Screws & Tools</title>
+    <title>AMAL ENTERPRISES | Industrial Tools, Auto Spare Parts & Engineering Fasteners</title>
 
-    <!-- ✅ Favicon -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/logo.png">
     
-    <link rel="stylesheet" href="style.css?v=2.3">
+    <link rel="stylesheet" href="style.css?v=2.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <style>
@@ -76,7 +76,10 @@
         .hero {
             margin-top: 68px; min-height: 85vh; display: flex; align-items: center;
             justify-content: center; position: relative; overflow: hidden;
-            background: linear-gradient(135deg, #0a101f 0%, #0d1a2e 50%, #080d1a 100%);
+            background: linear-gradient(135deg, rgba(8, 13, 26, 0.85) 0%, rgba(13, 26, 46, 0.75) 50%, rgba(8, 13, 26, 0.95) 100%),
+                        url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
         }
         .hero-glow {
             position: absolute; width: 500px; height: 500px;
@@ -225,7 +228,7 @@
                 <img src="assets/logo.png" alt="AMAL ENTERPRISES Logo" class="brand-logo">
                 <div class="brand-text">
                     <h1>AMAL ENTERPRISES</h1>
-                    <p>Industrial Tools & Spares Parts</p>
+                    <p>Industrial Tools, Auto Spare Parts & Engineering Fasteners</p>
                 </div>
             </a>
             <nav class="nav-links" id="navLinks">
@@ -243,8 +246,8 @@
         <div class="hero-glow"></div>
         <div class="hero-content">
             <div class="hero-text">
-                <h2>Premium Nuts, Bolts, Screws<br>B2B Sourcing Platform</h2>
-                <p>AMAL ENTERPRISES connects workshops and industries with high-quality nuts, bolts, screws, taps, dies, and industrial tools. <strong style="color:#6db3f2;">Create quotations absolutely FREE.</strong></p>
+                <h2>Premium Industrial Tools &<br>Auto Spare Parts Sourcing</h2>
+                <p>AMAL ENTERPRISES connects workshops, industries, and garages with high-quality engineering fasteners, auto spare parts, and industrial tools. <strong style="color:#6db3f2;">Create quotations absolutely FREE.</strong></p>
                 <a href="#quotation" class="btn btn-primary"><i class="fas fa-file-invoice"></i> Create Free Quotation</a>
                 <a href="#products" class="btn btn-outline"><i class="fas fa-box"></i> Explore Products</a>
             </div>
@@ -259,12 +262,15 @@
 
     <section class="products-section" id="products">
         <h2 class="section-title">Our Product Range</h2>
-        <p class="section-subtitle">High-quality fasteners, tools, and industrial supplies</p>
+        <p class="section-subtitle">High-quality industrial supplies, fasteners, and engineering spare parts</p>
         <div class="product-grid">
-            <div class="product-card"><i class="fas fa-bolt"></i><h3>Nuts, Bolts & Washers</h3><p>High-tensile bolts, nuts, and washers in various grades, materials, and thread sizes.</p></div>
-            <div class="product-card"><i class="fas fa-screwdriver"></i><h3>Screws & Fasteners</h3><p>Self-tapping, machine, wood, and drywall screws available in all standard sizes.</p></div>
-            <div class="product-card"><i class="fas fa-wrench"></i><h3>Tools, Taps & Dies</h3><p>High-quality threading taps, dies, wrenches, and professional hand tools for workshops.</p></div>
-            <div class="product-card"><i class="fas fa-tools"></i><h3>Industrial Supplies</h3><p>Drill bits, cutting tools, abrasives, workshop consumables, and safety equipment.</p></div>
+            <div class="product-card"><i class="fas fa-bolt"></i><h3>Engineering Fasteners</h3><p>High-tensile nuts, bolts, screws, washers, rivets, and all types of industrial fastening solutions.</p></div>
+            
+            <div class="product-card"><i class="fas fa-cogs"></i><h3>Auto & Engineering Spare Parts</h3><p>Bearings, bushings, gears, filters, belts, and general mechanical replacement parts for vehicles and machinery.</p></div>
+            
+            <div class="product-card"><i class="fas fa-wrench"></i><h3>Industrial Hand & Power Tools</h3><p>Wrenches, screwdrivers, drills, taps, dies, cutting tools, and essential workshop equipment.</p></div>
+            
+            <div class="product-card"><i class="fas fa-tools"></i><h3>General Industrial Supplies</h3><p>Abrasives, safety gear, lubricants, adhesives, and all workshop consumables for daily industrial use.</p></div>
         </div>
     </section>
 
@@ -313,8 +319,8 @@
     <footer>
         <div class="footer-inner">
             <div>
-                <!-- ✅ অটোমেটিক কপিরাইট ইয়ার (২০২৬, ২০২৭... অটোমেটিক) -->
-                <div class="copyright">&copy; <span id="currentYear"></span> AMAL ENTERPRISES.</div>
+                <!-- ✅ কপিরাইট টেক্সটে "All Rights Reserved" যুক্ত করা হয়েছে -->
+                <div class="copyright">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
                 <div class="legal-links">
                     <a href="#" onclick="openLegalModal('disclaimer')">Disclaimer</a> |
                     <a href="#" onclick="openLegalModal('privacy')">Privacy Policy</a> |
@@ -347,7 +353,7 @@
             document.getElementById("navLinks").classList.toggle("show");
         }
         
-        // ✅ অটোমেটিক কপিরাইট ইয়ার (এটি স্বয়ংক্রিয়ভাবে 2026, 2027... হয়ে যাবে)
+        // অটোমেটিক কপিরাইট ইয়ার
         document.getElementById("currentYear").textContent = new Date().getFullYear();
 
         document.querySelectorAll(".nav-links a").forEach(link => {
@@ -400,12 +406,12 @@
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
             let currentRole = "";
 
-            /* ✅ Product Categories updated for Nuts, Bolts, Screws & Tools */
+            /* Product Categories */
             const PRODUCT_CATEGORIES = [
-                "Nuts, Bolts & Washers",
-                "Screws & Fasteners",
-                "Tools, Taps & Dies",
-                "Industrial Supplies",
+                "Engineering Fasteners",
+                "Auto & Engineering Spare Parts",
+                "Industrial Hand & Power Tools",
+                "General Industrial Supplies",
                 "Other / Custom Product"
             ];
             const UNITS = ["piece", "set", "box", "kg", "metre", "dozen", "pair", "pack"];
@@ -609,7 +615,7 @@
                     <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                 `;
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    let recipient = data.roleName === "Amal Enterprises" ? data.recipient : ADMIN_WHATSAPP;
+                    let recipient = data.roleName === "AMAL ENTERPRISES" ? data.recipient : ADMIN_WHATSAPP;
                     openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
                 });
                 document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
