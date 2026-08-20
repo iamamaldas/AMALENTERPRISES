@@ -8,7 +8,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/logo.png">
     
-    <link rel="stylesheet" href="style.css?v=2.4">
+    <link rel="stylesheet" href="style.css?v=2.5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <style>
@@ -72,14 +72,15 @@
         .nav-links a:hover, .nav-links a.active { color: #6db3f2; }
         .menu-button { display: none; cursor: pointer; font-size: 22px; color: #b0b9c5; }
 
-        /* HERO */
+        /* HERO - Fixed Gap & New Background */
         .hero {
-            margin-top: 68px; min-height: 85vh; display: flex; align-items: center;
+            margin-top: 68px; min-height: 75vh; display: flex; align-items: center;
             justify-content: center; position: relative; overflow: hidden;
-            background: linear-gradient(135deg, rgba(8, 13, 26, 0.85) 0%, rgba(13, 26, 46, 0.75) 50%, rgba(8, 13, 26, 0.95) 100%),
-                        url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80');
+            background: linear-gradient(135deg, rgba(8, 13, 26, 0.80) 0%, rgba(13, 26, 46, 0.70) 50%, rgba(8, 13, 26, 0.90) 100%),
+                        url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
+            padding: 20px 0;
         }
         .hero-glow {
             position: absolute; width: 500px; height: 500px;
@@ -87,7 +88,7 @@
             top: -200px; right: -100px; border-radius: 50%; pointer-events: none;
         }
         .hero-content {
-            max-width: 1200px; padding: 40px 24px; position: relative;
+            max-width: 1200px; padding: 30px 24px; position: relative;
             display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
             width: 100%;
         }
@@ -319,7 +320,6 @@
     <footer>
         <div class="footer-inner">
             <div>
-                <!-- ✅ কপিরাইট টেক্সটে "All Rights Reserved" যুক্ত করা হয়েছে -->
                 <div class="copyright">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
                 <div class="legal-links">
                     <a href="#" onclick="openLegalModal('disclaimer')">Disclaimer</a> |
@@ -353,7 +353,6 @@
             document.getElementById("navLinks").classList.toggle("show");
         }
         
-        // অটোমেটিক কপিরাইট ইয়ার
         document.getElementById("currentYear").textContent = new Date().getFullYear();
 
         document.querySelectorAll(".nav-links a").forEach(link => {
@@ -391,12 +390,11 @@
             document.body.style.overflow = "auto";
         }
 
-        // Close modal when clicking outside
         document.getElementById("legalModal").addEventListener("click", function(e) {
             if (e.target === this) closeLegalModal();
         });
 
-        // --- COMPLETE QUOTATION SYSTEM ---
+        // --- COMPLETE QUOTATION SYSTEM (Silent Save & Preview) ---
         (function() {
             "use strict";
 
@@ -406,7 +404,6 @@
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
             let currentRole = "";
 
-            /* Product Categories */
             const PRODUCT_CATEGORIES = [
                 "Engineering Fasteners",
                 "Auto & Engineering Spare Parts",
@@ -473,7 +470,7 @@
                             </div>
                             <div id="aeNegotiationNote" style="display:none; background:rgba(255,200,50,0.1); border-left:3px solid #f0b040; padding:10px; border-radius:6px; color:#f0d080; font-size:14px; margin-bottom:12px;">Price and delivery terms are negotiable.</div>
                             <button type="button" class="ae-generate-btn" id="aeGenerateBtn"><i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation</button>
-                            <div id="aeSaveStatus" style="margin-top:12px; text-align:center; font-size:14px;"></div>
+                            <div id="aeSaveStatus" style="margin-top:12px; text-align:center; font-size:14px; display:none;"></div>
                         </div>
                     </div>
                     <div class="ae-modal-overlay" id="aeModal" hidden>
@@ -565,7 +562,11 @@
                 if (!validateData(data)) return;
                 const quoteNo = quotationNumber();
                 showPreview(data, quoteNo);
-                if (data.status === "Final Quotation") saveFinalQuotation(data, quoteNo);
+                
+                // Final Quotation হলে ব্যাকগ্রাউন্ডে সেভ হবে (কোনো মেসেজ দেখাবে না)
+                if (data.status === "Final Quotation") {
+                    saveFinalQuotation(data, quoteNo);
+                }
             }
 
             function showPreview(data, quoteNo) {
@@ -615,6 +616,7 @@
                     <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                 `;
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
+                    // Correct Logic: Buyer/Supplier sends to Admin, Admin sends to Recipient
                     let recipient = data.roleName === "AMAL ENTERPRISES" ? data.recipient : ADMIN_WHATSAPP;
                     openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
                 });
@@ -635,14 +637,11 @@
             }
 
             function saveFinalQuotation(data, quoteNo) {
-                const status = document.getElementById("aeSaveStatus");
+                // Silent save (No UI messages)
                 if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
-                    status.textContent = "Quotation created. Google Sheet is not connected yet.";
-                    status.style.color = "#f0d080";
-                    return;
+                    return; // Just return silently if not configured
                 }
-                status.textContent = "Saving final quotation...";
-                status.style.color = "#6db3f2";
+                
                 const payload = {
                     token: API_TOKEN,
                     action: "saveFinalQuotation",
@@ -660,22 +659,18 @@
                     unit: data.unit,
                     price: data.price,
                     total: data.total,
-                    status: data.status
+                    status: data.status,
+                    recipient: data.recipient || ""
                 };
+                
+                // Send data to Apps Script silently
                 fetch(APPS_SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams(payload).toString()
-                })
-                .then(() => {
-                    status.textContent = "✅ Final quotation saved to Google Sheet. PDF is being generated.";
-                    status.style.color = "#4caf50";
-                })
-                .catch((error) => {
-                    console.error("Submission error:", error);
-                    status.textContent = "⚠️ Quotation created, but database submission failed.";
-                    status.style.color = "#f44336";
+                }).catch(() => {
+                    // Fail silently, user doesn't need to know
                 });
             }
 
