@@ -225,7 +225,7 @@
                 <img src="assets/logo.png" alt="AMAL ENTERPRISES Logo" class="brand-logo">
                 <div class="brand-text">
                     <h1>AMAL ENTERPRISES</h1>
-                    <p>Nuts, Bolts, Screws & Industrial Tools</p>
+                    <p>Industrial Tools & Spares Parts</p>
                 </div>
             </a>
             <nav class="nav-links" id="navLinks">
@@ -609,7 +609,7 @@
                     <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                 `;
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    let recipient = data.roleName === "AMAL ENTERPRISES" ? data.recipient : ADMIN_WHATSAPP;
+                    let recipient = data.roleName === "Amal Enterprises" ? data.recipient : ADMIN_WHATSAPP;
                     openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
                 });
                 document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
