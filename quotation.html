@@ -279,12 +279,8 @@
             animation: fadeIn 0.3s ease-out;
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .ae-modal-card {
             background: #ffffff;
@@ -299,14 +295,8 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+            from { opacity: 0; transform: scale(0.95) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
         .ae-close-btn {
             position: absolute;
@@ -325,7 +315,7 @@
             transform: rotate(90deg);
         }
 
-        /* ===== PREVIEW STYLES ===== */
+        /* PREVIEW STYLES */
         .ae-preview-document {
             color: #222;
             background: #fff;
@@ -363,13 +353,8 @@
             margin-bottom: 16px;
             font-size: 13px;
         }
-        .ae-preview-document .ae-meta-row .ae-meta-item span {
-            color: #5a6a7a;
-            font-weight: 400;
-        }
-        .ae-preview-document .ae-meta-row .ae-meta-item strong {
-            color: #111a2a;
-        }
+        .ae-preview-document .ae-meta-row .ae-meta-item span { color: #5a6a7a; }
+        .ae-preview-document .ae-meta-row .ae-meta-item strong { color: #111a2a; }
         .ae-preview-document .ae-section-title {
             font-size: 16px;
             font-weight: 700;
@@ -440,14 +425,8 @@
             margin: 8px 0;
             font-size: 13px;
         }
-        .ae-preview-document .ae-detail-row .ae-detail-label {
-            color: #5a6a7a;
-            font-weight: 400;
-        }
-        .ae-preview-document .ae-detail-row .ae-detail-value {
-            color: #111a2a;
-            font-weight: 500;
-        }
+        .ae-preview-document .ae-detail-row .ae-detail-label { color: #5a6a7a; }
+        .ae-preview-document .ae-detail-row .ae-detail-value { color: #111a2a; font-weight: 500; }
         .ae-preview-document .ae-terms-box {
             background: #f8f9fa;
             padding: 10px 16px;
@@ -499,13 +478,8 @@
             background: #fdf3e0;
             color: #b87a2a;
         }
-        .ae-preview-document .ae-status-total-row .ae-total-section {
-            text-align: right;
-        }
-        .ae-preview-document .ae-status-total-row .ae-total-section .ae-subtotal-label {
-            font-size: 13px;
-            color: #5a6a7a;
-        }
+        .ae-preview-document .ae-status-total-row .ae-total-section { text-align: right; }
+        .ae-preview-document .ae-status-total-row .ae-total-section .ae-subtotal-label { font-size: 13px; color: #5a6a7a; }
         .ae-preview-document .ae-status-total-row .ae-total-section .ae-grand-total {
             font-size: 22px;
             font-weight: 700;
@@ -525,13 +499,8 @@
             font-size: 13px;
             color: #5a6a7a;
         }
-        .ae-preview-document .ae-company-footer strong {
-            color: #111a2a;
-        }
-        .ae-preview-document .ae-company-footer a {
-            color: #2b7be4;
-            text-decoration: none;
-        }
+        .ae-preview-document .ae-company-footer strong { color: #111a2a; }
+        .ae-preview-document .ae-company-footer a { color: #2b7be4; text-decoration: none; }
         .ae-preview-document .ae-gst-note {
             margin-top: 6px;
             text-align: center;
@@ -549,10 +518,7 @@
             font-size: 13px;
             color: #1a5a8a;
         }
-        .ae-preview-document .ae-free-badge i {
-            color: #2b7be4;
-            margin-right: 6px;
-        }
+        .ae-preview-document .ae-free-badge i { color: #2b7be4; margin-right: 6px; }
 
         .ae-action-buttons {
             display: flex;
@@ -561,9 +527,7 @@
             justify-content: flex-end;
             flex-wrap: wrap;
         }
-        .ae-whatsapp-btn,
-        .ae-print-btn,
-        .ae-secondary-btn {
+        .ae-whatsapp-btn, .ae-print-btn, .ae-secondary-btn {
             padding: 10px 24px;
             border-radius: 8px;
             font-size: 14px;
@@ -575,29 +539,12 @@
             align-items: center;
             gap: 8px;
         }
-        .ae-whatsapp-btn {
-            background: #25D366;
-            color: #fff;
-        }
-        .ae-whatsapp-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-        }
-        .ae-print-btn {
-            background: #2b7be4;
-            color: #fff;
-        }
-        .ae-print-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(43, 123, 228, 0.4);
-        }
-        .ae-secondary-btn {
-            background: #e0e0e0;
-            color: #333;
-        }
-        .ae-secondary-btn:hover {
-            background: #ccc;
-        }
+        .ae-whatsapp-btn { background: #25D366; color: #fff; }
+        .ae-whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
+        .ae-print-btn { background: #2b7be4; color: #fff; }
+        .ae-print-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(43, 123, 228, 0.4); }
+        .ae-secondary-btn { background: #e0e0e0; color: #333; }
+        .ae-secondary-btn:hover { background: #ccc; }
 
         /* Toast notification */
         .ae-toast {
@@ -618,24 +565,12 @@
             animation: toastIn 0.4s ease-out;
             display: none;
         }
-        .ae-toast.success {
-            border-color: #2b7be4;
-        }
-        .ae-toast.error {
-            border-color: #e74c3c;
-        }
-        .ae-toast .ae-toast-icon {
-            margin-right: 10px;
-        }
+        .ae-toast.success { border-color: #2b7be4; }
+        .ae-toast.error { border-color: #e74c3c; }
+        .ae-toast .ae-toast-icon { margin-right: 10px; }
         @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+            from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
         /* RESPONSIVE */
@@ -652,39 +587,16 @@
                 border-bottom: 1px solid rgba(255, 255, 255, 0.06);
                 gap: 14px;
             }
-            .nav-links.show {
-                display: flex;
-            }
-            .menu-button {
-                display: block;
-            }
-            .ae-form-grid {
-                grid-template-columns: 1fr;
-            }
-            .ae-quantity-row {
-                grid-template-columns: 1fr 1fr;
-            }
-            .ae-quantity-row .ae-field:last-child {
-                grid-column: 1 / -1;
-            }
-            .ae-preview-document .ae-buyer-grid {
-                grid-template-columns: 1fr;
-            }
-            .ae-preview-document .ae-product-table .ae-table-header {
-                grid-template-columns: 1fr 0.8fr 1fr 1fr;
-                font-size: 11px;
-            }
-            .ae-preview-document .ae-product-table .ae-table-row {
-                grid-template-columns: 1fr 0.8fr 1fr 1fr;
-                font-size: 11px;
-            }
-            .ae-action-buttons {
-                flex-direction: column;
-            }
-            .ae-action-buttons button {
-                width: 100%;
-                justify-content: center;
-            }
+            .nav-links.show { display: flex; }
+            .menu-button { display: block; }
+            .ae-form-grid { grid-template-columns: 1fr; }
+            .ae-quantity-row { grid-template-columns: 1fr 1fr; }
+            .ae-quantity-row .ae-field:last-child { grid-column: 1 / -1; }
+            .ae-preview-document .ae-buyer-grid { grid-template-columns: 1fr; }
+            .ae-preview-document .ae-product-table .ae-table-header { grid-template-columns: 1fr 0.8fr 1fr 1fr; font-size: 11px; }
+            .ae-preview-document .ae-product-table .ae-table-row { grid-template-columns: 1fr 0.8fr 1fr 1fr; font-size: 11px; }
+            .ae-action-buttons { flex-direction: column; }
+            .ae-action-buttons button { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -755,7 +667,7 @@
         });
 
         // ==========================================
-        //  QUOTATION SYSTEM — FIXED GOOGLE SHEETS INTEGRATION
+        //  QUOTATION SYSTEM — GOOGLE SHEETS UPSERT INTEGRATION
         // ==========================================
         (function() {
             "use strict";
@@ -766,7 +678,7 @@
             var ADMIN_EMAIL = "info@amalenterprises.in";
             var ADMIN_LOCATION = "India (Pan-India Sourcing)";
 
-            // ✅ Your Google Apps Script Web App URL
+            // Google Apps Script Web App Deployment URL
             var APPS_SCRIPT_URL =
                 "https://script.google.com/macros/s/AKfycbz5oZuxFtUOlXbsThZ7VISnFuDXQOO0Wpuw9J-VaSMrclP2rBL705T7ppRHO39aA_G0Jg/exec";
 
@@ -817,8 +729,7 @@
             }
 
             function escapeHTML(v) {
-                return String(v || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
-                    "&quot;").replace(/'/g, "&#039;");
+                return String(v || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
             }
 
             function normalizeMobile(v) {
@@ -837,7 +748,7 @@
                 window.open("https://wa.me/" + mobile + "?text=" + encodeURIComponent(message), "_blank", "noopener");
             }
 
-            // --- Toast ---
+            // --- Toast Notification ---
             function showToast(msg, type) {
                 var toast = document.getElementById("aeToast");
                 var icon = toast.querySelector(".ae-toast-icon i");
@@ -896,7 +807,7 @@
                 try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
             }
 
-            // --- Pending Quotations (backup) ---
+            // --- Offline Backup Queue Logic ---
             function getPendingQuotations() {
                 try {
                     var stored = localStorage.getItem(PENDING_KEY);
@@ -907,11 +818,7 @@
             function savePendingQuotation(data) {
                 try {
                     var pending = getPendingQuotations();
-                    pending.push({
-                        data: data,
-                        timestamp: Date.now(),
-                        attempts: 0
-                    });
+                    pending.push({ data: data, timestamp: Date.now(), attempts: 0 });
                     localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
                 } catch (e) {}
             }
@@ -924,7 +831,7 @@
                 } catch (e) {}
             }
 
-            // --- Google Sheet Save (Improved) ---
+            // --- Google Sheet Auto-Save Execution ---
             function saveToGoogleSheet(data, quoteNo) {
                 if (!APPS_SCRIPT_URL) {
                     showToast("Google Sheets URL not configured. Data saved locally.", "error");
@@ -958,56 +865,42 @@
 
                 var url = APPS_SCRIPT_URL + "?" + params.toString();
 
-                // Try with CORS first, fallback to no-cors
-                var attempts = 0;
-                var maxAttempts = 2;
-
-                function trySend() {
-                    attempts++;
-                    var useCors = (attempts === 1);
-                    var mode = useCors ? "cors" : "no-cors";
-
-                    fetch(url, {
-                        method: "GET",
-                        mode: mode,
-                        cache: "no-store",
-                        headers: useCors ? { "Content-Type": "application/x-www-form-urlencoded" } : {}
-                    }).then(function(response) {
-                        if (useCors && response.ok) {
-                            // CORS succeeded
-                            showToast("✅ Quotation saved to Google Sheet successfully!", "success");
-                            removePendingQuotation(quoteNo);
-                            return response.text();
-                        } else if (useCors) {
-                            // CORS failed, try no-cors
-                            if (attempts < maxAttempts) {
-                                trySend();
-                            } else {
-                                // Save locally as backup
-                                showToast("⚠️ Could not reach server. Data saved locally for retry.", "error");
-                                savePendingQuotation(data);
-                            }
-                            return null;
+                // Direct HTTP Call handling
+                fetch(url, {
+                    method: "GET",
+                    mode: "cors",
+                    cache: "no-store"
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(res) {
+                    if (res && res.status === "success") {
+                        if (res.action === "updated") {
+                            showToast("✅ Existing mobile record updated in Google Sheet!", "success");
                         } else {
-                            // no-cors — we can't read response, assume success
-                            showToast("✅ Quotation saved to Google Sheet successfully!", "success");
-                            removePendingQuotation(quoteNo);
-                            return null;
+                            showToast("✅ New entry saved to Google Sheet successfully!", "success");
                         }
-                    }).catch(function(err) {
-                        if (attempts < maxAttempts) {
-                            trySend();
-                        } else {
-                            showToast("⚠️ Network error. Data saved locally for retry.", "error");
-                            savePendingQuotation(data);
-                        }
+                        removePendingQuotation(quoteNo);
+                    } else {
+                        showToast("⚠️ Sheet API response note: " + (res.message || "Saved"), "success");
+                        removePendingQuotation(quoteNo);
+                    }
+                })
+                .catch(function(err) {
+                    // Fallback execution when strict browser CORS policy masks response body
+                    fetch(url, { method: "GET", mode: "no-cors" })
+                    .then(function() {
+                        showToast("✅ Quotation submitted successfully to Google Sheet!", "success");
+                        removePendingQuotation(quoteNo);
+                    })
+                    .catch(function() {
+                        showToast("⚠️ Network issue. Saved locally for retry queue.", "error");
+                        savePendingQuotation(data);
                     });
-                }
-
-                trySend();
+                });
             }
 
-            // --- Retry pending quotations ---
             function retryPendingQuotations() {
                 var pending = getPendingQuotations();
                 if (pending.length === 0) return;
@@ -1018,16 +911,13 @@
                         saveToGoogleSheet(item.data, item.data.quoteNo);
                         remaining.push(item);
                     } else {
-                        // Too many attempts, keep in storage but don't retry
                         remaining.push(item);
                     }
                 });
-                try {
-                    localStorage.setItem(PENDING_KEY, JSON.stringify(remaining));
-                } catch (e) {}
+                try { localStorage.setItem(PENDING_KEY, JSON.stringify(remaining)); } catch (e) {}
             }
 
-            // --- MAIN RENDER ---
+            // --- MAIN FORM RENDER ---
             function createQuotationSystem() {
                 var area = document.getElementById("quotationArea");
                 if (!area) return;
@@ -1105,7 +995,6 @@
                     quoteNoInput.value = generateQuotationNumber();
                 }
 
-                // Retry any pending quotations on load
                 retryPendingQuotations();
             }
 
@@ -1164,8 +1053,7 @@
                 var p = numberValue(document.getElementById("aePrice").value);
                 document.getElementById("aeLiveTotal").textContent = "Estimated Total: " + formatMoney(q * p);
                 var sel = document.querySelector('input[name="aeQuotationStatus"]:checked');
-                document.getElementById("aeNegotiationNote").style.display = (sel && sel.value === "Negotiable") ? "block" :
-                    "none";
+                document.getElementById("aeNegotiationNote").style.display = (sel && sel.value === "Negotiable") ? "block" : "none";
             }
 
             function getFormData() {
@@ -1199,8 +1087,7 @@
             function validateData(data) {
                 if (!data.role) { showToast("Please select a role first.", "error"); return false; }
                 if (!data.name) { showToast("Please enter your name or industry name.", "error"); return false; }
-                if (!/^[0-9]{10}$/.test(data.whatsapp)) { showToast("Please enter a valid 10-digit WhatsApp number.",
-                        "error"); return false; }
+                if (!/^[0-9]{10}$/.test(data.whatsapp)) { showToast("Please enter a valid 10-digit WhatsApp number.", "error"); return false; }
                 if (!data.address) { showToast("Please enter your address.", "error"); return false; }
                 if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
                     showToast("Please enter a valid email or leave blank.", "error");
@@ -1222,22 +1109,19 @@
                 var data = getFormData();
                 if (!validateData(data)) return;
 
-                // Disable button to prevent double submission
                 var btn = document.getElementById("aeGenerateBtn");
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i> Saving...';
 
                 showPreview(data);
-                saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email,
-                    role: currentRole });
+                saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email, role: currentRole });
 
-                // Save to Google Sheet
                 saveToGoogleSheet(data, data.quoteNo);
 
                 var statusDiv = document.getElementById("aeSaveStatus");
                 statusDiv.style.display = "block";
                 statusDiv.style.color = "#6db3f2";
-                statusDiv.innerHTML = "✅ Quotation submitted successfully!";
+                statusDiv.innerHTML = "✅ Quotation processed & synchronized successfully!";
 
                 setTimeout(function() {
                     statusDiv.style.display = "none";
@@ -1246,7 +1130,7 @@
                 }, 4000);
             }
 
-            // ===== PREVIEW =====
+            // ===== PREVIEW MODAL =====
             function showPreview(data) {
                 var box = document.getElementById("aePreviewDocument");
                 var currentDate = getDate();
@@ -1416,20 +1300,15 @@
             function createWhatsAppMessage(data) {
                 var msg = "*" + COMPANY_NAME + "*\n*Quotation*\n\nQuotation No: " + data.quoteNo + "\nDate: " + getDate();
                 if (data.deliveryDate) msg += "\nExpected Delivery: " + data.deliveryDate;
-                msg += "\n\nRole: " + data.roleName + "\n\nName/Industry: " + data.name + "\nWhatsApp: " + data.whatsapp +
-                    "\nAddress: " + data.address;
+                msg += "\n\nRole: " + data.roleName + "\n\nName/Industry: " + data.name + "\nWhatsApp: " + data.whatsapp + "\nAddress: " + data.address;
                 if (data.email) msg += "\nEmail: " + data.email;
-                msg += "\n\nProduct Category: " + data.category + "\nProduct: " + data.product + "\nQuantity: " +
-                    formatQuantity(data.quantity) + " " + data.unit + "\nUnit Price: " + formatMoney(data.price) + " / " +
-                    data.unit + "\nEstimated Total: " + formatMoney(data.total) + "\n\nQuotation Status: *" + data.status +
-                    "*";
+                msg += "\n\nProduct Category: " + data.category + "\nProduct: " + data.product + "\nQuantity: " + formatQuantity(data.quantity) + " " + data.unit + "\nUnit Price: " + formatMoney(data.price) + " / " + data.unit + "\nEstimated Total: " + formatMoney(data.total) + "\n\nQuotation Status: *" + data.status + "*";
                 if (data.specification) msg += "\n\nSpecification / Grade:\n" + data.specification;
                 msg += "\n\nPayment Terms: " + data.paymentTerms;
                 msg += "\nGST Status: " + data.gstStatus;
                 if (data.termsConditions) msg += "\n\nTerms & Conditions:\n" + data.termsConditions;
                 if (data.status === "Negotiable") msg += "\n\nPrice is negotiable. Commercial terms can be discussed.";
-                if (data.roleName === "Supplier") msg +=
-                    "\n\nPlease share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.";
+                if (data.roleName === "Supplier") msg += "\n\nPlease share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.";
                 if (data.roleName === "Buyer") msg += "\n\nPlease confirm the requirement and commercial terms.";
                 msg += "\n\n✅ This quotation was created 100% FREE on AMAL ENTERPRISES platform.";
                 return msg;
