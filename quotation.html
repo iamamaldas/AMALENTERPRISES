@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <style>
-        /* ============ SINGLE FILE STYLES ============ */
+        /* ============ GLOBAL ============ */
         * { margin:0; padding:0; box-sizing:border-box; }
         html { scroll-behavior:smooth; }
         body {
@@ -23,7 +23,6 @@
             display: flex;
             flex-direction: column;
         }
-        
         a { text-decoration: none !important; }
         
         /* HEADER */
@@ -76,7 +75,7 @@
         .quotation-section { padding: 100px 24px 60px; max-width: 1100px; margin: 0 auto; }
         #quotationArea { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; min-height: 400px; position: relative; }
 
-        /* QUOTATION SYSTEM INLINE STYLES - SMART DESIGN */
+        /* FORM STYLES */
         .ae-quotation-wrapper { width: 100%; }
         .ae-quotation-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .ae-quotation-header h2 { font-size: 24px; font-weight: 600; color: #f0f4fa; margin: 0; }
@@ -93,6 +92,7 @@
         .ae-field label { display: block; font-size: 13px; color: #a0acbd; margin-bottom: 4px; }
         .ae-field input, .ae-field select, .ae-field textarea { width: 100%; padding: 10px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(255,255,255,0.04); color: #f0f4fa; font-size: 14px; outline: none; transition: 0.3s; }
         .ae-field input:focus, .ae-field select:focus, .ae-field textarea:focus { border-color: #6db3f2; background: rgba(255,255,255,0.06); }
+        .ae-field textarea { resize: vertical; min-height: 60px; }
         .ae-quantity-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
         .ae-status-options { display: flex; gap: 16px; margin-top: 6px; }
         .ae-status-option { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #a0acbd; cursor: pointer; }
@@ -100,53 +100,171 @@
         .ae-generate-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #2b7be4, #1a5bb5); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 12px; }
         .ae-generate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(43,123,228,0.4); }
 
-        /* FLASH MESSAGE MODAL (POPUP) SMART DESIGN */
+        /* MODAL */
         .ae-modal-overlay { position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .ae-modal-card { background: #ffffff; border-radius: 20px; padding: 30px; max-width: 900px; width: 100%; max-height: 90vh; position: relative; animation: slideUp 0.3s ease-out; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .ae-modal-card { background: #ffffff; border-radius: 20px; padding: 30px; max-width: 950px; width: 100%; max-height: 90vh; position: relative; animation: slideUp 0.3s ease-out; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         @keyframes slideUp { from { opacity: 0; transform: scale(0.95) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .ae-close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #555; cursor: pointer; background: transparent; border: none; transition: 0.3s; z-index: 10; }
         .ae-close-btn:hover { color: #111; transform: rotate(90deg); }
         
-        /* QUOTATION PREVIEW STYLE - Flash Message Style */
-        .ae-preview-document { color: #222; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e0e0e0; position: relative; }
-        .ae-preview-document .ae-client-details { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; background: #f8f9fa; padding: 14px; border-radius: 10px; margin-bottom: 16px; }
-        .ae-preview-document .ae-client-details .ae-detail-item span { display: block; font-size: 11px; color: #5a6a7a; }
-        .ae-preview-document .ae-client-details .ae-detail-item strong { font-size: 14px; color: #1a1a2e; }
-        .ae-preview-document .ae-role-badge { display: inline-block; background: #e8f0fe; color: #2b7be4; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
-        .ae-preview-document .ae-product-table { border: 1px solid #dce2ea; border-radius: 10px; overflow: hidden; margin: 16px 0; }
-        .ae-preview-document .ae-product-table .ae-table-header { background: #e4e9f0; font-weight: 600; display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; }
-        .ae-preview-document .ae-product-table .ae-table-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; border-top: 1px solid #dce2ea; }
+        /* ===== PREVIEW STYLES (matches sample image) ===== */
+        .ae-preview-document {
+            color: #222;
+            background: #fff;
+            padding: 24px 28px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .ae-preview-document .ae-company-header {
+            text-align: center;
+            border-bottom: 2px solid #2b7be4;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+        .ae-preview-document .ae-company-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111a2a;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .ae-preview-document .ae-company-header .ae-tagline {
+            font-size: 12px;
+            color: #5a6a7a;
+            margin-top: 2px;
+        }
+        .ae-preview-document .ae-meta-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            background: #f8f9fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .ae-preview-document .ae-meta-row .ae-meta-item span { color: #5a6a7a; font-weight: 400; }
+        .ae-preview-document .ae-meta-row .ae-meta-item strong { color: #111a2a; }
+        .ae-preview-document .ae-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111a2a;
+            margin: 16px 0 10px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #dce2ea;
+        }
+        .ae-preview-document .ae-buyer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            background: #f8f9fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .ae-preview-document .ae-buyer-grid .ae-buyer-item span { display: block; font-size: 11px; color: #5a6a7a; }
+        .ae-preview-document .ae-buyer-grid .ae-buyer-item strong { font-size: 14px; color: #1a1a2e; }
+        .ae-preview-document .ae-product-table { border: 1px solid #dce2ea; border-radius: 8px; overflow: hidden; margin: 12px 0; }
+        .ae-preview-document .ae-product-table .ae-table-header {
+            background: #e4e9f0;
+            font-weight: 600;
+            display: grid;
+            grid-template-columns: 2fr 0.8fr 1.5fr 1.5fr;
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+        .ae-preview-document .ae-product-table .ae-table-row {
+            display: grid;
+            grid-template-columns: 2fr 0.8fr 1.5fr 1.5fr;
+            padding: 10px 12px;
+            border-top: 1px solid #dce2ea;
+            font-size: 13px;
+        }
         .ae-preview-document .ae-product-table .ae-table-row .ae-product-info small { display: block; color: #5a6a7a; font-size: 11px; }
         .ae-preview-document .ae-product-table .ae-table-row .ae-product-info strong { font-size: 14px; color: #1a1a2e; }
         .ae-preview-document .ae-product-table .ae-table-row .ae-total-price { color: #2b7be4; font-weight: 700; }
-        .ae-preview-document .ae-spec-box { background: #eef2f7; padding: 12px; border-radius: 8px; margin: 12px 0; }
-        .ae-preview-document .ae-spec-box small { display: block; color: #5a6a7a; margin-bottom: 4px; }
-        .ae-preview-document .ae-spec-box p { margin: 0; font-size: 14px; color: #1a1a2e; }
-        .ae-preview-document .ae-status-total { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dce2ea; }
-        .ae-preview-document .ae-status-total .ae-status { font-weight: 600; }
-        .ae-preview-document .ae-status-total .ae-status.final { color: #1a8a4a; }
-        .ae-preview-document .ae-status-total .ae-status.negotiable { color: #b87a2a; }
-        .ae-preview-document .ae-status-total .ae-total-amount { font-size: 22px; font-weight: 700; color: #111a2a; }
-        .ae-preview-document .ae-negotiable-note { background: #fdf3e0; border: 1px solid #f0dbb8; padding: 10px; border-radius: 8px; font-size: 13px; color: #7a5a2a; margin-top: 12px; }
-        .ae-preview-document .ae-company-footer { margin-top: 20px; padding-top: 12px; border-top: 2px solid #dce2ea; text-align: center; font-size: 13px; color: #5a6a7a; }
+        .ae-preview-document .ae-detail-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            background: #f8f9fa;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+        .ae-preview-document .ae-detail-row .ae-detail-label { color: #5a6a7a; font-weight: 400; }
+        .ae-preview-document .ae-detail-row .ae-detail-value { color: #111a2a; font-weight: 500; }
+        .ae-preview-document .ae-terms-box {
+            background: #f8f9fa;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-size: 13px;
+            border-left: 3px solid #2b7be4;
+        }
+        .ae-preview-document .ae-terms-box .ae-terms-label { color: #5a6a7a; display: block; font-size: 11px; }
+        .ae-preview-document .ae-terms-box .ae-terms-text { color: #111a2a; margin: 2px 0 0 0; }
+        .ae-preview-document .ae-status-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #dce2ea;
+        }
+        .ae-preview-document .ae-status-total-row .ae-status-box { display: flex; align-items: center; gap: 8px; }
+        .ae-preview-document .ae-status-total-row .ae-status-box .ae-status-label { font-size: 13px; color: #5a6a7a; }
+        .ae-preview-document .ae-status-total-row .ae-status-box .ae-status-value { font-weight: 600; padding: 2px 12px; border-radius: 12px; background: #e8f0fe; color: #2b7be4; }
+        .ae-preview-document .ae-status-total-row .ae-status-box .ae-status-value.final { background: #e0f0e0; color: #1a7a3a; }
+        .ae-preview-document .ae-status-total-row .ae-status-box .ae-status-value.negotiable { background: #fdf3e0; color: #b87a2a; }
+        .ae-preview-document .ae-status-total-row .ae-total-section { text-align: right; }
+        .ae-preview-document .ae-status-total-row .ae-total-section .ae-subtotal-label { font-size: 13px; color: #5a6a7a; }
+        .ae-preview-document .ae-status-total-row .ae-total-section .ae-grand-total { font-size: 22px; font-weight: 700; color: #111a2a; }
+        .ae-preview-document .ae-gst-line {
+            text-align: right;
+            font-size: 13px;
+            color: #5a6a7a;
+            margin-top: 4px;
+        }
+        .ae-preview-document .ae-company-footer {
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 2px solid #dce2ea;
+            text-align: center;
+            font-size: 13px;
+            color: #5a6a7a;
+        }
         .ae-preview-document .ae-company-footer strong { color: #111a2a; }
         .ae-preview-document .ae-company-footer a { color: #2b7be4; text-decoration: none; }
-        .ae-preview-document .ae-gst-note { margin-top: 8px; text-align: center; font-size: 13px; color: #777; font-style: italic; }
-        .ae-preview-document .ae-free-badge { margin-top: 12px; padding: 10px; background: #e8f0fe; border-radius: 8px; border: 1px solid #d0e0f0; text-align: center; font-size: 13px; color: #1a5a8a; }
+        .ae-preview-document .ae-gst-note { margin-top: 6px; text-align: center; font-size: 12px; color: #777; font-style: italic; }
+        .ae-preview-document .ae-free-badge {
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: #e8f0fe;
+            border-radius: 8px;
+            border: 1px solid #d0e0f0;
+            text-align: center;
+            font-size: 13px;
+            color: #1a5a8a;
+        }
         .ae-preview-document .ae-free-badge i { color: #2b7be4; margin-right: 6px; }
 
-        /* ACTION BUTTONS */
         .ae-action-buttons { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; flex-wrap: wrap; }
-        .ae-whatsapp-btn, .ae-print-btn, .ae-secondary-btn { padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
-        .ae-whatsapp-btn { background: #25D366; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .ae-whatsapp-btn, .ae-print-btn, .ae-secondary-btn { padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .ae-whatsapp-btn { background: #25D366; color: #fff; }
         .ae-whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
-        .ae-print-btn { background: #2b7be4; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .ae-print-btn { background: #2b7be4; color: #fff; }
         .ae-print-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(43,123,228,0.4); }
         .ae-secondary-btn { background: #e0e0e0; color: #333; }
         .ae-secondary-btn:hover { background: #ccc; }
 
-        /* MOBILE RESPONSIVE */
+        /* RESPONSIVE */
         @media (max-width: 700px) {
             .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; width: 100%; background: #080d1a; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 14px; }
             .nav-links.show { display: flex; }
@@ -154,9 +272,9 @@
             .ae-form-grid { grid-template-columns: 1fr; }
             .ae-quantity-row { grid-template-columns: 1fr 1fr; }
             .ae-quantity-row .ae-field:last-child { grid-column: 1 / -1; }
-            .ae-preview-document .ae-client-details { grid-template-columns: 1fr; }
-            .ae-preview-document .ae-product-table .ae-table-header { grid-template-columns: 1fr 1fr 1fr 1fr; font-size: 12px; }
-            .ae-preview-document .ae-product-table .ae-table-row { grid-template-columns: 1fr 1fr 1fr 1fr; font-size: 12px; }
+            .ae-preview-document .ae-buyer-grid { grid-template-columns: 1fr; }
+            .ae-preview-document .ae-product-table .ae-table-header { grid-template-columns: 1fr 0.8fr 1fr 1fr; font-size: 11px; }
+            .ae-preview-document .ae-product-table .ae-table-row { grid-template-columns: 1fr 0.8fr 1fr 1fr; font-size: 11px; }
             .ae-action-buttons { flex-direction: column; }
             .ae-action-buttons button { width: 100%; justify-content: center; }
         }
@@ -185,14 +303,11 @@
     </header>
 
     <section class="quotation-section" id="quotation">
-        <h2 class="section-title" style="text-align:center; font-size:32px; font-weight:700; margin-bottom:12px; color:#f0f4fa;">Quotation Builder</h2>
+        <h2 style="text-align:center; font-size:32px; font-weight:700; margin-bottom:12px; color:#f0f4fa;">Quotation Builder</h2>
         <p style="text-align:center; font-size:14px; color:#7e8a9a; margin-bottom:30px;">Fill in the details and generate a professional quotation <strong style="color:#6db3f2;">100% Free</strong></p>
-        
-        <!-- মূল কন্টেইনার (এখানে JS ফর্ম রেন্ডার করবে) -->
         <div id="quotationArea"></div>
     </section>
 
-    <!-- FOOTER -->
     <footer style="margin-top:auto; padding:30px 24px; background:rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.04);">
         <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
             <div>
@@ -211,15 +326,12 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT -->
     <script>
         // --- Mobile Menu ---
         function toggleMenu() {
             document.getElementById("navLinks").classList.toggle("show");
         }
-        
         document.getElementById("currentYear").textContent = new Date().getFullYear();
-
         document.querySelectorAll(".nav-links a").forEach(link => {
             link.addEventListener("click", function() {
                 document.getElementById("navLinks").classList.remove("show");
@@ -227,7 +339,7 @@
         });
 
         // ==========================================
-        //  COMPLETE QUOTATION SYSTEM
+        //  QUOTATION SYSTEM
         // ==========================================
         (function() {
             "use strict";
@@ -238,13 +350,12 @@
             const ADMIN_EMAIL = "info@amalenterprises.in";
             const ADMIN_LOCATION = "India (Pan-India Sourcing)";
             
-            // ⚠️ আপনার Google Apps Script URL এখানে দিন
-            const APPS_SCRIPT_URL = ""; 
-            
+            const APPS_SCRIPT_URL = ""; // আপনার Google Apps Script URL
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
             let currentRole = "";
             
             const STORAGE_KEY = "amal_user_data";
+            const SERIAL_KEY = "amal_quote_serial";
 
             const PRODUCT_CATEGORIES = [
                 "Engineering Fasteners",
@@ -254,25 +365,58 @@
                 "Other / Custom Product"
             ];
             const UNITS = ["piece", "set", "box", "kg", "metre", "dozen", "pair", "pack"];
+            
+            const PAYMENT_TERMS = [
+                "Cash on Delivery (COD)",
+                "100% Advance",
+                "50% Advance & 50% on Delivery",
+                "Net 30 Days Credit"
+            ];
+            const GST_OPTIONS = [
+                "Exclusive of GST (Without GST)",
+                "Inclusive of GST"
+            ];
+            const DEFAULT_TERMS = "Goods once sold will not be taken back. Delivery charges extra if applicable.";
 
+            // --- Helpers ---
             function numberValue(v) { const n = Number.parseFloat(v); return Number.isFinite(n) && n >= 0 ? n : 0; }
             function formatMoney(v) { return "₹" + numberValue(v).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2}); }
             function formatQuantity(v) { return numberValue(v).toLocaleString("en-IN", {maximumFractionDigits:6}); }
             function getDate() { return new Date().toLocaleDateString("en-IN", {day:"2-digit", month:"short", year:"numeric"}); }
-            function getTime() { return new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit"}); }
             function escapeHTML(v) { return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
-            function quotationNumber() { const now = new Date(); const date = now.getFullYear()+String(now.getMonth()+1).padStart(2,"0")+String(now.getDate()).padStart(2,"0"); const random = Math.floor(1000+Math.random()*9000); return "AE-"+date+"-"+random; }
             function normalizeMobile(v) { let num = String(v||"").replace(/\D/g,""); if(num.length===10) return "91"+num; if(num.length===12 && num.startsWith("91")) return num; return ""; }
             function openWhatsApp(recipient, message) { 
                 const mobile = normalizeMobile(recipient); 
-                if(!mobile) { 
-                    alert("Please enter a valid 10 digit mobile number."); 
-                    return; 
-                } 
+                if(!mobile) { alert("Please enter a valid 10 digit mobile number."); return; } 
                 window.open("https://wa.me/"+mobile+"?text="+encodeURIComponent(message), "_blank", "noopener"); 
             }
 
-            // --- LocalStorage ---
+            // --- Quotation Number Generator (Monthly Reset) ---
+            function generateQuotationNumber() {
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, "0");
+                const month = String(now.getMonth() + 1).padStart(2, "0");
+                const year = now.getFullYear();
+                const monthKey = month + year; // e.g. "082026"
+                
+                let serial = 1;
+                try {
+                    const stored = localStorage.getItem(SERIAL_KEY);
+                    if (stored) {
+                        const data = JSON.parse(stored);
+                        if (data.monthKey === monthKey) {
+                            serial = data.serial + 1;
+                        } else {
+                            serial = 1;
+                        }
+                    }
+                } catch (e) {}
+                localStorage.setItem(SERIAL_KEY, JSON.stringify({ monthKey, serial }));
+                const serialStr = String(serial).padStart(2, "0");
+                return `AE/${day}/${month}/${year}/${serialStr}`;
+            }
+
+            // --- LocalStorage User Data ---
             function getUserData(mobile) {
                 try {
                     const stored = localStorage.getItem(STORAGE_KEY);
@@ -296,7 +440,9 @@
                     address: data.address, email: data.email || "", category: data.category,
                     product: data.product, specification: data.specification || "",
                     quantity: data.quantity, unit: data.unit, price: data.price,
-                    total: data.total, status: data.status, deliveryDate: data.deliveryDate || ""
+                    total: data.total, status: data.status, deliveryDate: data.deliveryDate || "",
+                    paymentTerms: data.paymentTerms || "", gstStatus: data.gstStatus || "",
+                    termsConditions: data.termsConditions || ""
                 };
                 fetch(APPS_SCRIPT_URL, {
                     method: "POST", mode: "no-cors",
@@ -305,7 +451,7 @@
                 }).catch(() => {});
             }
 
-            // --- MAIN RENDER FUNCTION ---
+            // --- MAIN RENDER ---
             function createQuotationSystem() {
                 const area = document.getElementById("quotationArea");
                 if(!area) return;
@@ -316,7 +462,7 @@
                             <div>
                                 <div class="ae-small-label">100% Free to Use</div>
                                 <h2>Create a Quotation</h2>
-                                <p>Select your role, fill in the product details, and share instantly. <strong style="color:#6db3f2;">No platform fees.</strong></p>
+                                <p>Select your role, fill in the details, and generate instantly. <strong style="color:#6db3f2;">No platform fees.</strong></p>
                             </div>
                         </div>
                         <div class="ae-role-box">
@@ -329,22 +475,34 @@
                         <div class="ae-form-panel" id="aeFormPanel" style="display:none;">
                             <div class="ae-form-role-title" id="aeRoleTitle"></div>
                             <div class="ae-form-grid">
+                                <!-- Quotation Number -->
+                                <div class="ae-field"><label>Quotation Number *</label><input id="aeQuoteNo" type="text" readonly style="cursor:default; background:rgba(255,255,255,0.06);"></div>
+                                <div class="ae-field"><label>Expected Delivery Date</label><input id="aeDeliveryDate" type="date"></div>
                                 <div class="ae-field"><label>Name / Industry *</label><input id="aeName" type="text" placeholder="Enter your name or industry name"></div>
                                 <div class="ae-field"><label>WhatsApp Number *</label><input id="aeWhatsApp" type="tel" maxlength="10" placeholder="10-digit WhatsApp number"></div>
                                 <div class="ae-field"><label>Address *</label><input id="aeAddress" type="text" placeholder="Enter your address"></div>
                                 <div class="ae-field"><label>Email (Optional)</label><input id="aeEmail" type="email" placeholder="Email address"></div>
-                                <div class="ae-field"><label>Expected Delivery Date</label><input id="aeDeliveryDate" type="date"></div>
                                 <div class="ae-field"><label>Product Category *</label><select id="aeCategory"><option value="">Select Product Category</option>${PRODUCT_CATEGORIES.map(i => `<option value="${escapeHTML(i)}">${escapeHTML(i)}</option>`).join("")}</select></div>
-                                <div class="ae-field"><label>Product Name / Size *</label><input id="aeProduct" type="text" placeholder="e.g. M12 Bolt, #8 Screw, Tap Die Set"></div>
+                                <div class="ae-field"><label>Product Name & Size * (e.g., M10 Hex Nut)</label><input id="aeProduct" type="text" placeholder="e.g. M10 Hex Nut, #8 Screw"></div>
                             </div>
 
-                            <div class="ae-field"><label>Specification / Material Grade *</label><textarea id="aeSpecification" rows="3" placeholder="e.g. SS304, High Tensile, Thread Size M12, Weight 2kg, Hardness HRC..."></textarea></div>
+                            <div class="ae-field"><label>Specification / Grade * (e.g., MS, GI, SS 304)</label><textarea id="aeSpecification" rows="2" placeholder="e.g. MS, GI, SS 304, High Tensile"></textarea></div>
+                            
                             <div class="ae-quantity-row">
                                 <div class="ae-field"><label>Quantity *</label><input id="aeQuantity" type="number" min="0.000001" step="any" placeholder="Quantity"></div>
                                 <div class="ae-field"><label>Unit *</label><select id="aeUnit"><option value="">Unit</option>${UNITS.map(u => `<option value="${escapeHTML(u)}">${escapeHTML(u)}</option>`).join("")}</select></div>
-                                <div class="ae-field"><label>Unit Price (₹) *</label><input id="aePrice" type="number" min="0" step="0.01" placeholder="Price per unit"></div>
+                                <div class="ae-field"><label>Expected Unit Price (₹) *</label><input id="aePrice" type="number" min="0" step="0.01" placeholder="Enter your budget price or 0 if unknown"></div>
                             </div>
-                            <div style="margin:12px 0; font-size:18px; font-weight:600; text-align:right; color:#6db3f2;" id="aeLiveTotal">Estimated Total: ₹0.00</div>
+                            <div style="margin:8px 0 12px 0; font-size:15px; font-weight:600; text-align:right; color:#6db3f2;" id="aeLiveTotal">Estimated Total: ₹0.00</div>
+                            
+                            <!-- Payment Terms & GST -->
+                            <div class="ae-form-grid">
+                                <div class="ae-field"><label>Payment Terms *</label><select id="aePaymentTerms"><option value="">Select Payment Terms</option>${PAYMENT_TERMS.map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join("")}</select></div>
+                                <div class="ae-field"><label>GST Status *</label><select id="aeGstStatus"><option value="">Select GST Status</option>${GST_OPTIONS.map(g => `<option value="${escapeHTML(g)}">${escapeHTML(g)}</option>`).join("")}</select></div>
+                            </div>
+                            
+                            <div class="ae-field"><label>Terms & Conditions</label><textarea id="aeTermsConditions" rows="2">${DEFAULT_TERMS}</textarea></div>
+                            
                             <div class="ae-status-section">
                                 <label style="font-size:14px; color:#a0acbd; margin-bottom:6px; display:block;">Quotation Status *</label>
                                 <div class="ae-status-options">
@@ -367,6 +525,12 @@
                     </div>
                 `;
                 bindEvents();
+                
+                // Auto-generate quotation number
+                const quoteNoInput = document.getElementById("aeQuoteNo");
+                if (quoteNoInput) {
+                    quoteNoInput.value = generateQuotationNumber();
+                }
             }
 
             function bindEvents() {
@@ -409,6 +573,9 @@
                                 document.getElementById("aeUnit").value = "";
                                 document.getElementById("aePrice").value = "";
                                 document.getElementById("aeDeliveryDate").value = "";
+                                document.getElementById("aePaymentTerms").value = "";
+                                document.getElementById("aeGstStatus").value = "";
+                                document.getElementById("aeTermsConditions").value = DEFAULT_TERMS;
                                 currentRole = "";
                                 document.querySelectorAll(".ae-role-btn").forEach(b => b.classList.remove("selected"));
                                 document.getElementById("aeFormPanel").style.display = "none";
@@ -446,13 +613,17 @@
                 const w = document.getElementById("aeWhatsApp").value.replace(/\D/g, "").slice(0, 10);
                 return {
                     role: currentRole, roleName: currentRole === "buyer" ? "Buyer" : "Supplier",
+                    quoteNo: document.getElementById("aeQuoteNo").value.trim(),
                     name: document.getElementById("aeName").value.trim(), whatsapp: w,
                     address: document.getElementById("aeAddress").value.trim(), email: document.getElementById("aeEmail").value.trim(),
                     category: document.getElementById("aeCategory").value, product: document.getElementById("aeProduct").value.trim(),
                     specification: document.getElementById("aeSpecification").value.trim(), quantity: q,
                     unit: document.getElementById("aeUnit").value, price: p, total: q * p,
                     status: status ? status.value : "",
-                    deliveryDate: document.getElementById("aeDeliveryDate").value || ""
+                    deliveryDate: document.getElementById("aeDeliveryDate").value || "",
+                    paymentTerms: document.getElementById("aePaymentTerms").value || "",
+                    gstStatus: document.getElementById("aeGstStatus").value || "",
+                    termsConditions: document.getElementById("aeTermsConditions").value.trim() || DEFAULT_TERMS
                 };
             }
 
@@ -463,11 +634,13 @@
                 if (!data.address) { alert("Please enter your address."); return false; }
                 if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { alert("Please enter a valid email or leave blank."); return false; }
                 if (!data.category) { alert("Please select a product category."); return false; }
-                if (!data.product) { alert("Please enter the product name or size."); return false; }
+                if (!data.product) { alert("Please enter the product name & size."); return false; }
                 if (!(data.quantity > 0)) { alert("Please enter a valid quantity."); return false; }
                 if (!data.unit) { alert("Please select a unit."); return false; }
-                if (!(data.price > 0)) { alert("Please enter a valid unit price."); return false; }
+                if (!(data.price >= 0)) { alert("Please enter a valid unit price (0 is allowed)."); return false; }
                 if (!data.status) { alert("Please select a quotation status."); return false; }
+                if (!data.paymentTerms) { alert("Please select payment terms."); return false; }
+                if (!data.gstStatus) { alert("Please select GST status."); return false; }
                 return true;
             }
 
@@ -475,65 +648,124 @@
                 if (!currentRole) { alert("Please select a role first."); return; }
                 const data = getFormData();
                 if (!validateData(data)) return;
-                const quoteNo = quotationNumber();
                 
-                showPreview(data, quoteNo);
-                
+                showPreview(data);
                 saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email, role: currentRole });
-                saveToGoogleSheet(data, quoteNo);
+                saveToGoogleSheet(data, data.quoteNo);
                 
                 const statusDiv = document.getElementById("aeSaveStatus");
                 statusDiv.style.display = "block";
                 statusDiv.style.color = "#6db3f2";
-                statusDiv.innerHTML = "✅ Quotation saved successfully! Data has been updated.";
+                statusDiv.innerHTML = "✅ Quotation saved successfully!";
                 setTimeout(() => { statusDiv.style.display = "none"; }, 5000);
             }
 
-            function showPreview(data, quoteNo) {
+            // ===== PREVIEW (matches sample image) =====
+            function showPreview(data) {
                 const box = document.getElementById("aePreviewDocument");
                 const currentDate = getDate();
-                const currentTime = getTime();
+                const isFinal = data.status === "Final Quotation";
+                const statusClass = isFinal ? "final" : "negotiable";
+                const total = data.total;
+                const gstDisplay = data.gstStatus || "Exclusive of GST (Without GST)";
                 
                 box.innerHTML = `
-                    <div class="ae-client-details">
-                        <div class="ae-detail-item"><span>Name / Industry</span><strong>${escapeHTML(data.name)}</strong></div>
-                        <div class="ae-detail-item"><span>Address</span><strong>${escapeHTML(data.address)}</strong></div>
-                        <div class="ae-detail-item"><span>Phone</span><strong>${escapeHTML(data.whatsapp)}</strong></div>
-                        <div class="ae-detail-item"><span>Date</span><strong>${escapeHTML(currentDate)}</strong></div>
-                        <div class="ae-detail-item"><span>Time</span><strong>${escapeHTML(currentTime)}</strong></div>
-                        ${data.email ? `<div class="ae-detail-item"><span>Email</span><strong>${escapeHTML(data.email)}</strong></div>` : ''}
-                        ${data.deliveryDate ? `<div class="ae-detail-item"><span>Expected Delivery</span><strong>${escapeHTML(data.deliveryDate)}</strong></div>` : ''}
+                    <!-- Company Header -->
+                    <div class="ae-company-header">
+                        <h1>${COMPANY_NAME}</h1>
+                        <div class="ae-tagline">${COMPANY_TAGLINE}</div>
                     </div>
-                    <div class="ae-role-badge">${escapeHTML(data.roleName)} Quotation</div>
+                    
+                    <!-- Meta Row: Quotation No, Date, Delivery -->
+                    <div class="ae-meta-row">
+                        <div class="ae-meta-item"><span>QUOTATION NO.</span> <strong>${escapeHTML(data.quoteNo)}</strong></div>
+                        <div class="ae-meta-item"><span>DATE</span> <strong>${escapeHTML(currentDate)}</strong></div>
+                        ${data.deliveryDate ? `<div class="ae-meta-item"><span>EXPECTED DELIVERY</span> <strong>${escapeHTML(data.deliveryDate)}</strong></div>` : ''}
+                    </div>
+                    
+                    <!-- Buyer Details -->
+                    <div class="ae-section-title">BUYER DETAILS</div>
+                    <div class="ae-buyer-grid">
+                        <div class="ae-buyer-item"><span>Customer Name</span><strong>${escapeHTML(data.name)}</strong></div>
+                        <div class="ae-buyer-item"><span>Address</span><strong>${escapeHTML(data.address)}</strong></div>
+                        <div class="ae-buyer-item"><span>Phone</span><strong>${escapeHTML(data.whatsapp)}</strong></div>
+                        <div class="ae-buyer-item"><span>Email</span><strong>${escapeHTML(data.email || '—')}</strong></div>
+                    </div>
+                    
+                    <!-- Section: Final Quotation -->
+                    <div class="ae-section-title">${escapeHTML(data.status)}</div>
+                    
+                    <!-- Product Table -->
                     <div class="ae-product-table">
-                        <div class="ae-table-header"><span>Product</span><span>Qty</span><span>Unit Price</span><span>Total</span></div>
+                        <div class="ae-table-header">
+                            <span>Product Name & Size</span>
+                            <span>Qty</span>
+                            <span>Expected Unit Price (₹)</span>
+                            <span>Total (₹)</span>
+                        </div>
                         <div class="ae-table-row">
-                            <div class="ae-product-info"><small>${escapeHTML(data.category)}</small><strong>${escapeHTML(data.product)}</strong></div>
+                            <div class="ae-product-info">
+                                <small>${escapeHTML(data.category)}</small>
+                                <strong>${escapeHTML(data.product)}</strong>
+                            </div>
                             <div>${formatQuantity(data.quantity)} ${escapeHTML(data.unit)}</div>
                             <div>${formatMoney(data.price)} / ${escapeHTML(data.unit)}</div>
                             <div class="ae-total-price">${formatMoney(data.total)}</div>
                         </div>
                     </div>
-                    ${data.specification ? `<div class="ae-spec-box"><small>Specification / Grade</small><p>${escapeHTML(data.specification)}</p></div>` : ''}
-                    <div class="ae-status-total">
-                        <div><span style="font-size:13px; color:#5a6a7a;">Status</span><div class="ae-status ${data.status === 'Negotiable' ? 'negotiable' : 'final'}">${escapeHTML(data.status)}</div></div>
-                        <div><span style="font-size:13px; color:#5a6a7a;">Total</span><div class="ae-total-amount">${formatMoney(data.total)}</div></div>
+                    
+                    <!-- Specification -->
+                    ${data.specification ? `<div class="ae-detail-row"><span class="ae-detail-label">Specification / Grade</span> <span class="ae-detail-value">${escapeHTML(data.specification)}</span></div>` : ''}
+                    
+                    <!-- Payment Terms & GST -->
+                    <div class="ae-detail-row">
+                        <span class="ae-detail-label">Payment Terms</span>
+                        <span class="ae-detail-value">${escapeHTML(data.paymentTerms)}</span>
                     </div>
-                    ${data.status === 'Negotiable' ? `<div class="ae-negotiable-note">Price is subject to negotiation and commercial discussion.</div>` : ''}
+                    <div class="ae-detail-row">
+                        <span class="ae-detail-label">GST Status</span>
+                        <span class="ae-detail-value">${escapeHTML(data.gstStatus)}</span>
+                    </div>
+                    
+                    <!-- Terms & Conditions -->
+                    <div class="ae-terms-box">
+                        <span class="ae-terms-label">Terms & Conditions</span>
+                        <p class="ae-terms-text">${escapeHTML(data.termsConditions)}</p>
+                    </div>
+                    
+                    <!-- Status & Total -->
+                    <div class="ae-status-total-row">
+                        <div class="ae-status-box">
+                            <span class="ae-status-label">STATUS</span>
+                            <span class="ae-status-value ${statusClass}">${escapeHTML(data.status)}</span>
+                        </div>
+                        <div class="ae-total-section">
+                            <div><span class="ae-subtotal-label">SUBTOTAL</span> <strong style="font-size:18px;">${formatMoney(total)}</strong></div>
+                            <div class="ae-gst-line">GST STATUS: ${escapeHTML(gstDisplay)}</div>
+                            <div style="margin-top:4px;"><span class="ae-subtotal-label">GRAND TOTAL</span> <span class="ae-grand-total">${formatMoney(total)}</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Company Footer -->
                     <div class="ae-company-footer">
-                        <strong>${COMPANY_NAME}</strong><br>${COMPANY_TAGLINE}<br>
+                        <strong>${COMPANY_NAME}</strong><br>
+                        ${COMPANY_TAGLINE}<br>
                         📞 <a href="tel:+${ADMIN_WHATSAPP}">+${ADMIN_WHATSAPP}</a> &nbsp;|&nbsp; ✉️ <a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a><br>
                         📍 ${ADMIN_LOCATION}
                     </div>
-                    <div class="ae-gst-note">* Without GST Quotation</div>
-                    <div class="ae-free-badge"><i class="fas fa-check-circle"></i> This quotation is 100% FREE to create. No platform fees applied.</div>
+                    
+                    <div class="ae-gst-note">* Prices are exclusive of GST</div>
+                    
+                    <div class="ae-free-badge">
+                        <i class="fas fa-check-circle"></i> This quotation is 100% FREE to create. No platform fees applied.
+                    </div>
                 `;
-                createActionButtons(data, quoteNo);
+                createActionButtons(data);
                 document.getElementById("aeModal").style.display = "flex";
                 document.body.style.overflow = 'hidden';
             }
 
-            function createActionButtons(data, quoteNo) {
+            function createActionButtons(data) {
                 const buttons = document.getElementById("aeActionButtons");
                 buttons.innerHTML = `
                     <button class="ae-whatsapp-btn" id="aeWhatsAppBtn"><i class="fab fa-whatsapp"></i> Share via WhatsApp</button>
@@ -542,42 +774,55 @@
                 `;
                 
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    openWhatsApp(ADMIN_WHATSAPP, createWhatsAppMessage(data, quoteNo));
+                    openWhatsApp(ADMIN_WHATSAPP, createWhatsAppMessage(data));
                 });
                 
                 document.getElementById("aePrintBtn").addEventListener("click", function() {
                     const printContent = document.getElementById("aePreviewDocument").innerHTML;
                     const win = window.open('', '_blank');
                     win.document.write(`
-                        <html><head><title>Quotation - ${escapeHTML(quoteNo)}</title>
+                        <html><head><title>Quotation - ${escapeHTML(data.quoteNo)}</title>
                         <style>
-                            body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; }
+                            body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; max-width: 950px; margin: 0 auto; }
                             @media print { body { padding: 0; } }
                             .ae-preview-document { color: #222; }
-                            .ae-client-details { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; background: #f8f9fa; padding: 14px; border-radius: 10px; margin-bottom: 16px; }
-                            .ae-client-details .ae-detail-item span { display: block; font-size: 11px; color: #5a6a7a; }
-                            .ae-client-details .ae-detail-item strong { font-size: 14px; color: #1a1a2e; }
-                            .ae-role-badge { display: inline-block; background: #e8f0fe; color: #2b7be4; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
-                            .ae-product-table { border: 1px solid #dce2ea; border-radius: 10px; overflow: hidden; margin: 16px 0; }
-                            .ae-product-table .ae-table-header { background: #e4e9f0; font-weight: 600; display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; }
-                            .ae-product-table .ae-table-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; border-top: 1px solid #dce2ea; }
+                            .ae-company-header { text-align: center; border-bottom: 2px solid #2b7be4; padding-bottom: 10px; margin-bottom: 16px; }
+                            .ae-company-header h1 { font-size: 24px; font-weight: 700; color: #111a2a; margin: 0; }
+                            .ae-company-header .ae-tagline { font-size: 12px; color: #5a6a7a; margin-top: 2px; }
+                            .ae-meta-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; background: #f8f9fa; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+                            .ae-meta-row .ae-meta-item span { color: #5a6a7a; }
+                            .ae-meta-row .ae-meta-item strong { color: #111a2a; }
+                            .ae-section-title { font-size: 16px; font-weight: 700; color: #111a2a; margin: 16px 0 10px 0; padding-bottom: 4px; border-bottom: 1px solid #dce2ea; }
+                            .ae-buyer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; background: #f8f9fa; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; }
+                            .ae-buyer-grid .ae-buyer-item span { display: block; font-size: 11px; color: #5a6a7a; }
+                            .ae-buyer-grid .ae-buyer-item strong { font-size: 14px; color: #1a1a2e; }
+                            .ae-product-table { border: 1px solid #dce2ea; border-radius: 8px; overflow: hidden; margin: 12px 0; }
+                            .ae-product-table .ae-table-header { background: #e4e9f0; font-weight: 600; display: grid; grid-template-columns: 2fr 0.8fr 1.5fr 1.5fr; padding: 10px 12px; font-size: 13px; }
+                            .ae-product-table .ae-table-row { display: grid; grid-template-columns: 2fr 0.8fr 1.5fr 1.5fr; padding: 10px 12px; border-top: 1px solid #dce2ea; font-size: 13px; }
                             .ae-product-table .ae-table-row .ae-product-info small { display: block; color: #5a6a7a; font-size: 11px; }
                             .ae-product-table .ae-table-row .ae-product-info strong { font-size: 14px; color: #1a1a2e; }
                             .ae-product-table .ae-table-row .ae-total-price { color: #2b7be4; font-weight: 700; }
-                            .ae-spec-box { background: #eef2f7; padding: 12px; border-radius: 8px; margin: 12px 0; }
-                            .ae-spec-box small { display: block; color: #5a6a7a; margin-bottom: 4px; }
-                            .ae-spec-box p { margin: 0; font-size: 14px; color: #1a1a2e; }
-                            .ae-status-total { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dce2ea; }
-                            .ae-status-total .ae-status { font-weight: 600; }
-                            .ae-status-total .ae-status.final { color: #1a8a4a; }
-                            .ae-status-total .ae-status.negotiable { color: #b87a2a; }
-                            .ae-status-total .ae-total-amount { font-size: 22px; font-weight: 700; color: #111a2a; }
-                            .ae-negotiable-note { background: #fdf3e0; border: 1px solid #f0dbb8; padding: 10px; border-radius: 8px; font-size: 13px; color: #7a5a2a; margin-top: 12px; }
-                            .ae-company-footer { margin-top: 20px; padding-top: 12px; border-top: 2px solid #dce2ea; text-align: center; font-size: 13px; color: #5a6a7a; }
+                            .ae-detail-row { display: flex; flex-wrap: wrap; gap: 8px 20px; background: #f8f9fa; padding: 10px 16px; border-radius: 8px; margin: 8px 0; font-size: 13px; }
+                            .ae-detail-row .ae-detail-label { color: #5a6a7a; }
+                            .ae-detail-row .ae-detail-value { color: #111a2a; font-weight: 500; }
+                            .ae-terms-box { background: #f8f9fa; padding: 10px 16px; border-radius: 8px; margin: 8px 0; font-size: 13px; border-left: 3px solid #2b7be4; }
+                            .ae-terms-box .ae-terms-label { color: #5a6a7a; display: block; font-size: 11px; }
+                            .ae-terms-box .ae-terms-text { color: #111a2a; margin: 2px 0 0 0; }
+                            .ae-status-total-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dce2ea; }
+                            .ae-status-total-row .ae-status-box { display: flex; align-items: center; gap: 8px; }
+                            .ae-status-total-row .ae-status-box .ae-status-label { font-size: 13px; color: #5a6a7a; }
+                            .ae-status-total-row .ae-status-box .ae-status-value { font-weight: 600; padding: 2px 12px; border-radius: 12px; background: #e8f0fe; color: #2b7be4; }
+                            .ae-status-total-row .ae-status-box .ae-status-value.final { background: #e0f0e0; color: #1a7a3a; }
+                            .ae-status-total-row .ae-status-box .ae-status-value.negotiable { background: #fdf3e0; color: #b87a2a; }
+                            .ae-status-total-row .ae-total-section { text-align: right; }
+                            .ae-status-total-row .ae-total-section .ae-subtotal-label { font-size: 13px; color: #5a6a7a; }
+                            .ae-status-total-row .ae-total-section .ae-grand-total { font-size: 22px; font-weight: 700; color: #111a2a; }
+                            .ae-gst-line { text-align: right; font-size: 13px; color: #5a6a7a; margin-top: 4px; }
+                            .ae-company-footer { margin-top: 20px; padding-top: 14px; border-top: 2px solid #dce2ea; text-align: center; font-size: 13px; color: #5a6a7a; }
                             .ae-company-footer strong { color: #111a2a; }
                             .ae-company-footer a { color: #2b7be4; text-decoration: none; }
-                            .ae-gst-note { margin-top: 8px; text-align: center; font-size: 13px; color: #777; font-style: italic; }
-                            .ae-free-badge { margin-top: 12px; padding: 10px; background: #e8f0fe; border-radius: 8px; border: 1px solid #d0e0f0; text-align: center; font-size: 13px; color: #1a5a8a; }
+                            .ae-gst-note { margin-top: 6px; text-align: center; font-size: 12px; color: #777; font-style: italic; }
+                            .ae-free-badge { margin-top: 12px; padding: 8px 16px; background: #e8f0fe; border-radius: 8px; border: 1px solid #d0e0f0; text-align: center; font-size: 13px; color: #1a5a8a; }
                             .ae-free-badge i { color: #2b7be4; margin-right: 6px; }
                         </style>
                         </head><body>${printContent}</body></html>
@@ -589,12 +834,16 @@
                 document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
             }
 
-            function createWhatsAppMessage(data, quoteNo) {
-                let msg = `*${COMPANY_NAME}*\n*Quotation*\n\nQuotation No: ${quoteNo}\nDate: ${getDate()}\nTime: ${getTime()}\n\nRole: ${data.roleName}\n\nName/Industry: ${data.name}\nWhatsApp: ${data.whatsapp}\nAddress: ${data.address}`;
-                if (data.email) msg += `\nEmail: ${data.email}`;
+            function createWhatsAppMessage(data) {
+                let msg = `*${COMPANY_NAME}*\n*Quotation*\n\nQuotation No: ${data.quoteNo}\nDate: ${getDate()}`;
                 if (data.deliveryDate) msg += `\nExpected Delivery: ${data.deliveryDate}`;
+                msg += `\n\nRole: ${data.roleName}\n\nName/Industry: ${data.name}\nWhatsApp: ${data.whatsapp}\nAddress: ${data.address}`;
+                if (data.email) msg += `\nEmail: ${data.email}`;
                 msg += `\n\nProduct Category: ${data.category}\nProduct: ${data.product}\nQuantity: ${formatQuantity(data.quantity)} ${data.unit}\nUnit Price: ${formatMoney(data.price)} / ${data.unit}\nEstimated Total: ${formatMoney(data.total)}\n\nQuotation Status: *${data.status}*`;
-                if (data.specification) msg += `\n\nDescription / Specification:\n${data.specification}`;
+                if (data.specification) msg += `\n\nSpecification / Grade:\n${data.specification}`;
+                msg += `\n\nPayment Terms: ${data.paymentTerms}`;
+                msg += `\nGST Status: ${data.gstStatus}`;
+                if (data.termsConditions) msg += `\n\nTerms & Conditions:\n${data.termsConditions}`;
                 if (data.status === "Negotiable") msg += `\n\nPrice is negotiable. Commercial terms can be discussed.`;
                 if (data.roleName === "Supplier") msg += `\n\nPlease share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.`;
                 if (data.roleName === "Buyer") msg += `\n\nPlease confirm the requirement and commercial terms.`;
@@ -607,11 +856,10 @@
                 document.body.style.overflow = '';
             }
 
-            // --- INITIALIZE ---
+            // --- INIT ---
             window.onload = function() {
                 createQuotationSystem();
             };
-            
         })();
     </script>
 </body>
