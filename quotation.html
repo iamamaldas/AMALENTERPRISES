@@ -152,7 +152,13 @@
     <section class="quotation-section" id="quotation">
         <h2 class="section-title" style="text-align:center; font-size:32px; font-weight:700; margin-bottom:12px; color:#f0f4fa;">Quotation Builder</h2>
         <p style="text-align:center; font-size:14px; color:#7e8a9a; margin-bottom:30px;">Create, review, and share professional quotations <strong style="color:#6db3f2;">100% Free</strong></p>
-        <div id="quotationArea"></div>
+        <div id="quotationArea">
+            <!-- Quotation System will be rendered here -->
+            <div style="text-align:center; padding:40px;">
+                <i class="fas fa-spinner fa-pulse" style="font-size:30px; color:#6db3f2;"></i>
+                <p style="color:#a0acbd; margin-top:12px;">Loading Quotation System...</p>
+            </div>
+        </div>
     </section>
 
     <!-- FOOTER -->
@@ -197,9 +203,15 @@
             const COMPANY_TAGLINE = "Industrial Tools, Auto Spare Parts & Engineering Fasteners";
             const ADMIN_WHATSAPP = "916296471636";
             const ADMIN_EMAIL = "info@amalenterprises.in";
-            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5Laifn1XVxLbKUFriCzaOTj9gqNBFJWG4IPIV18Qa_bD2EWFC_nRFpG2_bi6qWXITqw/exec";
+            
+            // ⚠️ আপনার Google Apps Script URL এখানে দিন
+            const APPS_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
+            
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
             let currentRole = "";
+            
+            // localStorage key for storing user data (optional, for auto-fill only)
+            const STORAGE_KEY = "amal_user_data";
 
             const PRODUCT_CATEGORIES = [
                 "Engineering Fasteners",
@@ -219,9 +231,76 @@
             function normalizeMobile(v) { let num = String(v||"").replace(/\D/g,""); if(num.length===10) return "91"+num; if(num.length===12 && num.startsWith("91")) return num; return ""; }
             function openWhatsApp(recipient, message) { const mobile = normalizeMobile(recipient); if(!mobile) { alert("Please enter a valid 10 digit mobile number."); return; } window.open("https://wa.me/"+mobile+"?text="+encodeURIComponent(message), "_blank", "noopener"); }
 
+            // ---------- LocalStorage User Data Management (for auto-fill) ----------
+            function getUserData(mobile) {
+                try {
+                    const stored = localStorage.getItem(STORAGE_KEY);
+                    if (stored) {
+                        const data = JSON.parse(stored);
+                        if (data.mobile === mobile) {
+                            return data;
+                        }
+                    }
+                } catch (e) {}
+                return null;
+            }
+
+            function saveUserData(data) {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                } catch (e) {}
+            }
+
+            // ---------- Google Sheet Data Save (UPDATED LOGIC) ----------
+            // This will send data to Apps Script which will handle:
+            // - If mobile number exists: UPDATE the row
+            // - If mobile number is new: INSERT new row
+            function saveToGoogleSheet(data, quoteNo) {
+                if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+                    console.warn("Google Apps Script URL not configured.");
+                    return;
+                }
+                
+                const payload = {
+                    token: API_TOKEN,
+                    action: "saveOrUpdateQuotation",
+                    quoteNo: quoteNo,
+                    date: getDate(),
+                    role: data.roleName,
+                    name: data.name,
+                    whatsapp: data.whatsapp,
+                    address: data.address,
+                    email: data.email || "",
+                    category: data.category,
+                    product: data.product,
+                    specification: data.specification || "",
+                    quantity: data.quantity,
+                    unit: data.unit,
+                    price: data.price,
+                    total: data.total,
+                    status: data.status
+                };
+                
+                // Send to Apps Script
+                fetch(APPS_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(payload).toString()
+                })
+                .then(() => {
+                    console.log("Data sent to Google Sheet (no-cors mode)");
+                })
+                .catch(err => {
+                    console.warn("Google Sheet save failed:", err);
+                });
+            }
+
+            // ---------- Create Quotation System ----------
             function createQuotationSystem() {
                 const area = document.getElementById("quotationArea");
                 if(!area) return;
+                
                 area.innerHTML = `
                     <div class="ae-quotation-wrapper">
                         <div class="ae-quotation-header">
@@ -291,6 +370,36 @@
                     el.addEventListener("change", updateLiveCalculation);
                 });
                 document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(r => r.addEventListener("change", updateLiveCalculation));
+                
+                // NEW: Monitor WhatsApp number change for auto-fill (optional)
+                const whatsappInput = document.getElementById("aeWhatsApp");
+                if (whatsappInput) {
+                    whatsappInput.addEventListener("input", function() {
+                        const mobile = this.value.replace(/\D/g, "").slice(0, 10);
+                        if (mobile.length === 10) {
+                            const saved = getUserData(mobile);
+                            if (saved) {
+                                // Auto-fill fields from saved data (optional)
+                                document.getElementById("aeName").value = saved.name || "";
+                                document.getElementById("aeAddress").value = saved.address || "";
+                                document.getElementById("aeEmail").value = saved.email || "";
+                                if (saved.role) {
+                                    document.querySelectorAll(".ae-role-btn").forEach(b => {
+                                        if (b.dataset.role === saved.role) {
+                                            selectRole(saved.role);
+                                        }
+                                    });
+                                }
+                            } else {
+                                // NEW MOBILE NUMBER: clear all fields except mobile (optional)
+                                // You can remove this block if you want to keep user data
+                                // document.getElementById("aeName").value = "";
+                                // document.getElementById("aeAddress").value = "";
+                                // document.getElementById("aeEmail").value = "";
+                            }
+                        }
+                    });
+                }
             }
 
             function selectRole(role) {
@@ -355,9 +464,28 @@
                 
                 showPreview(data, quoteNo);
                 
-                if (data.status === "Final Quotation") {
-                    saveFinalQuotation(data, quoteNo);
-                }
+                // Save user data to localStorage (optional, for auto-fill)
+                const userData = {
+                    mobile: data.whatsapp,
+                    name: data.name,
+                    address: data.address,
+                    email: data.email,
+                    role: currentRole
+                };
+                saveUserData(userData);
+                
+                // Save to Google Sheet with UPDATE/INSERT logic
+                // The Apps Script will handle whether to UPDATE or INSERT
+                saveToGoogleSheet(data, quoteNo);
+                
+                // Show success message
+                const statusDiv = document.getElementById("aeSaveStatus");
+                statusDiv.style.display = "block";
+                statusDiv.style.color = "#6db3f2";
+                statusDiv.innerHTML = "✅ Quotation saved successfully! Data has been updated in our system.";
+                setTimeout(() => {
+                    statusDiv.style.display = "none";
+                }, 5000);
             }
 
             function showPreview(data, quoteNo) {
@@ -433,12 +561,10 @@
                     <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                 `;
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    // Always send to AMAL ENTERPRISES WhatsApp
                     let recipient = ADMIN_WHATSAPP;
                     openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
                 });
                 document.getElementById("aePrintBtn").addEventListener("click", function() {
-                    // Print the preview document
                     const printContent = document.getElementById("aePreviewDocument").innerHTML;
                     const win = window.open('', '_blank');
                     win.document.write(`
@@ -464,44 +590,12 @@
                 return msg;
             }
 
-            function saveFinalQuotation(data, quoteNo) {
-                if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
-                    return; 
-                }
-                
-                const payload = {
-                    token: API_TOKEN,
-                    action: "saveFinalQuotation",
-                    quoteNo: quoteNo,
-                    date: getDate(),
-                    role: data.roleName,
-                    name: data.name,
-                    whatsapp: data.whatsapp,
-                    address: data.address,
-                    email: data.email || "",
-                    category: data.category,
-                    product: data.product,
-                    specification: data.specification || "",
-                    quantity: data.quantity,
-                    unit: data.unit,
-                    price: data.price,
-                    total: data.total,
-                    status: data.status
-                };
-                
-                fetch(APPS_SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(payload).toString()
-                }).catch(() => {});
-            }
-
             function closePreview() {
                 document.getElementById("aeModal").hidden = true;
                 document.body.style.overflow = '';
             }
 
+            // ---------- Initialize ----------
             if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", createQuotationSystem);
             else createQuotationSystem();
         })();
