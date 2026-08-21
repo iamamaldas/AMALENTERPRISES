@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Create Quotation | AMAL ENTERPRISES</title>
+    <title>Quotation Builder | AMAL ENTERPRISES</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/logo.png">
@@ -185,7 +185,7 @@
     </header>
 
     <section class="quotation-section" id="quotation">
-        <h2 class="section-title" style="text-align:center; font-size:32px; font-weight:700; margin-bottom:12px; color:#f0f4fa;">Create Quotation</h2>
+        <h2 class="section-title" style="text-align:center; font-size:32px; font-weight:700; margin-bottom:12px; color:#f0f4fa;">Quotation Builder</h2>
         <p style="text-align:center; font-size:14px; color:#7e8a9a; margin-bottom:30px;">Fill in the details and generate a professional quotation <strong style="color:#6db3f2;">100% Free</strong></p>
         
         <!-- মূল কন্টেইনার (এখানে JS ফর্ম রেন্ডার করবে) -->
@@ -491,12 +491,10 @@
 
             function showPreview(data, quoteNo) {
                 const box = document.getElementById("aePreviewDocument");
-                // Format date and time
                 const currentDate = getDate();
                 const currentTime = getTime();
                 
                 box.innerHTML = `
-                    <!-- Client Details instead of company header -->
                     <div class="ae-client-details">
                         <div class="ae-detail-item"><span>Name / Industry</span><strong>${escapeHTML(data.name)}</strong></div>
                         <div class="ae-detail-item"><span>Address</span><strong>${escapeHTML(data.address)}</strong></div>
