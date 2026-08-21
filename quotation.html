@@ -317,7 +317,7 @@
                     <a href="#" style="color:#7e8a9a; font-size:12px; text-decoration:none; transition:0.3s;" onclick="alert('Terms & Conditions content here')">Terms & Conditions</a>
                 </div>
             </div>
-            <div style="display:flex; gap:14px;">
+            <div style="display:flex; gap:14px; align-items:center;">
                 <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -349,7 +349,7 @@
             const ADMIN_EMAIL = "info@amalenterprises.in";
             const ADMIN_LOCATION = "India (Pan-India Sourcing)";
             
-            // ✅ আপনার Google Apps Script Web App URL এখানে দিন
+            // ✅ Your Google Apps Script Web App URL
             const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzV6WGIfSSI92tny7GqVI_lnfJTCKGhB1o-DTfY9LXB7YgK_vqJft4ZZJhwgdORZgK7/exec";
             
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
@@ -438,7 +438,7 @@
                     console.warn("Apps Script URL not configured");
                     return;
                 }
-                const payload = {
+                const params = new URLSearchParams({
                     token: API_TOKEN,
                     action: "saveQuotation",
                     quoteNo: quoteNo,
@@ -458,16 +458,10 @@
                     status: data.status,
                     deliveryDate: data.deliveryDate || "",
                     paymentTerms: data.paymentTerms || "",
-                    gstStatus: data.gstStatus || "",
-                    termsConditions: data.termsConditions || ""
-                };
+                    gstStatus: data.gstStatus || ""
+                });
                 
-                // Using fetch with no-cors mode - will still send but response won't be readable
-                // For better handling, use GET with redirect
-                const url = new URL(APPS_SCRIPT_URL);
-                Object.keys(payload).forEach(key => url.searchParams.append(key, payload[key]));
-                
-                fetch(url.toString(), {
+                fetch(APPS_SCRIPT_URL + "?" + params.toString(), {
                     method: "GET",
                     mode: "no-cors"
                 }).catch(() => {});
@@ -564,7 +558,7 @@
                 });
                 document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(r => r.addEventListener("change", updateLiveCalculation));
                 
-                // ✅ FIX: WhatsApp input - load data on 10 digits but DON'T lock the field
+                // ✅ WhatsApp input - load data on 10 digits
                 const whatsappInput = document.getElementById("aeWhatsApp");
                 if (whatsappInput) {
                     whatsappInput.addEventListener("input", function() {
@@ -670,8 +664,12 @@
                 const gstDisplay = data.gstStatus || "Exclusive of GST (Without GST)";
                 const roleTitle = data.roleName === "Buyer" ? "Buyer Quotation" : "Supplier Quotation";
                 
+                // ✅ FIX: Dynamic section title based on role
+                const partyTitle = data.roleName === "Buyer" ? "BUYER DETAILS" : "SUPPLIER DETAILS";
+                const partyNameLabel = data.roleName === "Buyer" ? "Customer Name" : "Supplier Name";
+                
                 box.innerHTML = `
-                    <!-- Role Header (removed AMAL ENTERPRISES title) -->
+                    <!-- Role Header -->
                     <div class="ae-role-header">
                         <h1>${escapeHTML(roleTitle)}</h1>
                         <div class="ae-sub">${escapeHTML(data.roleName)} - ${escapeHTML(data.status)}</div>
@@ -684,16 +682,16 @@
                         ${data.deliveryDate ? `<div class="ae-meta-item"><span>EXPECTED DELIVERY</span> <strong>${escapeHTML(data.deliveryDate)}</strong></div>` : ''}
                     </div>
                     
-                    <!-- Buyer Details -->
-                    <div class="ae-section-title">BUYER DETAILS</div>
+                    <!-- Party Details (Buyer or Supplier based on role) -->
+                    <div class="ae-section-title">${partyTitle}</div>
                     <div class="ae-buyer-grid">
-                        <div class="ae-buyer-item"><span>Customer Name</span><strong>${escapeHTML(data.name)}</strong></div>
+                        <div class="ae-buyer-item"><span>${partyNameLabel}</span><strong>${escapeHTML(data.name)}</strong></div>
                         <div class="ae-buyer-item"><span>Address</span><strong>${escapeHTML(data.address)}</strong></div>
                         <div class="ae-buyer-item"><span>Phone</span><strong>${escapeHTML(data.whatsapp)}</strong></div>
                         <div class="ae-buyer-item"><span>Email</span><strong>${escapeHTML(data.email || '—')}</strong></div>
                     </div>
                     
-                    <!-- Section: Final Quotation -->
+                    <!-- Section: Quotation Status -->
                     <div class="ae-section-title">${escapeHTML(data.status)}</div>
                     
                     <!-- Product Table -->
