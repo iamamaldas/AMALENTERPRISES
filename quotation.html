@@ -74,7 +74,7 @@
 
         /* QUOTATION AREA */
         .quotation-section { padding: 100px 24px 60px; max-width: 1100px; margin: 0 auto; }
-        #quotationArea { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+        #quotationArea { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; min-height: 400px; position: relative; }
 
         /* QUOTATION SYSTEM INLINE STYLES - SMART DESIGN */
         .ae-quotation-wrapper { width: 100%; }
@@ -101,7 +101,7 @@
         .ae-generate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(43,123,228,0.4); }
 
         /* FLASH MESSAGE MODAL (POPUP) SMART DESIGN */
-        .ae-modal-overlay { position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.3s ease-out; }
+        .ae-modal-overlay { position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .ae-modal-card { background: #ffffff; border-radius: 20px; padding: 30px; max-width: 900px; width: 100%; max-height: 90vh; position: relative; animation: slideUp 0.3s ease-out; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         @keyframes slideUp { from { opacity: 0; transform: scale(0.95) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -193,13 +193,9 @@
     <section class="quotation-section" id="quotation">
         <h2 class="section-title" style="text-align:center; font-size:32px; font-weight:700; margin-bottom:12px; color:#f0f4fa;">Quotation Builder</h2>
         <p style="text-align:center; font-size:14px; color:#7e8a9a; margin-bottom:30px;">Create, review, and share professional quotations <strong style="color:#6db3f2;">100% Free</strong></p>
-        <div id="quotationArea">
-            <!-- Quotation System will be rendered here -->
-            <div style="text-align:center; padding:40px;">
-                <i class="fas fa-spinner fa-pulse" style="font-size:30px; color:#6db3f2;"></i>
-                <p style="color:#a0acbd; margin-top:12px;">Loading Quotation System...</p>
-            </div>
-        </div>
+        
+        <!-- মূল কন্টেইনার (এখানে JS ফর্ম রেন্ডার করবে) -->
+        <div id="quotationArea"></div>
     </section>
 
     <!-- FOOTER -->
@@ -236,7 +232,10 @@
             });
         });
 
-        // --- COMPLETE QUOTATION SYSTEM (Smart Design) ---
+        // ==========================================
+        //  COMPLETE QUOTATION SYSTEM
+        //  এই IIFE ফাংশনটি পেজ লোড হওয়া মাত্র রান করবে
+        // ==========================================
         (function() {
             "use strict";
 
@@ -246,12 +245,11 @@
             const ADMIN_EMAIL = "info@amalenterprises.in";
             
             // ⚠️ আপনার Google Apps Script URL এখানে দিন
-            const APPS_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
+            const APPS_SCRIPT_URL = ""; // উদাহরণ: "https://script.google.com/macros/s/..." 
             
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
             let currentRole = "";
             
-            // localStorage key for storing user data (optional, for auto-fill)
             const STORAGE_KEY = "amal_user_data";
 
             const PRODUCT_CATEGORIES = [
@@ -276,72 +274,43 @@
                     alert("Please enter a valid 10 digit mobile number."); 
                     return; 
                 } 
-                // WhatsApp URL - এটি মোবাইলে খুললে ব্যবহারকারীর নিজস্ব নম্বর থেকেই মেসেজ যাবে
                 window.open("https://wa.me/"+mobile+"?text="+encodeURIComponent(message), "_blank", "noopener"); 
             }
 
-            // ---------- LocalStorage User Data Management (for auto-fill) ----------
+            // --- LocalStorage ---
             function getUserData(mobile) {
                 try {
                     const stored = localStorage.getItem(STORAGE_KEY);
                     if (stored) {
                         const data = JSON.parse(stored);
-                        if (data.mobile === mobile) {
-                            return data;
-                        }
+                        if (data.mobile === mobile) return data;
                     }
                 } catch (e) {}
                 return null;
             }
-
             function saveUserData(data) {
-                try {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                } catch (e) {}
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
             }
 
-            // ---------- Google Sheet Data Save (UPDATE/INSERT LOGIC) ----------
+            // --- Google Sheet ---
             function saveToGoogleSheet(data, quoteNo) {
-                if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
-                    console.warn("Google Apps Script URL not configured.");
-                    return;
-                }
-                
+                if (!APPS_SCRIPT_URL) return;
                 const payload = {
-                    token: API_TOKEN,
-                    action: "saveOrUpdateQuotation",
-                    quoteNo: quoteNo,
-                    date: getDate(),
-                    role: data.roleName,
-                    name: data.name,
-                    whatsapp: data.whatsapp,
-                    address: data.address,
-                    email: data.email || "",
-                    category: data.category,
-                    product: data.product,
-                    specification: data.specification || "",
-                    quantity: data.quantity,
-                    unit: data.unit,
-                    price: data.price,
-                    total: data.total,
-                    status: data.status
+                    token: API_TOKEN, action: "saveOrUpdateQuotation", quoteNo: quoteNo,
+                    date: getDate(), role: data.roleName, name: data.name, whatsapp: data.whatsapp,
+                    address: data.address, email: data.email || "", category: data.category,
+                    product: data.product, specification: data.specification || "",
+                    quantity: data.quantity, unit: data.unit, price: data.price,
+                    total: data.total, status: data.status
                 };
-                
                 fetch(APPS_SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
+                    method: "POST", mode: "no-cors",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams(payload).toString()
-                })
-                .then(() => {
-                    console.log("Data sent to Google Sheet (no-cors mode)");
-                })
-                .catch(err => {
-                    console.warn("Google Sheet save failed:", err);
-                });
+                }).catch(() => {});
             }
 
-            // ---------- Create Quotation System ----------
+            // --- MAIN RENDER FUNCTION ---
             function createQuotationSystem() {
                 const area = document.getElementById("quotationArea");
                 if(!area) return;
@@ -362,7 +331,7 @@
                                 <button type="button" class="ae-role-btn" data-role="supplier">I am Supplier</button>
                             </div>
                         </div>
-                        <div class="ae-form-panel" id="aeFormPanel" hidden>
+                        <div class="ae-form-panel" id="aeFormPanel" style="display:none;">
                             <div class="ae-form-role-title" id="aeRoleTitle"></div>
                             <div class="ae-form-grid">
                                 <div class="ae-field"><label>Name / Industry *</label><input id="aeName" type="text" placeholder="Enter your name or industry name"></div>
@@ -393,7 +362,7 @@
                         </div>
                     </div>
                     
-                    <div class="ae-modal-overlay" id="aeModal" hidden>
+                    <div class="ae-modal-overlay" id="aeModal" style="display:none;">
                         <div class="ae-modal-card">
                             <button class="ae-close-btn" id="aeCloseModal">×</button>
                             <div class="ae-preview-document" id="aePreviewDocument"></div>
@@ -416,7 +385,6 @@
                 });
                 document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(r => r.addEventListener("change", updateLiveCalculation));
                 
-                // Monitor WhatsApp number change for auto-fill (optional)
                 const whatsappInput = document.getElementById("aeWhatsApp");
                 if (whatsappInput) {
                     whatsappInput.addEventListener("input", function() {
@@ -424,19 +392,15 @@
                         if (mobile.length === 10) {
                             const saved = getUserData(mobile);
                             if (saved) {
-                                // Auto-fill fields from saved data
                                 document.getElementById("aeName").value = saved.name || "";
                                 document.getElementById("aeAddress").value = saved.address || "";
                                 document.getElementById("aeEmail").value = saved.email || "";
                                 if (saved.role) {
                                     document.querySelectorAll(".ae-role-btn").forEach(b => {
-                                        if (b.dataset.role === saved.role) {
-                                            selectRole(saved.role);
-                                        }
+                                        if (b.dataset.role === saved.role) selectRole(saved.role);
                                     });
                                 }
                             } else {
-                                // NEW MOBILE NUMBER: clear all fields except mobile (optional)
                                 document.getElementById("aeName").value = "";
                                 document.getElementById("aeAddress").value = "";
                                 document.getElementById("aeEmail").value = "";
@@ -448,7 +412,7 @@
                                 document.getElementById("aePrice").value = "";
                                 currentRole = "";
                                 document.querySelectorAll(".ae-role-btn").forEach(b => b.classList.remove("selected"));
-                                document.getElementById("aeFormPanel").hidden = true;
+                                document.getElementById("aeFormPanel").style.display = "none";
                                 document.getElementById("aeLiveTotal").textContent = "Estimated Total: ₹0.00";
                                 document.getElementById("aeNegotiationNote").style.display = "none";
                                 document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(r => r.checked = false);
@@ -463,7 +427,7 @@
                 document.querySelectorAll(".ae-role-btn").forEach(b => b.classList.toggle("selected", b.dataset.role === role));
                 const name = role === "buyer" ? "Buyer" : "Supplier";
                 document.getElementById("aeRoleTitle").textContent = name + " Quotation";
-                document.getElementById("aeFormPanel").hidden = false;
+                document.getElementById("aeFormPanel").style.display = "block";
             }
 
             function updateLiveCalculation() {
@@ -480,19 +444,12 @@
                 const p = numberValue(document.getElementById("aePrice").value);
                 const w = document.getElementById("aeWhatsApp").value.replace(/\D/g, "").slice(0, 10);
                 return {
-                    role: currentRole,
-                    roleName: currentRole === "buyer" ? "Buyer" : "Supplier",
-                    name: document.getElementById("aeName").value.trim(),
-                    whatsapp: w,
-                    address: document.getElementById("aeAddress").value.trim(),
-                    email: document.getElementById("aeEmail").value.trim(),
-                    category: document.getElementById("aeCategory").value,
-                    product: document.getElementById("aeProduct").value.trim(),
-                    specification: document.getElementById("aeSpecification").value.trim(),
-                    quantity: q,
-                    unit: document.getElementById("aeUnit").value,
-                    price: p,
-                    total: q * p,
+                    role: currentRole, roleName: currentRole === "buyer" ? "Buyer" : "Supplier",
+                    name: document.getElementById("aeName").value.trim(), whatsapp: w,
+                    address: document.getElementById("aeAddress").value.trim(), email: document.getElementById("aeEmail").value.trim(),
+                    category: document.getElementById("aeCategory").value, product: document.getElementById("aeProduct").value.trim(),
+                    specification: document.getElementById("aeSpecification").value.trim(), quantity: q,
+                    unit: document.getElementById("aeUnit").value, price: p, total: q * p,
                     status: status ? status.value : ""
                 };
             }
@@ -520,114 +477,54 @@
                 
                 showPreview(data, quoteNo);
                 
-                // Save user data to localStorage
-                const userData = {
-                    mobile: data.whatsapp,
-                    name: data.name,
-                    address: data.address,
-                    email: data.email,
-                    role: currentRole
-                };
-                saveUserData(userData);
-                
-                // Save to Google Sheet
+                saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email, role: currentRole });
                 saveToGoogleSheet(data, quoteNo);
                 
-                // Show success message
                 const statusDiv = document.getElementById("aeSaveStatus");
                 statusDiv.style.display = "block";
                 statusDiv.style.color = "#6db3f2";
-                statusDiv.innerHTML = "✅ Quotation saved successfully! Data has been updated in our system.";
-                setTimeout(() => {
-                    statusDiv.style.display = "none";
-                }, 5000);
+                statusDiv.innerHTML = "✅ Quotation saved successfully! Data has been updated.";
+                setTimeout(() => { statusDiv.style.display = "none"; }, 5000);
             }
 
             function showPreview(data, quoteNo) {
                 const box = document.getElementById("aePreviewDocument");
                 box.innerHTML = `
                     <div class="ae-header">
-                        <div class="ae-header-left">
-                            <h2>${COMPANY_NAME}</h2>
-                            <p>${COMPANY_TAGLINE}</p>
-                        </div>
-                        <div class="ae-header-right">
-                            <div class="ae-quote-no">QUOTATION</div>
-                            <div class="ae-date">${escapeHTML(quoteNo)}</div>
-                            <div class="ae-date">${escapeHTML(getDate())}</div>
-                        </div>
+                        <div class="ae-header-left"><h2>${COMPANY_NAME}</h2><p>${COMPANY_TAGLINE}</p></div>
+                        <div class="ae-header-right"><div class="ae-quote-no">QUOTATION</div><div class="ae-date">${escapeHTML(quoteNo)}</div><div class="ae-date">${escapeHTML(getDate())}</div></div>
                     </div>
-                    
                     <div class="ae-role-badge">${escapeHTML(data.roleName)} Quotation</div>
-                    
                     <div class="ae-details-grid">
-                        <div class="ae-detail-item">
-                            <span>Name / Industry</span>
-                            <strong>${escapeHTML(data.name)}</strong>
-                        </div>
-                        <div class="ae-detail-item">
-                            <span>WhatsApp</span>
-                            <strong>${escapeHTML(data.whatsapp)}</strong>
-                        </div>
-                        <div class="ae-detail-item">
-                            <span>Address</span>
-                            <strong>${escapeHTML(data.address)}</strong>
-                        </div>
+                        <div class="ae-detail-item"><span>Name / Industry</span><strong>${escapeHTML(data.name)}</strong></div>
+                        <div class="ae-detail-item"><span>WhatsApp</span><strong>${escapeHTML(data.whatsapp)}</strong></div>
+                        <div class="ae-detail-item"><span>Address</span><strong>${escapeHTML(data.address)}</strong></div>
                         ${data.email ? `<div class="ae-detail-item"><span>Email</span><strong>${escapeHTML(data.email)}</strong></div>` : ''}
                     </div>
-                    
                     <div class="ae-product-table">
-                        <div class="ae-table-header">
-                            <span>Product</span>
-                            <span>Qty</span>
-                            <span>Unit Price</span>
-                            <span>Total</span>
-                        </div>
+                        <div class="ae-table-header"><span>Product</span><span>Qty</span><span>Unit Price</span><span>Total</span></div>
                         <div class="ae-table-row">
-                            <div class="ae-product-info">
-                                <small>${escapeHTML(data.category)}</small>
-                                <strong>${escapeHTML(data.product)}</strong>
-                            </div>
+                            <div class="ae-product-info"><small>${escapeHTML(data.category)}</small><strong>${escapeHTML(data.product)}</strong></div>
                             <div>${formatQuantity(data.quantity)} ${escapeHTML(data.unit)}</div>
                             <div>${formatMoney(data.price)} / ${escapeHTML(data.unit)}</div>
                             <div class="ae-total-price">${formatMoney(data.total)}</div>
                         </div>
                     </div>
-                    
-                    ${data.specification ? `
-                    <div class="ae-spec-box">
-                        <small>Specification / Grade</small>
-                        <p>${escapeHTML(data.specification)}</p>
-                    </div>` : ''}
-                    
+                    ${data.specification ? `<div class="ae-spec-box"><small>Specification / Grade</small><p>${escapeHTML(data.specification)}</p></div>` : ''}
                     <div class="ae-status-total">
-                        <div>
-                            <span style="font-size:13px; color:#5a6a7a;">Status</span>
-                            <div class="ae-status ${data.status === 'Negotiable' ? 'negotiable' : 'final'}">${escapeHTML(data.status)}</div>
-                        </div>
-                        <div>
-                            <span style="font-size:13px; color:#5a6a7a;">Total</span>
-                            <div class="ae-total-amount">${formatMoney(data.total)}</div>
-                        </div>
+                        <div><span style="font-size:13px; color:#5a6a7a;">Status</span><div class="ae-status ${data.status === 'Negotiable' ? 'negotiable' : 'final'}">${escapeHTML(data.status)}</div></div>
+                        <div><span style="font-size:13px; color:#5a6a7a;">Total</span><div class="ae-total-amount">${formatMoney(data.total)}</div></div>
                     </div>
-                    
-                    ${data.status === 'Negotiable' ? `
-                    <div class="ae-negotiable-note">Price is subject to negotiation and commercial discussion.</div>` : ''}
-                    
+                    ${data.status === 'Negotiable' ? `<div class="ae-negotiable-note">Price is subject to negotiation and commercial discussion.</div>` : ''}
                     <div class="ae-company-footer">
-                        <strong>${COMPANY_NAME}</strong><br>
-                        ${COMPANY_TAGLINE}<br>
+                        <strong>${COMPANY_NAME}</strong><br>${COMPANY_TAGLINE}<br>
                         📞 <a href="tel:+${ADMIN_WHATSAPP}">+${ADMIN_WHATSAPP}</a> &nbsp;|&nbsp; ✉️ <a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a>
                     </div>
-                    
                     <div class="ae-gst-note">* Without GST Quotation</div>
-                    
-                    <div class="ae-free-badge">
-                        <i class="fas fa-check-circle"></i> This quotation is 100% FREE to create. No platform fees applied.
-                    </div>
+                    <div class="ae-free-badge"><i class="fas fa-check-circle"></i> This quotation is 100% FREE to create. No platform fees applied.</div>
                 `;
                 createActionButtons(data, quoteNo);
-                document.getElementById("aeModal").hidden = false;
+                document.getElementById("aeModal").style.display = "flex";
                 document.body.style.overflow = 'hidden';
             }
 
@@ -639,61 +536,53 @@
                     <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                 `;
                 
-                // WhatsApp Share - AMAL ENTERPRISES-এর নম্বরে, কিন্তু ব্যবহারকারীর নিজস্ব নম্বর থেকে
                 document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    // Recipient: AMAL ENTERPRISES WhatsApp
-                    let recipient = ADMIN_WHATSAPP;
-                    openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
+                    // সবসময় AMAL ENTERPRISES এর নম্বরে যাবে
+                    openWhatsApp(ADMIN_WHATSAPP, createWhatsAppMessage(data, quoteNo));
                 });
                 
-                // Print / Download PDF
                 document.getElementById("aePrintBtn").addEventListener("click", function() {
                     const printContent = document.getElementById("aePreviewDocument").innerHTML;
                     const win = window.open('', '_blank');
                     win.document.write(`
-                        <html>
-                        <head>
-                            <title>Quotation - ${escapeHTML(quoteNo)}</title>
-                            <style>
-                                body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; }
-                                @media print { body { padding: 0; } }
-                                .ae-preview-document { color: #222; }
-                                /* Copy all styles from above */
-                                .ae-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2b7be4; padding-bottom: 12px; margin-bottom: 16px; }
-                                .ae-header-left h2 { font-size: 24px; font-weight: 700; color: #111a2a; margin: 0; }
-                                .ae-header-left p { font-size: 11px; color: #5a6a7a; margin: 0; }
-                                .ae-header-right { text-align: right; }
-                                .ae-header-right .ae-quote-no { font-size: 16px; font-weight: 700; color: #2b7be4; }
-                                .ae-header-right .ae-date { font-size: 12px; color: #5a6a7a; }
-                                .ae-role-badge { display: inline-block; background: #e8f0fe; color: #2b7be4; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
-                                .ae-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #f8f9fa; padding: 14px; border-radius: 10px; margin-bottom: 16px; }
-                                .ae-details-grid .ae-detail-item span { display: block; font-size: 11px; color: #5a6a7a; }
-                                .ae-details-grid .ae-detail-item strong { font-size: 14px; color: #1a1a2e; }
-                                .ae-product-table { border: 1px solid #dce2ea; border-radius: 10px; overflow: hidden; margin: 16px 0; }
-                                .ae-product-table .ae-table-header { background: #e4e9f0; font-weight: 600; display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; }
-                                .ae-product-table .ae-table-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; border-top: 1px solid #dce2ea; }
-                                .ae-product-table .ae-table-row .ae-product-info small { display: block; color: #5a6a7a; font-size: 11px; }
-                                .ae-product-table .ae-table-row .ae-product-info strong { font-size: 14px; color: #1a1a2e; }
-                                .ae-product-table .ae-table-row .ae-total-price { color: #2b7be4; font-weight: 700; }
-                                .ae-spec-box { background: #eef2f7; padding: 12px; border-radius: 8px; margin: 12px 0; }
-                                .ae-spec-box small { display: block; color: #5a6a7a; margin-bottom: 4px; }
-                                .ae-spec-box p { margin: 0; font-size: 14px; color: #1a1a2e; }
-                                .ae-status-total { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dce2ea; }
-                                .ae-status-total .ae-status { font-weight: 600; }
-                                .ae-status-total .ae-status.final { color: #1a8a4a; }
-                                .ae-status-total .ae-status.negotiable { color: #b87a2a; }
-                                .ae-status-total .ae-total-amount { font-size: 22px; font-weight: 700; color: #111a2a; }
-                                .ae-negotiable-note { background: #fdf3e0; border: 1px solid #f0dbb8; padding: 10px; border-radius: 8px; font-size: 13px; color: #7a5a2a; margin-top: 12px; }
-                                .ae-company-footer { margin-top: 20px; padding-top: 12px; border-top: 2px solid #dce2ea; text-align: center; font-size: 13px; color: #5a6a7a; }
-                                .ae-company-footer strong { color: #111a2a; }
-                                .ae-company-footer a { color: #2b7be4; text-decoration: none; }
-                                .ae-gst-note { margin-top: 8px; text-align: center; font-size: 13px; color: #777; font-style: italic; }
-                                .ae-free-badge { margin-top: 12px; padding: 10px; background: #e8f0fe; border-radius: 8px; border: 1px solid #d0e0f0; text-align: center; font-size: 13px; color: #1a5a8a; }
-                                .ae-free-badge i { color: #2b7be4; margin-right: 6px; }
-                            </style>
-                        </head>
-                        <body>${printContent}</body>
-                        </html>
+                        <html><head><title>Quotation - ${escapeHTML(quoteNo)}</title>
+                        <style>
+                            body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; }
+                            @media print { body { padding: 0; } }
+                            .ae-preview-document { color: #222; }
+                            .ae-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2b7be4; padding-bottom: 12px; margin-bottom: 16px; }
+                            .ae-header-left h2 { font-size: 24px; font-weight: 700; color: #111a2a; margin: 0; }
+                            .ae-header-left p { font-size: 11px; color: #5a6a7a; margin: 0; }
+                            .ae-header-right { text-align: right; }
+                            .ae-header-right .ae-quote-no { font-size: 16px; font-weight: 700; color: #2b7be4; }
+                            .ae-header-right .ae-date { font-size: 12px; color: #5a6a7a; }
+                            .ae-role-badge { display: inline-block; background: #e8f0fe; color: #2b7be4; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+                            .ae-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #f8f9fa; padding: 14px; border-radius: 10px; margin-bottom: 16px; }
+                            .ae-details-grid .ae-detail-item span { display: block; font-size: 11px; color: #5a6a7a; }
+                            .ae-details-grid .ae-detail-item strong { font-size: 14px; color: #1a1a2e; }
+                            .ae-product-table { border: 1px solid #dce2ea; border-radius: 10px; overflow: hidden; margin: 16px 0; }
+                            .ae-product-table .ae-table-header { background: #e4e9f0; font-weight: 600; display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; }
+                            .ae-product-table .ae-table-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; padding: 10px; border-top: 1px solid #dce2ea; }
+                            .ae-product-table .ae-table-row .ae-product-info small { display: block; color: #5a6a7a; font-size: 11px; }
+                            .ae-product-table .ae-table-row .ae-product-info strong { font-size: 14px; color: #1a1a2e; }
+                            .ae-product-table .ae-table-row .ae-total-price { color: #2b7be4; font-weight: 700; }
+                            .ae-spec-box { background: #eef2f7; padding: 12px; border-radius: 8px; margin: 12px 0; }
+                            .ae-spec-box small { display: block; color: #5a6a7a; margin-bottom: 4px; }
+                            .ae-spec-box p { margin: 0; font-size: 14px; color: #1a1a2e; }
+                            .ae-status-total { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dce2ea; }
+                            .ae-status-total .ae-status { font-weight: 600; }
+                            .ae-status-total .ae-status.final { color: #1a8a4a; }
+                            .ae-status-total .ae-status.negotiable { color: #b87a2a; }
+                            .ae-status-total .ae-total-amount { font-size: 22px; font-weight: 700; color: #111a2a; }
+                            .ae-negotiable-note { background: #fdf3e0; border: 1px solid #f0dbb8; padding: 10px; border-radius: 8px; font-size: 13px; color: #7a5a2a; margin-top: 12px; }
+                            .ae-company-footer { margin-top: 20px; padding-top: 12px; border-top: 2px solid #dce2ea; text-align: center; font-size: 13px; color: #5a6a7a; }
+                            .ae-company-footer strong { color: #111a2a; }
+                            .ae-company-footer a { color: #2b7be4; text-decoration: none; }
+                            .ae-gst-note { margin-top: 8px; text-align: center; font-size: 13px; color: #777; font-style: italic; }
+                            .ae-free-badge { margin-top: 12px; padding: 10px; background: #e8f0fe; border-radius: 8px; border: 1px solid #d0e0f0; text-align: center; font-size: 13px; color: #1a5a8a; }
+                            .ae-free-badge i { color: #2b7be4; margin-right: 6px; }
+                        </style>
+                        </head><body>${printContent}</body></html>
                     `);
                     win.document.close();
                     setTimeout(() => { win.print(); }, 500);
@@ -715,13 +604,16 @@
             }
 
             function closePreview() {
-                document.getElementById("aeModal").hidden = true;
+                document.getElementById("aeModal").style.display = "none";
                 document.body.style.overflow = '';
             }
 
-            // ---------- Initialize ----------
-            if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", createQuotationSystem);
-            else createQuotationSystem();
+            // --- INITIALIZE ---
+            // window.onload ব্যবহার করলে ১০০% গ্যারান্টি যে DOM তৈরি হওয়ার পর রান হবে
+            window.onload = function() {
+                createQuotationSystem();
+            };
+            
         })();
     </script>
 </body>
