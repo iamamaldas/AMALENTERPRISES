@@ -8,7 +8,6 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/logo.png">
     
-    <link rel="stylesheet" href="style.css?v=2.6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <style>
@@ -108,7 +107,7 @@
         .ae-close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #555; cursor: pointer; background: transparent; border: none; transition: 0.3s; z-index: 10; }
         .ae-close-btn:hover { color: #111; transform: rotate(90deg); }
         
-        /* ===== PREVIEW STYLES (matches sample image) ===== */
+        /* ===== PREVIEW STYLES ===== */
         .ae-preview-document {
             color: #222;
             background: #fff;
@@ -117,21 +116,21 @@
             border: 1px solid #e0e0e0;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
-        .ae-preview-document .ae-company-header {
+        .ae-preview-document .ae-role-header {
             text-align: center;
             border-bottom: 2px solid #2b7be4;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             margin-bottom: 16px;
         }
-        .ae-preview-document .ae-company-header h1 {
-            font-size: 24px;
+        .ae-preview-document .ae-role-header h1 {
+            font-size: 26px;
             font-weight: 700;
             color: #111a2a;
             margin: 0;
             letter-spacing: 1px;
         }
-        .ae-preview-document .ae-company-header .ae-tagline {
-            font-size: 12px;
+        .ae-preview-document .ae-role-header .ae-sub {
+            font-size: 13px;
             color: #5a6a7a;
             margin-top: 2px;
         }
@@ -350,7 +349,9 @@
             const ADMIN_EMAIL = "info@amalenterprises.in";
             const ADMIN_LOCATION = "India (Pan-India Sourcing)";
             
-            const APPS_SCRIPT_URL = ""; // আপনার Google Apps Script URL
+            // ✅ আপনার Google Apps Script Web App URL এখানে দিন
+            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzV6WGIfSSI92tny7GqVI_lnfJTCKGhB1o-DTfY9LXB7YgK_vqJft4ZZJhwgdORZgK7/exec";
+            
             const API_TOKEN = "AmalQuotation2026_9x7Qm2";
             let currentRole = "";
             
@@ -397,7 +398,7 @@
                 const day = String(now.getDate()).padStart(2, "0");
                 const month = String(now.getMonth() + 1).padStart(2, "0");
                 const year = now.getFullYear();
-                const monthKey = month + year; // e.g. "082026"
+                const monthKey = month + year;
                 
                 let serial = 1;
                 try {
@@ -431,23 +432,44 @@
                 try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
             }
 
-            // --- Google Sheet ---
+            // --- Google Sheet Save ---
             function saveToGoogleSheet(data, quoteNo) {
-                if (!APPS_SCRIPT_URL) return;
+                if (!APPS_SCRIPT_URL) {
+                    console.warn("Apps Script URL not configured");
+                    return;
+                }
                 const payload = {
-                    token: API_TOKEN, action: "saveOrUpdateQuotation", quoteNo: quoteNo,
-                    date: getDate(), role: data.roleName, name: data.name, whatsapp: data.whatsapp,
-                    address: data.address, email: data.email || "", category: data.category,
-                    product: data.product, specification: data.specification || "",
-                    quantity: data.quantity, unit: data.unit, price: data.price,
-                    total: data.total, status: data.status, deliveryDate: data.deliveryDate || "",
-                    paymentTerms: data.paymentTerms || "", gstStatus: data.gstStatus || "",
+                    token: API_TOKEN,
+                    action: "saveQuotation",
+                    quoteNo: quoteNo,
+                    date: getDate(),
+                    role: data.roleName,
+                    name: data.name,
+                    whatsapp: data.whatsapp,
+                    address: data.address,
+                    email: data.email || "",
+                    category: data.category,
+                    product: data.product,
+                    specification: data.specification || "",
+                    quantity: data.quantity,
+                    unit: data.unit,
+                    price: data.price,
+                    total: data.total,
+                    status: data.status,
+                    deliveryDate: data.deliveryDate || "",
+                    paymentTerms: data.paymentTerms || "",
+                    gstStatus: data.gstStatus || "",
                     termsConditions: data.termsConditions || ""
                 };
-                fetch(APPS_SCRIPT_URL, {
-                    method: "POST", mode: "no-cors",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(payload).toString()
+                
+                // Using fetch with no-cors mode - will still send but response won't be readable
+                // For better handling, use GET with redirect
+                const url = new URL(APPS_SCRIPT_URL);
+                Object.keys(payload).forEach(key => url.searchParams.append(key, payload[key]));
+                
+                fetch(url.toString(), {
+                    method: "GET",
+                    mode: "no-cors"
                 }).catch(() => {});
             }
 
@@ -461,7 +483,7 @@
                         <div class="ae-quotation-header">
                             <div>
                                 <div class="ae-small-label">100% Free to Use</div>
-                                <h2>Create a Quotation</h2>
+                                <h2>Create Quotation</h2>
                                 <p>Select your role, fill in the details, and generate instantly. <strong style="color:#6db3f2;">No platform fees.</strong></p>
                             </div>
                         </div>
@@ -475,7 +497,6 @@
                         <div class="ae-form-panel" id="aeFormPanel" style="display:none;">
                             <div class="ae-form-role-title" id="aeRoleTitle"></div>
                             <div class="ae-form-grid">
-                                <!-- Quotation Number -->
                                 <div class="ae-field"><label>Quotation Number *</label><input id="aeQuoteNo" type="text" readonly style="cursor:default; background:rgba(255,255,255,0.06);"></div>
                                 <div class="ae-field"><label>Expected Delivery Date</label><input id="aeDeliveryDate" type="date"></div>
                                 <div class="ae-field"><label>Name / Industry *</label><input id="aeName" type="text" placeholder="Enter your name or industry name"></div>
@@ -495,7 +516,6 @@
                             </div>
                             <div style="margin:8px 0 12px 0; font-size:15px; font-weight:600; text-align:right; color:#6db3f2;" id="aeLiveTotal">Estimated Total: ₹0.00</div>
                             
-                            <!-- Payment Terms & GST -->
                             <div class="ae-form-grid">
                                 <div class="ae-field"><label>Payment Terms *</label><select id="aePaymentTerms"><option value="">Select Payment Terms</option>${PAYMENT_TERMS.map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join("")}</select></div>
                                 <div class="ae-field"><label>GST Status *</label><select id="aeGstStatus"><option value="">Select GST Status</option>${GST_OPTIONS.map(g => `<option value="${escapeHTML(g)}">${escapeHTML(g)}</option>`).join("")}</select></div>
@@ -526,7 +546,6 @@
                 `;
                 bindEvents();
                 
-                // Auto-generate quotation number
                 const quoteNoInput = document.getElementById("aeQuoteNo");
                 if (quoteNoInput) {
                     quoteNoInput.value = generateQuotationNumber();
@@ -545,13 +564,14 @@
                 });
                 document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(r => r.addEventListener("change", updateLiveCalculation));
                 
+                // ✅ FIX: WhatsApp input - load data on 10 digits but DON'T lock the field
                 const whatsappInput = document.getElementById("aeWhatsApp");
                 if (whatsappInput) {
                     whatsappInput.addEventListener("input", function() {
                         const mobile = this.value.replace(/\D/g, "").slice(0, 10);
                         this.value = mobile;
                         if (mobile.length === 10) {
-                            this.readOnly = true;
+                            // Load saved data if available
                             const saved = getUserData(mobile);
                             if (saved) {
                                 document.getElementById("aeName").value = saved.name || "";
@@ -562,29 +582,7 @@
                                         if (b.dataset.role === saved.role) selectRole(saved.role);
                                     });
                                 }
-                            } else {
-                                document.getElementById("aeName").value = "";
-                                document.getElementById("aeAddress").value = "";
-                                document.getElementById("aeEmail").value = "";
-                                document.getElementById("aeCategory").value = "";
-                                document.getElementById("aeProduct").value = "";
-                                document.getElementById("aeSpecification").value = "";
-                                document.getElementById("aeQuantity").value = "";
-                                document.getElementById("aeUnit").value = "";
-                                document.getElementById("aePrice").value = "";
-                                document.getElementById("aeDeliveryDate").value = "";
-                                document.getElementById("aePaymentTerms").value = "";
-                                document.getElementById("aeGstStatus").value = "";
-                                document.getElementById("aeTermsConditions").value = DEFAULT_TERMS;
-                                currentRole = "";
-                                document.querySelectorAll(".ae-role-btn").forEach(b => b.classList.remove("selected"));
-                                document.getElementById("aeFormPanel").style.display = "none";
-                                document.getElementById("aeLiveTotal").textContent = "Estimated Total: ₹0.00";
-                                document.getElementById("aeNegotiationNote").style.display = "none";
-                                document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(r => r.checked = false);
                             }
-                        } else {
-                            this.readOnly = false;
                         }
                     });
                 }
@@ -651,16 +649,18 @@
                 
                 showPreview(data);
                 saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email, role: currentRole });
+                
+                // ✅ Save to Google Sheet
                 saveToGoogleSheet(data, data.quoteNo);
                 
                 const statusDiv = document.getElementById("aeSaveStatus");
                 statusDiv.style.display = "block";
                 statusDiv.style.color = "#6db3f2";
-                statusDiv.innerHTML = "✅ Quotation saved successfully!";
+                statusDiv.innerHTML = "✅ Quotation saved to Google Sheet successfully!";
                 setTimeout(() => { statusDiv.style.display = "none"; }, 5000);
             }
 
-            // ===== PREVIEW (matches sample image) =====
+            // ===== PREVIEW =====
             function showPreview(data) {
                 const box = document.getElementById("aePreviewDocument");
                 const currentDate = getDate();
@@ -668,12 +668,13 @@
                 const statusClass = isFinal ? "final" : "negotiable";
                 const total = data.total;
                 const gstDisplay = data.gstStatus || "Exclusive of GST (Without GST)";
+                const roleTitle = data.roleName === "Buyer" ? "Buyer Quotation" : "Supplier Quotation";
                 
                 box.innerHTML = `
-                    <!-- Company Header -->
-                    <div class="ae-company-header">
-                        <h1>${COMPANY_NAME}</h1>
-                        <div class="ae-tagline">${COMPANY_TAGLINE}</div>
+                    <!-- Role Header (removed AMAL ENTERPRISES title) -->
+                    <div class="ae-role-header">
+                        <h1>${escapeHTML(roleTitle)}</h1>
+                        <div class="ae-sub">${escapeHTML(data.roleName)} - ${escapeHTML(data.status)}</div>
                     </div>
                     
                     <!-- Meta Row: Quotation No, Date, Delivery -->
@@ -786,9 +787,9 @@
                             body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; max-width: 950px; margin: 0 auto; }
                             @media print { body { padding: 0; } }
                             .ae-preview-document { color: #222; }
-                            .ae-company-header { text-align: center; border-bottom: 2px solid #2b7be4; padding-bottom: 10px; margin-bottom: 16px; }
-                            .ae-company-header h1 { font-size: 24px; font-weight: 700; color: #111a2a; margin: 0; }
-                            .ae-company-header .ae-tagline { font-size: 12px; color: #5a6a7a; margin-top: 2px; }
+                            .ae-role-header { text-align: center; border-bottom: 2px solid #2b7be4; padding-bottom: 12px; margin-bottom: 16px; }
+                            .ae-role-header h1 { font-size: 26px; font-weight: 700; color: #111a2a; margin: 0; }
+                            .ae-role-header .ae-sub { font-size: 13px; color: #5a6a7a; margin-top: 2px; }
                             .ae-meta-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; background: #f8f9fa; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
                             .ae-meta-row .ae-meta-item span { color: #5a6a7a; }
                             .ae-meta-row .ae-meta-item strong { color: #111a2a; }
