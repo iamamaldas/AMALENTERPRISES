@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Quotation Builder | AMAL ENTERPRISES</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    
+    <link rel="stylesheet" href="style.css?v=2.6">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        /* ============ SINGLE FILE STYLES ============ */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #080d1a;
+            color: #e3e8ef;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        a { text-decoration: none !important; }
+        
+        /* HEADER */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 68px;
+            z-index: 1000; background: rgba(8, 13, 26, 0.95);
+            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .navbar {
+            max-width: 1200px; height: 100%; margin: 0 auto; padding: 0 16px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .brand-logo {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+        }
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f0f4fa;
+            line-height: 1.1;
+            margin: 0;
+        }
+        .brand-text p {
+            font-size: 9px;
+            letter-spacing: 0.5px;
+            color: #7e8a9a;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .nav-links { display: flex; align-items: center; gap: 18px; }
+        .nav-links a { color: #b0b9c5; font-size: 13px; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #6db3f2; }
+        .menu-button { display: none; cursor: pointer; font-size: 22px; color: #b0b9c5; }
+
+        /* QUOTATION AREA */
+        .quotation-section { padding: 100px 24px 60px; max-width: 1100px; margin: 0 auto; }
+        #quotationArea { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+
+        /* QUOTATION SYSTEM INLINE STYLES - SMART DESIGN */
+        .ae-quotation-wrapper { width: 100%; }
+        .ae-quotation-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .ae-quotation-header h2 { font-size: 24px; font-weight: 600; color: #f0f4fa; margin: 0; }
+        .ae-quotation-header p { color: #7e8a9a; font-size: 14px; margin-top: 4px; }
+        .ae-small-label { color: #6db3f2; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .ae-role-box { margin-bottom: 20px; }
+        .ae-role-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+        .ae-role-btn { padding: 8px 18px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: #a0acbd; border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.3s; }
+        .ae-role-btn:hover { border-color: #6db3f2; color: #f0f4fa; }
+        .ae-role-btn.selected { background: #2b7be4; border-color: #2b7be4; color: #fff; }
+        .ae-form-panel { margin-top: 12px; }
+        .ae-form-role-title { font-size: 18px; font-weight: 600; color: #f0f4fa; margin-bottom: 12px; }
+        .ae-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .ae-field label { display: block; font-size: 13px; color: #a0acbd; margin-bottom: 4px; }
+        .ae-field input, .ae-field select, .ae-field textarea { width: 100%; padding: 10px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(255,255,255,0.04); color: #f0f4fa; font-size: 14px; outline: none; transition: 0.3s; }
+        .ae-field input:focus, .ae-field select:focus, .ae-field textarea:focus { border-color: #6db3f2; background: rgba(255,255,255,0.06); }
+        .ae-quantity-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+        .ae-status-options { display: flex; gap: 16px; margin-top: 6px; }
+        .ae-status-option { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #a0acbd; cursor: pointer; }
+        .ae-status-option input { accent-color: #2b7be4; }
+        .ae-generate-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #2b7be4, #1a5bb5); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 12px; }
+        .ae-generate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(43,123,228,0.4); }
+
+        /* MODAL (POPUP) SMART DESIGN */
+        .ae-modal-overlay { position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; }
+        .ae-modal-card { background: #ffffff; border-radius: 20px; padding: 30px; max-width: 900px; width: 100%; max-height: 90vh; position: relative; animation: modalFadeIn 0.3s ease-out; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .ae-close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #555; cursor: pointer; background: transparent; border: none; transition: 0.3s; }
+        .ae-close-btn:hover { color: #111; transform: rotate(90deg); }
+        .ae-preview-document { color: #222; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e0e0e0; }
+        .ae-action-buttons { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; flex-wrap: wrap; }
+        .ae-whatsapp-btn, .ae-print-btn, .ae-secondary-btn { padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
+        .ae-whatsapp-btn { background: #25D366; color: #fff; }
+        .ae-whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
+        .ae-print-btn { background: #2b7be4; color: #fff; }
+        .ae-print-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(43,123,228,0.4); }
+        .ae-secondary-btn { background: #e0e0e0; color: #333; }
+        .ae-secondary-btn:hover { background: #ccc; }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 700px) {
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; width: 100%; background: #080d1a; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 14px; }
+            .nav-links.show { display: flex; }
+            .menu-button { display: block; }
+            .ae-form-grid { grid-template-columns: 1fr; }
+            .ae-quantity-row { grid-template-columns: 1fr 1fr; }
+            .ae-quantity-row .ae-field:last-child { grid-column: 1 / -1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="brand">
+                <img src="assets/logo.png" alt="AMAL ENTERPRISES Logo" class="brand-logo">
+                <div class="brand-text">
+                    <h1>AMAL ENTERPRISES</h1>
+                    <p>Industrial Tools, Auto Spare Parts & Engineering Fasteners</p>
+                </div>
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="index.html#products">Products</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="#quotation">Quotation</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+            <div class="menu-button" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <section class="quotation-section" id="quotation">
+        <h2 class="section-title" style="text-align:center; font-size:32px; font-weight:700; margin-bottom:12px; color:#f0f4fa;">Quotation Builder</h2>
+        <p style="text-align:center; font-size:14px; color:#7e8a9a; margin-bottom:30px;">Create, review, and share professional quotations <strong style="color:#6db3f2;">100% Free</strong></p>
+        <div id="quotationArea"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="margin-top:auto; padding:30px 24px; background:rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.04);">
+        <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
+            <div>
+                <div style="color:#5a6a7a; font-size:13px;">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;">
+                    <a href="#" style="color:#7e8a9a; font-size:12px; text-decoration:none; transition:0.3s;" onclick="alert('Disclaimer content here')">Disclaimer</a> |
+                    <a href="#" style="color:#7e8a9a; font-size:12px; text-decoration:none; transition:0.3s;" onclick="alert('Privacy Policy content here')">Privacy Policy</a> |
+                    <a href="#" style="color:#7e8a9a; font-size:12px; text-decoration:none; transition:0.3s;" onclick="alert('Terms & Conditions content here')">Terms & Conditions</a>
+                </div>
+            </div>
+            <div style="display:flex; gap:14px;">
+                <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- Mobile Menu ---
+        function toggleMenu() {
+            document.getElementById("navLinks").classList.toggle("show");
+        }
+        
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+        document.querySelectorAll(".nav-links a").forEach(link => {
+            link.addEventListener("click", function() {
+                document.getElementById("navLinks").classList.remove("show");
+            });
+        });
+
+        // --- COMPLETE QUOTATION SYSTEM (Smart Design) ---
+        (function() {
+            "use strict";
+
+            const COMPANY_NAME = "AMAL ENTERPRISES";
+            const COMPANY_TAGLINE = "Industrial Tools, Auto Spare Parts & Engineering Fasteners";
+            const ADMIN_WHATSAPP = "916296471636";
+            const ADMIN_EMAIL = "info@amalenterprises.in";
+            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5Laifn1XVxLbKUFriCzaOTj9gqNBFJWG4IPIV18Qa_bD2EWFC_nRFpG2_bi6qWXITqw/exec";
+            const API_TOKEN = "AmalQuotation2026_9x7Qm2";
+            let currentRole = "";
+
+            const PRODUCT_CATEGORIES = [
+                "Engineering Fasteners",
+                "Auto & Engineering Spare Parts",
+                "Industrial Hand & Power Tools",
+                "General Industrial Supplies",
+                "Other / Custom Product"
+            ];
+            const UNITS = ["piece", "set", "box", "kg", "metre", "dozen", "pair", "pack"];
+
+            function numberValue(v) { const n = Number.parseFloat(v); return Number.isFinite(n) && n >= 0 ? n : 0; }
+            function formatMoney(v) { return "₹" + numberValue(v).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+            function formatQuantity(v) { return numberValue(v).toLocaleString("en-IN", {maximumFractionDigits:6}); }
+            function getDate() { return new Date().toLocaleDateString("en-IN", {day:"2-digit", month:"short", year:"numeric"}); }
+            function escapeHTML(v) { return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+            function quotationNumber() { const now = new Date(); const date = now.getFullYear()+String(now.getMonth()+1).padStart(2,"0")+String(now.getDate()).padStart(2,"0"); const random = Math.floor(1000+Math.random()*9000); return "AE-"+date+"-"+random; }
+            function normalizeMobile(v) { let num = String(v||"").replace(/\D/g,""); if(num.length===10) return "91"+num; if(num.length===12 && num.startsWith("91")) return num; return ""; }
+            function openWhatsApp(recipient, message) { const mobile = normalizeMobile(recipient); if(!mobile) { alert("Please enter a valid 10 digit mobile number."); return; } window.open("https://wa.me/"+mobile+"?text="+encodeURIComponent(message), "_blank", "noopener"); }
+
+            function createQuotationSystem() {
+                const area = document.getElementById("quotationArea");
+                if(!area) return;
+                area.innerHTML = `
+                    <div class="ae-quotation-wrapper">
+                        <div class="ae-quotation-header">
+                            <div>
+                                <div class="ae-small-label">100% Free to Use</div>
+                                <h2>Create a Quotation</h2>
+                                <p>Select your role, fill in the product details, and share instantly. <strong style="color:#6db3f2;">No platform fees.</strong></p>
+                            </div>
+                        </div>
+                        <div class="ae-role-box">
+                            <div class="ae-field-label" style="font-size:14px; color:#a0acbd; margin-bottom:8px;">Choose Your Role</div>
+                            <div class="ae-role-buttons">
+                                <button type="button" class="ae-role-btn" data-role="buyer">I am Buyer</button>
+                                <button type="button" class="ae-role-btn" data-role="supplier">I am Supplier</button>
+                            </div>
+                        </div>
+                        <div class="ae-form-panel" id="aeFormPanel" hidden>
+                            <div class="ae-form-role-title" id="aeRoleTitle"></div>
+                            <div class="ae-form-grid">
+                                <div class="ae-field"><label>Name / Industry *</label><input id="aeName" type="text" placeholder="Enter your name or industry name"></div>
+                                <div class="ae-field"><label>WhatsApp Number *</label><input id="aeWhatsApp" type="tel" maxlength="10" placeholder="10-digit WhatsApp number"></div>
+                                <div class="ae-field"><label>Address *</label><input id="aeAddress" type="text" placeholder="Enter your address"></div>
+                                <div class="ae-field"><label>Email (Optional)</label><input id="aeEmail" type="email" placeholder="Email address"></div>
+                                <div class="ae-field"><label>Product Category *</label><select id="aeCategory"><option value="">Select Product Category</option>${PRODUCT_CATEGORIES.map(i => `<option value="${escapeHTML(i)}">${escapeHTML(i)}</option>`).join("")}</select></div>
+                                <div class="ae-field"><label>Product Name / Size *</label><input id="aeProduct" type="text" placeholder="e.g. M12 Bolt, #8 Screw, Tap Die Set"></div>
+                            </div>
+
+                            <div class="ae-field"><label>Specification / Material Grade *</label><textarea id="aeSpecification" rows="3" placeholder="e.g. SS304, High Tensile, Thread Size M12, Weight 2kg, Hardness HRC..."></textarea></div>
+                            <div class="ae-quantity-row">
+                                <div class="ae-field"><label>Quantity *</label><input id="aeQuantity" type="number" min="0.000001" step="any" placeholder="Quantity"></div>
+                                <div class="ae-field"><label>Unit *</label><select id="aeUnit"><option value="">Unit</option>${UNITS.map(u => `<option value="${escapeHTML(u)}">${escapeHTML(u)}</option>`).join("")}</select></div>
+                                <div class="ae-field"><label>Unit Price (₹) *</label><input id="aePrice" type="number" min="0" step="0.01" placeholder="Price per unit"></div>
+                            </div>
+                            <div style="margin:12px 0; font-size:18px; font-weight:600; text-align:right; color:#6db3f2;" id="aeLiveTotal">Estimated Total: ₹0.00</div>
+                            <div class="ae-status-section">
+                                <label style="font-size:14px; color:#a0acbd; margin-bottom:6px; display:block;">Quotation Status *</label>
+                                <div class="ae-status-options">
+                                    <label class="ae-status-option"><input type="radio" name="aeQuotationStatus" value="Final Quotation"> Final Quotation</label>
+                                    <label class="ae-status-option"><input type="radio" name="aeQuotationStatus" value="Negotiable"> Negotiable</label>
+                                </div>
+                            </div>
+                            <div id="aeNegotiationNote" style="display:none; background:rgba(255,200,50,0.1); border-left:3px solid #f0b040; padding:10px; border-radius:6px; color:#f0d080; font-size:14px; margin-bottom:12px;">Price and delivery terms are negotiable.</div>
+                            <button type="button" class="ae-generate-btn" id="aeGenerateBtn"><i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation</button>
+                            <div id="aeSaveStatus" style="margin-top:12px; text-align:center; font-size:14px; display:none;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="ae-modal-overlay" id="aeModal" hidden>
+                        <div class="ae-modal-card">
+                            <button class="ae-close-btn" id="aeCloseModal">×</button>
+                            <div class="ae-preview-document" id="aePreviewDocument"></div>
+                            <div class="ae-action-buttons" id="aeActionButtons"></div>
+                        </div>
+                    </div>
+                `;
+                bindEvents();
+            }
+
+            function bindEvents() {
+                document.querySelectorAll(".ae-role-btn").forEach(b => b.addEventListener("click", function() { selectRole(this.dataset.role); }));
+                document.getElementById("aeGenerateBtn").addEventListener("click", generateQuotation);
+                document.getElementById("aeCloseModal").addEventListener("click", closePreview);
+                document.getElementById("aeModal").addEventListener("click", function(e) { if (e.target === e.currentTarget) closePreview(); });
+                ["aeQuantity","aePrice","aeUnit"].forEach(id => {
+                    const el = document.getElementById(id);
+                    el.addEventListener("input", updateLiveCalculation);
+                    el.addEventListener("change", updateLiveCalculation);
+                });
+                document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(r => r.addEventListener("change", updateLiveCalculation));
+            }
+
+            function selectRole(role) {
+                currentRole = role;
+                document.querySelectorAll(".ae-role-btn").forEach(b => b.classList.toggle("selected", b.dataset.role === role));
+                const name = role === "buyer" ? "Buyer" : "Supplier";
+                document.getElementById("aeRoleTitle").textContent = name + " Quotation";
+                document.getElementById("aeFormPanel").hidden = false;
+            }
+
+            function updateLiveCalculation() {
+                const q = numberValue(document.getElementById("aeQuantity").value);
+                const p = numberValue(document.getElementById("aePrice").value);
+                document.getElementById("aeLiveTotal").textContent = "Estimated Total: " + formatMoney(q * p);
+                const sel = document.querySelector('input[name="aeQuotationStatus"]:checked');
+                document.getElementById("aeNegotiationNote").style.display = (sel && sel.value === "Negotiable") ? "block" : "none";
+            }
+
+            function getFormData() {
+                const status = document.querySelector('input[name="aeQuotationStatus"]:checked');
+                const q = numberValue(document.getElementById("aeQuantity").value);
+                const p = numberValue(document.getElementById("aePrice").value);
+                const w = document.getElementById("aeWhatsApp").value.replace(/\D/g, "").slice(0, 10);
+                return {
+                    role: currentRole,
+                    roleName: currentRole === "buyer" ? "Buyer" : "Supplier",
+                    name: document.getElementById("aeName").value.trim(),
+                    whatsapp: w,
+                    address: document.getElementById("aeAddress").value.trim(),
+                    email: document.getElementById("aeEmail").value.trim(),
+                    category: document.getElementById("aeCategory").value,
+                    product: document.getElementById("aeProduct").value.trim(),
+                    specification: document.getElementById("aeSpecification").value.trim(),
+                    quantity: q,
+                    unit: document.getElementById("aeUnit").value,
+                    price: p,
+                    total: q * p,
+                    status: status ? status.value : ""
+                };
+            }
+
+            function validateData(data) {
+                if (!data.role) { alert("Please select a role first."); return false; }
+                if (!data.name) { alert("Please enter your name or industry name."); return false; }
+                if (!/^[0-9]{10}$/.test(data.whatsapp)) { alert("Please enter a valid 10-digit WhatsApp number."); return false; }
+                if (!data.address) { alert("Please enter your address."); return false; }
+                if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { alert("Please enter a valid email or leave blank."); return false; }
+                if (!data.category) { alert("Please select a product category."); return false; }
+                if (!data.product) { alert("Please enter the product name or size."); return false; }
+                if (!(data.quantity > 0)) { alert("Please enter a valid quantity."); return false; }
+                if (!data.unit) { alert("Please select a unit."); return false; }
+                if (!(data.price > 0)) { alert("Please enter a valid unit price."); return false; }
+                if (!data.status) { alert("Please select a quotation status."); return false; }
+                return true;
+            }
+
+            function generateQuotation() {
+                if (!currentRole) { alert("Please select a role first."); return; }
+                const data = getFormData();
+                if (!validateData(data)) return;
+                const quoteNo = quotationNumber();
+                
+                showPreview(data, quoteNo);
+                
+                if (data.status === "Final Quotation") {
+                    saveFinalQuotation(data, quoteNo);
+                }
+            }
+
+            function showPreview(data, quoteNo) {
+                const box = document.getElementById("aePreviewDocument");
+                box.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid #dce2ea; padding-bottom:12px; margin-bottom:12px;">
+                        <div>
+                            <div style="font-size:22px; font-weight:700; color:#111a2a;">${COMPANY_NAME}</div>
+                            <div style="font-size:11px; color:#5a6a7a;">${COMPANY_TAGLINE}</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="font-size:16px;">QUOTATION</strong><br>
+                            <span style="font-size:12px; color:#5a6a7a;">${escapeHTML(quoteNo)}</span><br>
+                            <span style="font-size:12px; color:#5a6a7a;">${escapeHTML(getDate())}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size:14px; font-weight:600; color:#2b7be4; margin:8px 0 16px;">${escapeHTML(data.roleName)} Quotation</div>
+                    
+                    <!-- Buyer/Supplier Details (Top) -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; background:#f8f9fa; padding:12px; border-radius:8px;">
+                        <div><small style="font-size:11px; color:#5a6a7a;">Name / Industry</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.name)}</strong></div>
+                        <div><small style="font-size:11px; color:#5a6a7a;">WhatsApp</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.whatsapp)}</strong></div>
+                        <div><small style="font-size:11px; color:#5a6a7a;">Address</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.address)}</strong></div>
+                        ${data.email ? `<div><small style="font-size:11px; color:#5a6a7a;">Email</small><strong style="font-size:14px; color:#1a1a2e;">${escapeHTML(data.email)}</strong></div>` : ''}
+                    </div>
+                    
+                    <!-- Product Table -->
+                    <div style="border:1px solid #dce2ea; border-radius:8px; overflow:hidden; margin:12px 0;">
+                        <div style="background:#e4e9f0; font-weight:600; display:grid; grid-template-columns:2fr 1fr 1.5fr 1.5fr; padding:10px;">
+                            <span>Product</span><span>Qty</span><span>Unit Price</span><span>Total</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns:2fr 1fr 1.5fr 1.5fr; padding:10px; border-top:1px solid #dce2ea;">
+                            <span><small style="display:block; color:#5a6a7a;">${escapeHTML(data.category)}</small><strong>${escapeHTML(data.product)}</strong></span>
+                            <span>${formatQuantity(data.quantity)} ${escapeHTML(data.unit)}</span>
+                            <span>${formatMoney(data.price)} / ${escapeHTML(data.unit)}</span>
+                            <strong style="color:#2b7be4;">${formatMoney(data.total)}</strong>
+                        </div>
+                    </div>
+                    ${data.specification ? `<div style="margin:12px 0; padding:10px; background:#eef2f7; border-radius:6px;"><small style="display:block; color:#5a6a7a; margin-bottom:4px;">Specification / Grade</small><p style="margin:0; font-size:14px;">${escapeHTML(data.specification)}</p></div>` : ''}
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:12px; border-top:1px solid #dce2ea;">
+                        <div><small style="display:block; color:#5a6a7a;">Status</small><strong style="${data.status === 'Negotiable' ? 'color:#b87a2a;' : 'color:#1a8a4a;'}">${escapeHTML(data.status)}</strong></div>
+                        <div style="text-align:right;"><small style="display:block; color:#5a6a7a;">Total</small><strong style="font-size:20px; color:#111a2a;">${formatMoney(data.total)}</strong></div>
+                    </div>
+                    ${data.status === 'Negotiable' ? `<div style="background:#fdf3e0; border:1px solid #f0dbb8; padding:10px; border-radius:6px; font-size:13px; color:#7a5a2a; margin-top:12px;">Price is subject to negotiation and commercial discussion.</div>` : ''}
+                    
+                    <!-- AMAL ENTERPRISES Details (Bottom) + Without GST -->
+                    <div style="margin-top:20px; padding-top:12px; border-top:2px solid #dce2ea; text-align:center; font-size:13px; color:#5a6a7a;">
+                        <strong style="color:#111a2a;">${COMPANY_NAME}</strong><br>
+                        ${COMPANY_TAGLINE}<br>
+                        📞 <a href="tel:+${ADMIN_WHATSAPP}" style="color:#2b7be4;">+${ADMIN_WHATSAPP}</a> &nbsp;|&nbsp; ✉️ <a href="mailto:${ADMIN_EMAIL}" style="color:#2b7be4;">${ADMIN_EMAIL}</a>
+                    </div>
+                    
+                    <div style="margin-top:8px; text-align:center; font-size:13px; color:#777; font-style:italic;">
+                        * Without GST Quotation
+                    </div>
+                    
+                    <div style="margin-top:12px; padding:10px; background:#e8f0fe; border-radius:6px; border:1px solid #d0e0f0; text-align:center; font-size:13px; color:#1a5a8a;">
+                        <i class="fas fa-check-circle" style="color:#2b7be4;"></i> This quotation is 100% FREE to create. No platform fees applied.
+                    </div>
+                `;
+                createActionButtons(data, quoteNo);
+                document.getElementById("aeModal").hidden = false;
+                document.body.style.overflow = 'hidden';
+            }
+
+            function createActionButtons(data, quoteNo) {
+                const buttons = document.getElementById("aeActionButtons");
+                buttons.innerHTML = `
+                    <button class="ae-whatsapp-btn" id="aeWhatsAppBtn"><i class="fab fa-whatsapp" style="margin-right:6px;"></i> Share via WhatsApp</button>
+                    <button class="ae-print-btn" id="aePrintBtn"><i class="fas fa-print" style="margin-right:6px;"></i> Print / Download PDF</button>
+                    <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
+                `;
+                document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
+                    // Always send to AMAL ENTERPRISES WhatsApp
+                    let recipient = ADMIN_WHATSAPP;
+                    openWhatsApp(recipient, createWhatsAppMessage(data, quoteNo));
+                });
+                document.getElementById("aePrintBtn").addEventListener("click", function() {
+                    // Print the preview document
+                    const printContent = document.getElementById("aePreviewDocument").innerHTML;
+                    const win = window.open('', '_blank');
+                    win.document.write(`
+                        <html><head><title>Print Quotation</title>
+                        <style>body { font-family: Arial, sans-serif; padding: 20px; }</style>
+                        </head><body>${printContent}</body></html>
+                    `);
+                    win.document.close();
+                    win.print();
+                });
+                document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
+            }
+
+            function createWhatsAppMessage(data, quoteNo) {
+                let msg = `*${COMPANY_NAME}*\n*Quotation*\n\nQuotation No: ${quoteNo}\nDate: ${getDate()}\n\nRole: ${data.roleName}\n\nName/Industry: ${data.name}\nWhatsApp: ${data.whatsapp}\nAddress: ${data.address}`;
+                if (data.email) msg += `\nEmail: ${data.email}`;
+                msg += `\n\nProduct Category: ${data.category}\nProduct: ${data.product}\nQuantity: ${formatQuantity(data.quantity)} ${data.unit}\nUnit Price: ${formatMoney(data.price)} / ${data.unit}\nEstimated Total: ${formatMoney(data.total)}\n\nQuotation Status: *${data.status}*`;
+                if (data.specification) msg += `\n\nDescription / Specification:\n${data.specification}`;
+                if (data.status === "Negotiable") msg += `\n\nPrice is negotiable. Commercial terms can be discussed.`;
+                if (data.roleName === "Supplier") msg += `\n\nPlease share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.`;
+                if (data.roleName === "Buyer") msg += `\n\nPlease confirm the requirement and commercial terms.`;
+                msg += `\n\n✅ This quotation was created 100% FREE on AMAL ENTERPRISES platform.`;
+                return msg;
+            }
+
+            function saveFinalQuotation(data, quoteNo) {
+                if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
+                    return; 
+                }
+                
+                const payload = {
+                    token: API_TOKEN,
+                    action: "saveFinalQuotation",
+                    quoteNo: quoteNo,
+                    date: getDate(),
+                    role: data.roleName,
+                    name: data.name,
+                    whatsapp: data.whatsapp,
+                    address: data.address,
+                    email: data.email || "",
+                    category: data.category,
+                    product: data.product,
+                    specification: data.specification || "",
+                    quantity: data.quantity,
+                    unit: data.unit,
+                    price: data.price,
+                    total: data.total,
+                    status: data.status
+                };
+                
+                fetch(APPS_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(payload).toString()
+                }).catch(() => {});
+            }
+
+            function closePreview() {
+                document.getElementById("aeModal").hidden = true;
+                document.body.style.overflow = '';
+            }
+
+            if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", createQuotationSystem);
+            else createQuotationSystem();
+        })();
+    </script>
+</body>
+</html>
