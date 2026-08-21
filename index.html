@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>AMAL ENTERPRISES | Industrial Tools, Auto Spare Parts & Engineering Fasteners</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/logo.png">
-    
-    <link rel="stylesheet" href="style.css?v=2.6">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
     <style>
-        /* ============ SINGLE FILE STYLES ============ */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html { scroll-behavior:smooth; }
+        /* ============ GLOBAL RESET & BASE ============ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #080d1a;
@@ -23,18 +28,30 @@
             display: flex;
             flex-direction: column;
         }
-        
-        a { text-decoration: none !important; }
-        
-        /* HEADER */
+        a {
+            text-decoration: none !important;
+        }
+
+        /* ============ HEADER ============ */
         header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 68px;
-            z-index: 1000; background: rgba(8, 13, 26, 0.95);
-            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            z-index: 1000;
+            background: rgba(8, 13, 26, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
         .navbar {
-            max-width: 1200px; height: 100%; margin: 0 auto; padding: 0 16px;
-            display: flex; align-items: center; justify-content: space-between;
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         .brand {
             display: flex;
@@ -67,193 +84,562 @@
             margin: 0;
             line-height: 1.2;
         }
-        .nav-links { display: flex; align-items: center; gap: 18px; }
-        .nav-links a { color: #b0b9c5; font-size: 13px; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: #6db3f2; }
-        .menu-button { display: none; cursor: pointer; font-size: 22px; color: #b0b9c5; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .nav-links a {
+            color: #b0b9c5;
+            font-size: 13px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #6db3f2;
+        }
+        .menu-button {
+            display: none;
+            cursor: pointer;
+            font-size: 22px;
+            color: #b0b9c5;
+        }
 
-        /* HERO - Smaller Gap & Tools Related Background */
+        /* ============ HERO ============ */
         .hero {
-            margin-top: 68px; min-height: 70vh; display: flex; align-items: center;
-            justify-content: center; position: relative; overflow: hidden;
+            margin-top: 68px;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
             background: linear-gradient(135deg, rgba(8, 13, 26, 0.80) 0%, rgba(13, 26, 46, 0.70) 50%, rgba(8, 13, 26, 0.90) 100%),
-                        url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80');
+                url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
             padding: 10px 0;
         }
         .hero-glow {
-            position: absolute; width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(47,128,237,0.15) 0%, transparent 70%);
-            top: -200px; right: -100px; border-radius: 50%; pointer-events: none;
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(47, 128, 237, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -100px;
+            border-radius: 50%;
+            pointer-events: none;
         }
         .hero-content {
-            max-width: 1200px; padding: 20px 24px; position: relative;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+            max-width: 1200px;
+            padding: 20px 24px;
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
             width: 100%;
         }
         .hero-text h2 {
-            font-size: 38px; font-weight: 700; line-height: 1.2;
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1.2;
             background: linear-gradient(135deg, #ffffff 0%, #6db3f2 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 16px;
         }
-        .hero-text p { font-size: 16px; line-height: 1.7; color: #a0acbd; max-width: 480px; margin-bottom: 28px; }
+        .hero-text p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #a0acbd;
+            max-width: 480px;
+            margin-bottom: 28px;
+        }
         .btn {
-            display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px;
-            border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
             transition: 0.3s;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #2b7be4, #1a5bb5); color: #fff;
-            box-shadow: 0 4px 20px rgba(43,123,228,0.35);
+            background: linear-gradient(135deg, #2b7be4, #1a5bb5);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(43, 123, 228, 0.35);
         }
-        .btn-primary:hover { transform: translateY(-2px); }
-        .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: #e3e8ef; }
-        .btn-outline:hover { border-color: #6db3f2; color: #6db3f2; }
-        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e3e8ef;
+        }
+        .btn-outline:hover {
+            border-color: #6db3f2;
+            color: #6db3f2;
+        }
+
         .hero-card {
-            background: rgba(255,255,255,0.04); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
-        .hero-card-item { display: flex; flex-direction: column; gap: 4px; }
-        .hero-card-item i { font-size: 24px; color: #6db3f2; margin-bottom: 6px; }
-        .hero-card-item span { font-size: 13px; color: #a0acbd; }
-        .hero-card-item strong { font-size: 15px; color: #f0f4fa; }
+        .hero-card-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .hero-card-item i {
+            font-size: 24px;
+            color: #6db3f2;
+            margin-bottom: 6px;
+        }
+        .hero-card-item span {
+            font-size: 13px;
+            color: #a0acbd;
+        }
+        .hero-card-item strong {
+            font-size: 15px;
+            color: #f0f4fa;
+        }
 
-        /* PRODUCTS */
-        .products-section { padding: 60px 24px; max-width: 1200px; margin: 0 auto; }
-        .section-title { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 12px; color: #f0f4fa; }
-        .section-subtitle { text-align: center; font-size: 14px; color: #7e8a9a; margin-bottom: 30px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        /* ============ PRODUCTS ============ */
+        .products-section {
+            padding: 60px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #f0f4fa;
+        }
+        .section-subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #7e8a9a;
+            margin-bottom: 30px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
         .product-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px; padding: 24px; text-align: center; transition: 0.3s;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: 0.3s;
         }
-        .product-card:hover { transform: translateY(-4px); border-color: rgba(109,179,242,0.3); }
-        .product-card i { font-size: 36px; color: #6db3f2; margin-bottom: 12px; }
-        .product-card h3 { font-size: 17px; margin-bottom: 6px; color: #f0f4fa; }
-        .product-card p { font-size: 13px; color: #7e8a9a; line-height: 1.5; }
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(109, 179, 242, 0.3);
+        }
+        .product-card i {
+            font-size: 36px;
+            color: #6db3f2;
+            margin-bottom: 12px;
+        }
+        .product-card h3 {
+            font-size: 17px;
+            margin-bottom: 6px;
+            color: #f0f4fa;
+        }
+        .product-card p {
+            font-size: 13px;
+            color: #7e8a9a;
+            line-height: 1.5;
+        }
 
-        /* STEPS */
-        .steps-section { padding: 60px 24px; max-width: 1200px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.05); }
-        .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; }
-        .step-card { text-align: center; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); }
-        .step-card .step-number { font-size: 11px; font-weight: 700; color: #6db3f2; letter-spacing: 1px; margin-bottom: 6px; }
-        .step-card i { font-size: 28px; color: #6db3f2; margin-bottom: 10px; }
-        .step-card h4 { color: #f0f4fa; font-size: 16px; margin-bottom: 4px; }
-        .step-card p { color: #7e8a9a; font-size: 13px; line-height: 1.4; }
+        /* ============ STEPS ============ */
+        .steps-section {
+            padding: 60px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .step-card {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .step-card .step-number {
+            font-size: 11px;
+            font-weight: 700;
+            color: #6db3f2;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .step-card i {
+            font-size: 28px;
+            color: #6db3f2;
+            margin-bottom: 10px;
+        }
+        .step-card h4 {
+            color: #f0f4fa;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .step-card p {
+            color: #7e8a9a;
+            font-size: 13px;
+            line-height: 1.4;
+        }
 
-        /* CONTACT */
-        .contact-section { padding: 60px 24px; max-width: 1200px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.05); }
-        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
+        /* ============ QUOTATION TEASER (on index) ============ */
+        .quotation-teaser {
+            padding: 60px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+        .quotation-teaser .btn-primary {
+            font-size: 18px;
+            padding: 14px 40px;
+        }
+
+        /* ============ CONTACT ============ */
+        .contact-section {
+            padding: 60px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
         .contact-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px; padding: 24px; text-align: center; transition: 0.3s;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: 0.3s;
         }
-        .contact-card:hover { border-color: rgba(109,179,242,0.3); transform: translateY(-4px); }
-        .contact-icon { font-size: 34px; color: #6db3f2; margin-bottom: 10px; }
-        .contact-card h4 { font-size: 17px; color: #f0f4fa; margin-bottom: 4px; }
-        .contact-card p { font-size: 14px; color: #a0acbd; line-height: 1.5; }
+        .contact-card:hover {
+            border-color: rgba(109, 179, 242, 0.3);
+            transform: translateY(-4px);
+        }
+        .contact-icon {
+            font-size: 34px;
+            color: #6db3f2;
+            margin-bottom: 10px;
+        }
+        .contact-card h4 {
+            font-size: 17px;
+            color: #f0f4fa;
+            margin-bottom: 4px;
+        }
+        .contact-card p {
+            font-size: 14px;
+            color: #a0acbd;
+            line-height: 1.5;
+        }
 
-        /* FOOTER */
-        footer { margin-top: auto; padding: 30px 24px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.04); }
-        .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-        .footer-inner .copyright { color: #5a6a7a; font-size: 13px; }
-        .legal-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
-        .legal-links a { color: #7e8a9a; font-size: 12px; text-decoration: none; transition: 0.3s; }
-        .legal-links a:hover { color: #6db3f2; }
-        .social-links { display: flex; gap: 14px; }
-        .social-links a { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #a0acbd; text-decoration: none; transition: 0.3s; }
-        .social-links a:hover { border-color: #6db3f2; color: #6db3f2; }
+        /* ============ FOOTER ============ */
+        footer {
+            margin-top: auto;
+            padding: 30px 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .footer-inner .copyright {
+            color: #5a6a7a;
+            font-size: 13px;
+        }
+        .legal-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .legal-links a {
+            color: #7e8a9a;
+            font-size: 12px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .legal-links a:hover {
+            color: #6db3f2;
+        }
+        .social-links {
+            display: flex;
+            gap: 14px;
+        }
+        .social-links a {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #a0acbd;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .social-links a:hover {
+            border-color: #6db3f2;
+            color: #6db3f2;
+        }
 
-        /* LEGAL MODAL */
-        .legal-modal-overlay { position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; }
-        .legal-modal-card { background: #111a2a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 28px; max-width: 600px; width: 100%; max-height: 90vh; position: relative; animation: modalFadeIn 0.3s ease-out; overflow-y: auto; }
-        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .legal-close-btn { position: absolute; top: 12px; right: 16px; font-size: 28px; color: #a0acbd; cursor: pointer; background: transparent; border: none; transition: 0.3s; }
-        .legal-close-btn:hover { color: #f0f4fa; transform: rotate(90deg); }
-        .legal-modal-card h3 { color: #f0f4fa; margin-bottom: 12px; font-size: 20px; }
-        .legal-modal-card p, .legal-modal-card li { color: #a0acbd; line-height: 1.7; font-size: 14px; }
+        /* ============ LEGAL MODAL ============ */
+        .legal-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .legal-modal-card {
+            background: #111a2a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            position: relative;
+            animation: modalFadeIn 0.3s ease-out;
+            overflow-y: auto;
+        }
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .legal-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 28px;
+            color: #a0acbd;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            transition: 0.3s;
+        }
+        .legal-close-btn:hover {
+            color: #f0f4fa;
+            transform: rotate(90deg);
+        }
+        .legal-modal-card h3 {
+            color: #f0f4fa;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+        .legal-modal-card p,
+        .legal-modal-card li {
+            color: #a0acbd;
+            line-height: 1.7;
+            font-size: 14px;
+        }
 
-        /* MOBILE RESPONSIVE */
-        @media (max-width: 900px) { .hero-content { grid-template-columns: 1fr; gap: 24px; } .hero-card { grid-template-columns: 1fr 1fr; } }
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 900px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .hero-card {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
         @media (max-width: 700px) {
-            .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; width: 100%; background: #080d1a; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 14px; }
-            .nav-links.show { display: flex; }
-            .menu-button { display: block; }
-            .hero-text h2 { font-size: 28px; }
-            .hero-card { grid-template-columns: 1fr; }
-            .footer-inner { flex-direction: column; text-align: center; }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                width: 100%;
+                background: #080d1a;
+                padding: 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+                gap: 14px;
+            }
+            .nav-links.show {
+                display: flex;
+            }
+            .menu-button {
+                display: block;
+            }
+            .hero-text h2 {
+                font-size: 28px;
+            }
+            .hero-card {
+                grid-template-columns: 1fr;
+            }
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- ============ HEADER ============ -->
     <header>
         <div class="navbar">
-            <a href="#home" class="brand">
-                <img src="assets/logo.png" alt="AMAL ENTERPRISES Logo" class="brand-logo">
+            <a href="index.html" class="brand">
+                <img src="assets/logo.png" alt="AMAL ENTERPRISES Logo" class="brand-logo" />
                 <div class="brand-text">
                     <h1>AMAL ENTERPRISES</h1>
-                    <p>Industrial Tools, Auto Spare Parts & Engineering Fasteners</p>
+                    <p>Industrial Tools, Auto Spare Parts &amp; Engineering Fasteners</p>
                 </div>
             </a>
             <nav class="nav-links" id="navLinks">
-                <a href="#home">Home</a>
-                <a href="#products">Products</a>
-                <a href="#how-it-works">How It Works</a>
-                <a href="#quotation">Quotation</a>
-                <a href="#contact">Contact</a>
+                <a href="index.html#home">Home</a>
+                <a href="index.html#products">Products</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="quotation.html">Quotation</a>
+                <a href="index.html#contact">Contact</a>
             </nav>
             <div class="menu-button" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
         </div>
     </header>
 
+    <!-- ============ HERO ============ -->
     <section class="hero" id="home">
         <div class="hero-glow"></div>
         <div class="hero-content">
             <div class="hero-text">
-                <h2>Premium Industrial Tools &<br>Auto Spare Parts Sourcing</h2>
-                <p>AMAL ENTERPRISES connects workshops, industries, and garages with high-quality engineering fasteners, auto spare parts, and industrial tools. <strong style="color:#6db3f2;">Create quotations absolutely FREE.</strong></p>
+                <h2>Premium Industrial Tools &amp;<br />Auto Spare Parts Sourcing</h2>
+                <p>
+                    AMAL ENTERPRISES connects workshops, industries, and garages with high-quality
+                    engineering fasteners, auto spare parts, and industrial tools.
+                    <strong style="color:#6db3f2;">Create quotations absolutely FREE.</strong>
+                </p>
                 <a href="quotation.html" class="btn btn-primary"><i class="fas fa-file-invoice"></i> Create Free Quotation</a>
                 <a href="#products" class="btn btn-outline"><i class="fas fa-box"></i> Explore Products</a>
             </div>
             <div class="hero-card">
                 <div class="hero-card-item"><i class="fas fa-handshake"></i><span>Business Model</span><strong>Commission-Based</strong></div>
-                <div class="hero-card-item"><i class="fas fa-users"></i><span>Roles</span><strong>Buyer / Supplier / Admin</strong></div>
+                <div class="hero-card-item"><i class="fas fa-users"></i><span>Roles</span><strong>Buyer / Supplier</strong></div>
                 <div class="hero-card-item"><i class="fab fa-whatsapp"></i><span>Communication</span><strong>WhatsApp Integrated</strong></div>
                 <div class="hero-card-item"><i class="fas fa-file-invoice"></i><span>Quotation</span><strong>100% Free to Create</strong></div>
             </div>
         </div>
     </section>
 
+    <!-- ============ PRODUCTS ============ -->
     <section class="products-section" id="products">
         <h2 class="section-title">Our Product Range</h2>
         <p class="section-subtitle">High-quality industrial supplies, fasteners, and engineering spare parts</p>
         <div class="product-grid">
-            <div class="product-card"><i class="fas fa-bolt"></i><h3>Engineering Fasteners</h3><p>High-tensile nuts, bolts, screws, washers, rivets, and all types of industrial fastening solutions.</p></div>
-            
-            <div class="product-card"><i class="fas fa-cogs"></i><h3>Auto & Engineering Spare Parts</h3><p>Bearings, bushings, gears, filters, belts, and general mechanical replacement parts for vehicles and machinery.</p></div>
-            
-            <div class="product-card"><i class="fas fa-wrench"></i><h3>Industrial Hand & Power Tools</h3><p>Wrenches, screwdrivers, drills, taps, dies, cutting tools, and essential workshop equipment.</p></div>
-            
-            <div class="product-card"><i class="fas fa-tools"></i><h3>General Industrial Supplies</h3><p>Abrasives, safety gear, lubricants, adhesives, and all workshop consumables for daily industrial use.</p></div>
+            <div class="product-card">
+                <i class="fas fa-bolt"></i>
+                <h3>Engineering Fasteners</h3>
+                <p>High-tensile nuts, bolts, screws, washers, rivets, and all types of industrial fastening solutions.</p>
+            </div>
+            <div class="product-card">
+                <i class="fas fa-cogs"></i>
+                <h3>Auto &amp; Engineering Spare Parts</h3>
+                <p>Bearings, bushings, gears, filters, belts, and general mechanical replacement parts for vehicles and machinery.</p>
+            </div>
+            <div class="product-card">
+                <i class="fas fa-wrench"></i>
+                <h3>Industrial Hand &amp; Power Tools</h3>
+                <p>Wrenches, screwdrivers, drills, taps, dies, cutting tools, and essential workshop equipment.</p>
+            </div>
+            <div class="product-card">
+                <i class="fas fa-tools"></i>
+                <h3>General Industrial Supplies</h3>
+                <p>Abrasives, safety gear, lubricants, adhesives, and all workshop consumables for daily industrial use.</p>
+            </div>
         </div>
     </section>
 
+    <!-- ============ STEPS ============ -->
     <section class="steps-section" id="how-it-works">
         <h2 class="section-title">How It Works</h2>
         <p class="section-subtitle">Create a free quotation in 4 easy steps</p>
         <div class="steps-grid">
-            <div class="step-card"><div class="step-number">STEP 01</div><i class="fas fa-user-tag"></i><h4>Select Role</h4><p>Choose Buyer, Supplier, or Admin.</p></div>
-            <div class="step-card"><div class="step-number">STEP 02</div><i class="fas fa-edit"></i><h4>Fill Product Details</h4><p>Enter product name, material grade, quantity, and price.</p></div>
-            <div class="step-card"><div class="step-number">STEP 03</div><i class="fas fa-file-invoice"></i><h4>Generate Quotation</h4><p>Preview with Final or Negotiable status.</p></div>
-            <div class="step-card"><div class="step-number">STEP 04</div><i class="fab fa-whatsapp"></i><h4>Share & Deliver</h4><p>AMAL ENTERPRISES connects you with the right supplier and ensures delivery.</p></div>
+            <div class="step-card">
+                <div class="step-number">STEP 01</div>
+                <i class="fas fa-user-tag"></i>
+                <h4>Select Role</h4>
+                <p>Choose Buyer or Supplier.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">STEP 02</div>
+                <i class="fas fa-edit"></i>
+                <h4>Fill Product Details</h4>
+                <p>Enter product name, material grade, quantity, and price.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">STEP 03</div>
+                <i class="fas fa-file-invoice"></i>
+                <h4>Generate Quotation</h4>
+                <p>Preview with Final or Negotiable status.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">STEP 04</div>
+                <i class="fab fa-whatsapp"></i>
+                <h4>Share &amp; Deliver</h4>
+                <p>AMAL ENTERPRISES connects you with the right supplier and ensures delivery.</p>
+            </div>
         </div>
     </section>
 
+    <!-- ============ QUOTATION TEASER (above contact) ============ -->
+    <section class="quotation-teaser" id="quotation">
+        <h2 class="section-title">Quotation Builder</h2>
+        <p class="section-subtitle">Create, review, and share professional quotations <strong style="color:#6db3f2;">100% Free</strong></p>
+        <a href="quotation.html" class="btn btn-primary" style="font-size:18px; padding:14px 40px;">
+            <i class="fas fa-file-invoice"></i> Launch Quotation Builder
+        </a>
+        <p style="margin-top:12px; color:#7e8a9a; font-size:14px;">Opens the dedicated quotation page – you can update it separately anytime.</p>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
     <section class="contact-section" id="contact">
         <h2 class="section-title">Connect With Us</h2>
         <p class="section-subtitle">Have questions or need a custom quotation? Reach out to us.</p>
@@ -279,6 +665,7 @@
         </div>
     </section>
 
+    <!-- ============ FOOTER ============ -->
     <footer>
         <div class="footer-inner">
             <div>
@@ -286,7 +673,7 @@
                 <div class="legal-links">
                     <a href="#" onclick="openLegalModal('disclaimer')">Disclaimer</a> |
                     <a href="#" onclick="openLegalModal('privacy')">Privacy Policy</a> |
-                    <a href="#" onclick="openLegalModal('terms')">Terms & Conditions</a>
+                    <a href="#" onclick="openLegalModal('terms')">Terms &amp; Conditions</a>
                 </div>
             </div>
             <div class="social-links">
@@ -297,50 +684,50 @@
         </div>
     </footer>
 
-    <!-- LEGAL MODALS -->
+    <!-- ============ LEGAL MODAL ============ -->
     <div id="legalModal" class="legal-modal-overlay">
         <div class="legal-modal-card">
             <button class="legal-close-btn" onclick="closeLegalModal()">&times;</button>
             <h3 id="legalModalTitle">Legal Policy</h3>
-            <div id="legalModalContent">
-                <p>Loading...</p>
-            </div>
+            <div id="legalModalContent"><p>Loading…</p></div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <!-- ============ JAVASCRIPT ============ -->
+    <!-- ============================================================ -->
     <script>
         // --- Mobile Menu ---
         function toggleMenu() {
             document.getElementById("navLinks").classList.toggle("show");
         }
-        
+
         document.getElementById("currentYear").textContent = new Date().getFullYear();
 
-        document.querySelectorAll(".nav-links a").forEach(link => {
+        document.querySelectorAll(".nav-links a").forEach(function(link) {
             link.addEventListener("click", function() {
                 document.getElementById("navLinks").classList.remove("show");
             });
         });
 
-        // --- Legal Modal Contents ---
-        const legalContents = {
+        // --- Legal Modal ---
+        var legalContents = {
             disclaimer: {
                 title: "Disclaimer",
-                content: `<p><strong>General Information</strong></p><p>The information provided by AMAL ENTERPRISES is for general informational purposes only. We make no representation or warranty of any kind regarding the accuracy, adequacy, validity, or completeness of any information on the site.</p><br><p><strong>Limitation of Liability</strong></p><p>In no event shall AMAL ENTERPRISES be liable for any direct, indirect, incidental, or consequential damages arising out of your use of this website.</p>`
+                content: '<p><strong>General Information</strong></p><p>The information provided by AMAL ENTERPRISES is for general informational purposes only. We make no representation or warranty of any kind regarding the accuracy, adequacy, validity, or completeness of any information on the site.</p><br><p><strong>Limitation of Liability</strong></p><p>In no event shall AMAL ENTERPRISES be liable for any direct, indirect, incidental, or consequential damages arising out of your use of this website.</p>'
             },
             privacy: {
                 title: "Privacy Policy",
-                content: `<p><strong>Information We Collect</strong></p><p>We collect your name, company, email, and phone number when you use our quotation system.</p><br><p><strong>How We Use Your Information</strong></p><p>We use it to connect you with buyers/suppliers and improve our services. We do not sell or trade your data.</p>`
+                content: '<p><strong>Information We Collect</strong></p><p>We collect your name, company, email, and phone number when you use our quotation system.</p><br><p><strong>How We Use Your Information</strong></p><p>We use it to connect you with buyers/suppliers and improve our services. We do not sell or trade your data.</p>'
             },
             terms: {
                 title: "Terms & Conditions",
-                content: `<p><strong>Acceptance of Terms</strong></p><p>By using this website, you agree to these terms. AMAL ENTERPRISES acts as a facilitator and does not guarantee product quality or delivery.</p><br><p><strong>User Responsibilities</strong></p><p>Users are responsible for the accuracy of the information they provide.</p>`
+                content: '<p><strong>Acceptance of Terms</strong></p><p>By using this website, you agree to these terms. AMAL ENTERPRISES acts as a facilitator and does not guarantee product quality or delivery.</p><br><p><strong>User Responsibilities</strong></p><p>Users are responsible for the accuracy of the information they provide.</p>'
             }
         };
 
         function openLegalModal(type) {
-            const modal = document.getElementById("legalModal");
+            var modal = document.getElementById("legalModal");
             document.getElementById("legalModalTitle").textContent = legalContents[type].title;
             document.getElementById("legalModalContent").innerHTML = legalContents[type].content;
             modal.style.display = "flex";
