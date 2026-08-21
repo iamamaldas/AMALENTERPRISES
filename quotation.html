@@ -432,39 +432,79 @@
                 try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
             }
 
-            // --- Google Sheet Save ---
+            // --- Google Sheet Save (JSONP: works reliably from a static Google Site) ---
             function saveToGoogleSheet(data, quoteNo) {
-                if (!APPS_SCRIPT_URL) {
-                    console.warn("Apps Script URL not configured");
-                    return;
-                }
-                const params = new URLSearchParams({
-                    token: API_TOKEN,
-                    action: "saveQuotation",
-                    quoteNo: quoteNo,
-                    date: getDate(),
-                    role: data.roleName,
-                    name: data.name,
-                    whatsapp: data.whatsapp,
-                    address: data.address,
-                    email: data.email || "",
-                    category: data.category,
-                    product: data.product,
-                    specification: data.specification || "",
-                    quantity: data.quantity,
-                    unit: data.unit,
-                    price: data.price,
-                    total: data.total,
-                    status: data.status,
-                    deliveryDate: data.deliveryDate || "",
-                    paymentTerms: data.paymentTerms || "",
-                    gstStatus: data.gstStatus || ""
+                return new Promise((resolve, reject) => {
+                    if (!APPS_SCRIPT_URL) {
+                        reject(new Error("Google Apps Script URL is not configured."));
+                        return;
+                    }
+
+                    const callbackName = "amalSheetCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+                    const script = document.createElement("script");
+                    let finished = false;
+
+                    const cleanup = () => {
+                        if (script.parentNode) script.parentNode.removeChild(script);
+                        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+                    };
+
+                    const timer = setTimeout(() => {
+                        if (finished) return;
+                        finished = true;
+                        cleanup();
+                        reject(new Error("Google Sheet server did not respond. Please check the Apps Script deployment."));
+                    }, 15000);
+
+                    window[callbackName] = function(result) {
+                        if (finished) return;
+                        finished = true;
+                        clearTimeout(timer);
+                        cleanup();
+
+                        if (result && result.ok) {
+                            resolve(result);
+                        } else {
+                            reject(new Error((result && result.message) || "Google Sheet save failed."));
+                        }
+                    };
+
+                    const params = new URLSearchParams({
+                        token: API_TOKEN,
+                        action: "saveQuotation",
+                        callback: callbackName,
+                        quoteNo: quoteNo || "",
+                        date: getDate(),
+                        role: data.roleName || "",
+                        name: data.name || "",
+                        whatsapp: data.whatsapp || "",
+                        address: data.address || "",
+                        email: data.email || "",
+                        category: data.category || "",
+                        product: data.product || "",
+                        specification: data.specification || "",
+                        quantity: data.quantity || "",
+                        unit: data.unit || "",
+                        price: data.price || "",
+                        total: data.total || "",
+                        status: data.status || "",
+                        deliveryDate: data.deliveryDate || "",
+                        paymentTerms: data.paymentTerms || "",
+                        gstStatus: data.gstStatus || ""
+                    });
+
+                    script.src = APPS_SCRIPT_URL + "?" + params.toString();
+                    script.async = true;
+                    script.onerror = () => {
+                        if (finished) return;
+                        finished = true;
+                        clearTimeout(timer);
+                        cleanup();
+                        reject(new Error("Could not connect to Google Apps Script."));
+                    };
+
+                    document.head.appendChild(script);
                 });
-                
-                fetch(APPS_SCRIPT_URL + "?" + params.toString(), {
-                    method: "GET",
-                    mode: "no-cors"
-                }).catch(() => {});
             }
 
             // --- MAIN RENDER ---
@@ -636,22 +676,65 @@
                 return true;
             }
 
-            function generateQuotation() {
+            async function generateQuotation() {
                 if (!currentRole) { alert("Please select a role first."); return; }
+
                 const data = getFormData();
                 if (!validateData(data)) return;
-                
-                showPreview(data);
-                saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email, role: currentRole });
-                
-                // ✅ Save to Google Sheet
-                saveToGoogleSheet(data, data.quoteNo);
-                
+
                 const statusDiv = document.getElementById("aeSaveStatus");
-                statusDiv.style.display = "block";
-                statusDiv.style.color = "#6db3f2";
-                statusDiv.innerHTML = "✅ Quotation saved to Google Sheet successfully!";
-                setTimeout(() => { statusDiv.style.display = "none"; }, 5000);
+                const generateBtn = document.getElementById("aeGenerateBtn");
+
+                if (statusDiv) {
+                    statusDiv.style.display = "block";
+                    statusDiv.style.color = "#f0b040";
+                    statusDiv.textContent = "Saving quotation to Google Sheet...";
+                }
+                if (generateBtn) {
+                    generateBtn.disabled = true;
+                    generateBtn.style.opacity = "0.7";
+                    generateBtn.style.cursor = "wait";
+                }
+
+                saveUserData({
+                    mobile: data.whatsapp,
+                    name: data.name,
+                    address: data.address,
+                    email: data.email,
+                    role: currentRole
+                });
+
+                try {
+                    // Save first; show success only after Apps Script confirms the row was written.
+                    const result = await saveToGoogleSheet(data, data.quoteNo);
+                    showPreview(data);
+
+                    if (statusDiv) {
+                        statusDiv.style.display = "block";
+                        statusDiv.style.color = "#62d48b";
+                        statusDiv.textContent = result.replaced
+                            ? "✅ Quotation updated in Google Sheet."
+                            : "✅ Quotation saved to Google Sheet.";
+                    }
+                } catch (error) {
+                    console.error("Google Sheet save error:", error);
+                    if (statusDiv) {
+                        statusDiv.style.display = "block";
+                        statusDiv.style.color = "#ff7b7b";
+                        statusDiv.textContent = "❌ Google Sheet save failed: " + error.message;
+                    }
+                    alert("Quotation could not be saved to Google Sheet.\n\n" + error.message);
+                    return;
+                } finally {
+                    if (generateBtn) {
+                        generateBtn.disabled = false;
+                        generateBtn.style.opacity = "1";
+                        generateBtn.style.cursor = "pointer";
+                    }
+                    setTimeout(() => {
+                        if (statusDiv) statusDiv.style.display = "none";
+                    }, 7000);
+                }
             }
 
             // ===== PREVIEW =====
