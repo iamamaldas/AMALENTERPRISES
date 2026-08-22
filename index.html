@@ -245,6 +245,11 @@
             padding: 24px;
             text-align: center;
             transition: 0.3s;
+            min-height: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
         }
         .product-card:hover {
             transform: translateY(-4px);
@@ -366,58 +371,49 @@
         /* ============ FOOTER ============ */
         footer {
             margin-top: auto;
-            padding: 30px 24px;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 28px 24px 30px;
+            background: rgba(0, 0, 0, 0.30);
             border-top: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 0 0 32px 32px;
         }
         .footer-inner {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 8px 20px;
+            text-align: center;
         }
-        .footer-inner .copyright {
-            color: #5a6a7a;
-            font-size: 13px;
-        }
-        .legal-links {
+        .footer-left {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 6px;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
-        .legal-links a {
+        .footer-left .legal-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .footer-left .legal-links a {
             color: #7e8a9a;
             font-size: 12px;
             text-decoration: none;
             transition: 0.3s;
         }
-        .legal-links a:hover {
+        .footer-left .legal-links a:hover {
             color: #6db3f2;
         }
-        .social-links {
-            display: flex;
-            gap: 14px;
+        .footer-left .legal-links .sep {
+            color: #3a4a5a;
+            font-size: 12px;
         }
-        .social-links a {
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #a0acbd;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .social-links a:hover {
-            border-color: #6db3f2;
-            color: #6db3f2;
+        .footer-left .copyright {
+            color: #5a6a7a;
+            font-size: 13px;
         }
 
         /* ============ LEGAL MODAL ============ */
@@ -521,25 +517,21 @@
                 text-align: center;
             }
         }
-    
+
         /* ============ COMPACT HERO UPDATE ============ */
         .hero {
             min-height: 52vh;
         }
-
         .hero-content {
             padding-top: 14px;
             padding-bottom: 14px;
         }
-
         .hero-text p {
             margin-bottom: 20px;
         }
-
         .hero-card {
             padding: 20px;
         }
-
         @media (max-width: 768px) {
             .hero {
                 min-height: 46vh;
@@ -547,23 +539,19 @@
                 padding: 18px 0;
                 background-position: center;
             }
-
             .hero-content {
                 padding: 12px 18px;
                 gap: 24px;
             }
-
             .hero-text h2 {
                 font-size: 30px;
                 margin-bottom: 12px;
             }
-
             .hero-text p {
                 font-size: 14px;
                 line-height: 1.55;
                 margin-bottom: 18px;
             }
-
             .hero-card {
                 padding: 16px;
                 border-radius: 16px;
@@ -571,6 +559,42 @@
             }
         }
 
+        /* ============ FLOATING SHARE BUTTON ============ */
+        .ae-floating-share {
+            position: fixed;
+            right: 18px;
+            bottom: 22px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(17,26,42,0.92);
+            color: #f0f4fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            cursor: pointer;
+            z-index: 9998;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+            backdrop-filter: blur(10px);
+            transition: transform .25s ease, border-color .25s ease, background .25s ease;
+        }
+        .ae-floating-share:hover {
+            transform: translateY(-3px) scale(1.04);
+            border-color: #6db3f2;
+            background: rgba(17,26,42,0.98);
+        }
+        .ae-floating-share:active { transform: scale(.96); }
+        @media (max-width: 600px) {
+            .ae-floating-share {
+                width: 46px;
+                height: 46px;
+                right: 14px;
+                bottom: 16px;
+                font-size: 17px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -717,21 +741,24 @@
     <!-- ============ FOOTER ============ -->
     <footer>
         <div class="footer-inner">
-            <div>
-                <div class="copyright">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
+            <div class="footer-left">
                 <div class="legal-links">
-                    <a href="#" onclick="openLegalModal('disclaimer')">Disclaimer</a> |
-                    <a href="#" onclick="openLegalModal('privacy')">Privacy Policy</a> |
-                    <a href="#" onclick="openLegalModal('terms')">Terms &amp; Conditions</a>
+                    <a href="#" onclick="openLegalModal('disclaimer'); return false;">Disclaimer</a>
+                    <span class="sep">|</span>
+                    <a href="#" onclick="openLegalModal('privacy'); return false;">Privacy Policy</a>
+                    <span class="sep">|</span>
+                    <a href="#" onclick="openLegalModal('terms'); return false;">Terms &amp; Conditions</a>
                 </div>
-            </div>
-            <div class="social-links">
-                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <div class="copyright">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
             </div>
         </div>
     </footer>
+
+    <!-- FLOATING SHARE -->
+    <button class="ae-floating-share" type="button" id="aeFloatingShare"
+            aria-label="Share AMAL ENTERPRISES" title="Share">
+        <i class="fas fa-share-alt"></i>
+    </button>
 
     <!-- ============ LEGAL MODAL ============ -->
     <div id="legalModal" class="legal-modal-overlay">
@@ -791,6 +818,34 @@
         document.getElementById("legalModal").addEventListener("click", function(e) {
             if (e.target === this) closeLegalModal();
         });
+
+        // --- Floating Share ---
+        (function () {
+            var btn = document.getElementById("aeFloatingShare");
+            if (!btn) return;
+            btn.addEventListener("click", function () {
+                if (navigator.share) {
+                    navigator.share({
+                        title: "AMAL ENTERPRISES",
+                        text: "AMAL ENTERPRISES — Industrial Tools, Auto Spare Parts & Engineering Fasteners",
+                        url: window.location.href
+                    }).catch(function () {});
+                } else if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(window.location.href)
+                        .then(function () { alert("Share link copied."); })
+                        .catch(function () {});
+                } else {
+                    var t = document.createElement("input");
+                    t.value = window.location.href;
+                    document.body.appendChild(t);
+                    t.select();
+                    try { document.execCommand("copy"); } catch (e) {}
+                    document.body.removeChild(t);
+                    alert("Share link copied.");
+                }
+            });
+        })();
     </script>
+
 </body>
 </html>
