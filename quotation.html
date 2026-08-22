@@ -297,8 +297,12 @@
             animation: fadeIn 0.3s ease-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         .ae-modal-card {
             background: #ffffff;
@@ -313,8 +317,14 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
         @keyframes slideUp {
-            from { opacity: 0; transform: scale(0.95) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         .ae-close-btn {
             position: absolute;
@@ -371,8 +381,12 @@
             margin-bottom: 16px;
             font-size: 13px;
         }
-        .ae-preview-document .ae-meta-row .ae-meta-item span { color: #5a6a7a; }
-        .ae-preview-document .ae-meta-row .ae-meta-item strong { color: #111a2a; }
+        .ae-preview-document .ae-meta-row .ae-meta-item span {
+            color: #5a6a7a;
+        }
+        .ae-preview-document .ae-meta-row .ae-meta-item strong {
+            color: #111a2a;
+        }
         .ae-preview-document .ae-section-title {
             font-size: 16px;
             font-weight: 700;
@@ -443,8 +457,13 @@
             margin: 8px 0;
             font-size: 13px;
         }
-        .ae-preview-document .ae-detail-row .ae-detail-label { color: #5a6a7a; }
-        .ae-preview-document .ae-detail-row .ae-detail-value { color: #111a2a; font-weight: 500; }
+        .ae-preview-document .ae-detail-row .ae-detail-label {
+            color: #5a6a7a;
+        }
+        .ae-preview-document .ae-detail-row .ae-detail-value {
+            color: #111a2a;
+            font-weight: 500;
+        }
         .ae-preview-document .ae-terms-box {
             background: #f8f9fa;
             padding: 10px 16px;
@@ -496,8 +515,13 @@
             background: #fdf3e0;
             color: #b87a2a;
         }
-        .ae-preview-document .ae-status-total-row .ae-total-section { text-align: right; }
-        .ae-preview-document .ae-status-total-row .ae-total-section .ae-subtotal-label { font-size: 13px; color: #5a6a7a; }
+        .ae-preview-document .ae-status-total-row .ae-total-section {
+            text-align: right;
+        }
+        .ae-preview-document .ae-status-total-row .ae-total-section .ae-subtotal-label {
+            font-size: 13px;
+            color: #5a6a7a;
+        }
         .ae-preview-document .ae-status-total-row .ae-total-section .ae-grand-total {
             font-size: 22px;
             font-weight: 700;
@@ -517,8 +541,13 @@
             font-size: 13px;
             color: #5a6a7a;
         }
-        .ae-preview-document .ae-company-footer strong { color: #111a2a; }
-        .ae-preview-document .ae-company-footer a { color: #2b7be4; text-decoration: none; }
+        .ae-preview-document .ae-company-footer strong {
+            color: #111a2a;
+        }
+        .ae-preview-document .ae-company-footer a {
+            color: #2b7be4;
+            text-decoration: none;
+        }
         .ae-preview-document .ae-gst-note {
             margin-top: 6px;
             text-align: center;
@@ -536,7 +565,10 @@
             font-size: 13px;
             color: #1a5a8a;
         }
-        .ae-preview-document .ae-free-badge i { color: #2b7be4; margin-right: 6px; }
+        .ae-preview-document .ae-free-badge i {
+            color: #2b7be4;
+            margin-right: 6px;
+        }
 
         .ae-action-buttons {
             display: flex;
@@ -545,7 +577,9 @@
             justify-content: flex-end;
             flex-wrap: wrap;
         }
-        .ae-whatsapp-btn, .ae-print-btn, .ae-secondary-btn {
+        .ae-whatsapp-btn,
+        .ae-print-btn,
+        .ae-secondary-btn {
             padding: 10px 24px;
             border-radius: 8px;
             font-size: 14px;
@@ -557,12 +591,29 @@
             align-items: center;
             gap: 8px;
         }
-        .ae-whatsapp-btn { background: #25D366; color: #fff; }
-        .ae-whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
-        .ae-print-btn { background: #2b7be4; color: #fff; }
-        .ae-print-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(43, 123, 228, 0.4); }
-        .ae-secondary-btn { background: #e0e0e0; color: #333; }
-        .ae-secondary-btn:hover { background: #ccc; }
+        .ae-whatsapp-btn {
+            background: #25D366;
+            color: #fff;
+        }
+        .ae-whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+        .ae-print-btn {
+            background: #2b7be4;
+            color: #fff;
+        }
+        .ae-print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(43, 123, 228, 0.4);
+        }
+        .ae-secondary-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .ae-secondary-btn:hover {
+            background: #ccc;
+        }
 
         /* Toast notification */
         .ae-toast {
@@ -583,12 +634,24 @@
             animation: toastIn 0.4s ease-out;
             display: none;
         }
-        .ae-toast.success { border-color: #2b7be4; }
-        .ae-toast.error { border-color: #e74c3c; }
-        .ae-toast .ae-toast-icon { margin-right: 10px; }
+        .ae-toast.success {
+            border-color: #2b7be4;
+        }
+        .ae-toast.error {
+            border-color: #e74c3c;
+        }
+        .ae-toast .ae-toast-icon {
+            margin-right: 10px;
+        }
         @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(30px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         /* ============ FOOTER ============ */
@@ -597,7 +660,6 @@
             padding: 28px 24px 30px;
             background: rgba(0, 0, 0, 0.30);
             border-top: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 0 0 32px 32px;
         }
         .footer-inner {
             max-width: 1200px;
@@ -626,6 +688,7 @@
             font-size: 12px;
             text-decoration: none;
             transition: 0.3s;
+            cursor: pointer;
         }
         .footer-left .legal-links a:hover {
             color: #6db3f2;
@@ -647,8 +710,8 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.16);
-            background: rgba(17,26,42,0.92);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(17, 26, 42, 0.92);
             color: #f0f4fa;
             display: flex;
             align-items: center;
@@ -656,16 +719,18 @@
             font-size: 19px;
             cursor: pointer;
             z-index: 9998;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
             backdrop-filter: blur(10px);
             transition: transform .25s ease, border-color .25s ease, background .25s ease;
         }
         .ae-floating-share:hover {
             transform: translateY(-3px) scale(1.04);
             border-color: #6db3f2;
-            background: rgba(17,26,42,0.98);
+            background: rgba(17, 26, 42, 0.98);
         }
-        .ae-floating-share:active { transform: scale(.96); }
+        .ae-floating-share:active {
+            transform: scale(.96);
+        }
         @media (max-width: 600px) {
             .ae-floating-share {
                 width: 46px;
@@ -674,6 +739,67 @@
                 bottom: 16px;
                 font-size: 17px;
             }
+        }
+
+        /* ============ LEGAL MODAL — 完整样式 (与首页一致) ============ */
+        .legal-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .legal-modal-card {
+            background: #111a2a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            position: relative;
+            animation: modalFadeIn 0.3s ease-out;
+            overflow-y: auto;
+        }
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .legal-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 28px;
+            color: #a0acbd;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            transition: 0.3s;
+        }
+        .legal-close-btn:hover {
+            color: #f0f4fa;
+            transform: rotate(90deg);
+        }
+        .legal-modal-card h3 {
+            color: #f0f4fa;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+        .legal-modal-card p,
+        .legal-modal-card li {
+            color: #a0acbd;
+            line-height: 1.7;
+            font-size: 14px;
         }
 
         /* RESPONSIVE */
@@ -690,16 +816,39 @@
                 border-bottom: 1px solid rgba(255, 255, 255, 0.06);
                 gap: 14px;
             }
-            .nav-links.show { display: flex; }
-            .menu-button { display: block; }
-            .ae-form-grid { grid-template-columns: 1fr; }
-            .ae-quantity-row { grid-template-columns: 1fr 1fr; }
-            .ae-quantity-row .ae-field:last-child { grid-column: 1 / -1; }
-            .ae-preview-document .ae-buyer-grid { grid-template-columns: 1fr; }
-            .ae-preview-document .ae-product-table .ae-table-header { grid-template-columns: 1fr 0.8fr 1fr 1fr; font-size: 11px; }
-            .ae-preview-document .ae-product-table .ae-table-row { grid-template-columns: 1fr 0.8fr 1fr 1fr; font-size: 11px; }
-            .ae-action-buttons { flex-direction: column; }
-            .ae-action-buttons button { width: 100%; justify-content: center; }
+            .nav-links.show {
+                display: flex;
+            }
+            .menu-button {
+                display: block;
+            }
+            .ae-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .ae-quantity-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .ae-quantity-row .ae-field:last-child {
+                grid-column: 1 / -1;
+            }
+            .ae-preview-document .ae-buyer-grid {
+                grid-template-columns: 1fr;
+            }
+            .ae-preview-document .ae-product-table .ae-table-header {
+                grid-template-columns: 1fr 0.8fr 1fr 1fr;
+                font-size: 11px;
+            }
+            .ae-preview-document .ae-product-table .ae-table-row {
+                grid-template-columns: 1fr 0.8fr 1fr 1fr;
+                font-size: 11px;
+            }
+            .ae-action-buttons {
+                flex-direction: column;
+            }
+            .ae-action-buttons button {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -757,289 +906,384 @@
 
     <!-- FLOATING SHARE -->
     <button class="ae-floating-share" type="button" id="aeFloatingShare"
-            aria-label="Share AMAL ENTERPRISES" title="Share">
-        <i class="fas fa-share-alt"></i>
-    </button>
+    aria-label="Share AMAL ENTERPRISES" title="Share">
+    <i class="fas fa-share-alt"></i>
+</button>
 
-    <!-- ============ LEGAL MODAL ============ -->
-    <div id="legalModal" class="legal-modal-overlay">
-        <div class="legal-modal-card">
-            <button class="legal-close-btn" onclick="closeLegalModal()">&times;</button>
-            <h3 id="legalModalTitle">Legal Policy</h3>
-            <div id="legalModalContent"><p>Loading…</p></div>
-        </div>
+<!-- ============ LEGAL MODAL ============ -->
+<div id="legalModal" class="legal-modal-overlay">
+    <div class="legal-modal-card">
+        <button class="legal-close-btn" onclick="closeLegalModal()">&times;</button>
+        <h3 id="legalModalTitle">Legal Policy</h3>
+        <div id="legalModalContent"><p>Loading…</p></div>
     </div>
+</div>
 
-    <script>
-        // --- Mobile Menu ---
-        function toggleMenu() {
-            document.getElementById("navLinks").classList.toggle("show");
-        }
-        document.getElementById("currentYear").textContent = new Date().getFullYear();
-        document.querySelectorAll(".nav-links a").forEach(function(link) {
-            link.addEventListener("click", function() {
-                document.getElementById("navLinks").classList.remove("show");
-            });
+<script>
+    // --- Mobile Menu ---
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("show");
+    }
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+    document.querySelectorAll(".nav-links a").forEach(function(link) {
+        link.addEventListener("click", function() {
+            document.getElementById("navLinks").classList.remove("show");
         });
+    });
 
-        // --- Legal Modal ---
-        var legalContents = {
-            disclaimer: {
-                title: "Disclaimer",
-                content: '<p><strong>General Information</strong></p><p>The information provided by AMAL ENTERPRISES is for general informational purposes only. We make no representation or warranty of any kind regarding the accuracy, adequacy, validity, or completeness of any information on the site.</p><br><p><strong>Limitation of Liability</strong></p><p>In no event shall AMAL ENTERPRISES be liable for any direct, indirect, incidental, or consequential damages arising out of your use of this website.</p>'
-            },
-            privacy: {
-                title: "Privacy Policy",
-                content: '<p><strong>Information We Collect</strong></p><p>We collect your name, company, email, and phone number when you use our quotation system.</p><br><p><strong>How We Use Your Information</strong></p><p>We use it to connect you with buyers/suppliers and improve our services. We do not sell or trade your data.</p>'
-            },
-            terms: {
-                title: "Terms & Conditions",
-                content: '<p><strong>Acceptance of Terms</strong></p><p>By using this website, you agree to these terms. AMAL ENTERPRISES acts as a facilitator and does not guarantee product quality or delivery.</p><br><p><strong>User Responsibilities</strong></p><p>Users are responsible for the accuracy of the information they provide.</p>'
+    // --- Legal Modal ---
+    var legalContents = {
+        disclaimer: {
+            title: "Disclaimer",
+            content: '<p><strong>General Information</strong></p><p>The information provided by AMAL ENTERPRISES is for general informational purposes only. We make no representation or warranty of any kind regarding the accuracy, adequacy, validity, or completeness of any information on the site.</p><br><p><strong>Limitation of Liability</strong></p><p>In no event shall AMAL ENTERPRISES be liable for any direct, indirect, incidental, or consequential damages arising out of your use of this website.</p>'
+        },
+        privacy: {
+            title: "Privacy Policy",
+            content: '<p><strong>Information We Collect</strong></p><p>We collect your name, company, email, and phone number when you use our quotation system.</p><br><p><strong>How We Use Your Information</strong></p><p>We use it to connect you with buyers/suppliers and improve our services. We do not sell or trade your data.</p>'
+        },
+        terms: {
+            title: "Terms & Conditions",
+            content: '<p><strong>Acceptance of Terms</strong></p><p>By using this website, you agree to these terms. AMAL ENTERPRISES acts as a facilitator and does not guarantee product quality or delivery.</p><br><p><strong>User Responsibilities</strong></p><p>Users are responsible for the accuracy of the information they provide.</p>'
+        }
+    };
+
+    function openLegalModal(type) {
+        var modal = document.getElementById("legalModal");
+        document.getElementById("legalModalTitle").textContent = legalContents[type].title;
+        document.getElementById("legalModalContent").innerHTML = legalContents[type].content;
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeLegalModal() {
+        document.getElementById("legalModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    document.getElementById("legalModal").addEventListener("click", function(e) {
+        if (e.target === this) closeLegalModal();
+    });
+
+    // --- Floating Share ---
+    (function() {
+        var btn = document.getElementById("aeFloatingShare");
+        if (!btn) return;
+        btn.addEventListener("click", function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: "AMAL ENTERPRISES",
+                    text: "AMAL ENTERPRISES — Industrial Tools, Auto Spare Parts & Engineering Fasteners",
+                    url: window.location.href
+                }).catch(function() {});
+            } else if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(window.location.href)
+                    .then(function() { alert("Share link copied."); })
+                    .catch(function() {});
+            } else {
+                var t = document.createElement("input");
+                t.value = window.location.href;
+                document.body.appendChild(t);
+                t.select();
+                try { document.execCommand("copy"); } catch (e) {}
+                document.body.removeChild(t);
+                alert("Share link copied.");
             }
-        };
-
-        function openLegalModal(type) {
-            var modal = document.getElementById("legalModal");
-            document.getElementById("legalModalTitle").textContent = legalContents[type].title;
-            document.getElementById("legalModalContent").innerHTML = legalContents[type].content;
-            modal.style.display = "flex";
-            document.body.style.overflow = "hidden";
-        }
-
-        function closeLegalModal() {
-            document.getElementById("legalModal").style.display = "none";
-            document.body.style.overflow = "auto";
-        }
-
-        document.getElementById("legalModal").addEventListener("click", function(e) {
-            if (e.target === this) closeLegalModal();
         });
+    })();
 
-        // --- Floating Share ---
-        (function () {
-            var btn = document.getElementById("aeFloatingShare");
-            if (!btn) return;
-            btn.addEventListener("click", function () {
-                if (navigator.share) {
-                    navigator.share({
-                        title: "AMAL ENTERPRISES",
-                        text: "AMAL ENTERPRISES — Industrial Tools, Auto Spare Parts & Engineering Fasteners",
-                        url: window.location.href
-                    }).catch(function () {});
-                } else if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(window.location.href)
-                        .then(function () { alert("Share link copied."); })
-                        .catch(function () {});
-                } else {
-                    var t = document.createElement("input");
-                    t.value = window.location.href;
-                    document.body.appendChild(t);
-                    t.select();
-                    try { document.execCommand("copy"); } catch (e) {}
-                    document.body.removeChild(t);
-                    alert("Share link copied.");
-                }
-            });
-        })();
+    // ==========================================
+    //  QUOTATION SYSTEM — FIXED SERIAL (only increments on generate)
+    // ==========================================
+    (function() {
+        "use strict";
 
-        // ==========================================
-        //  QUOTATION SYSTEM — GOOGLE SHEETS UPSERT INTEGRATION
-        // ==========================================
-        (function() {
-            "use strict";
+        var COMPANY_NAME = "AMAL ENTERPRISES";
+        var COMPANY_TAGLINE = "Industrial Tools, Auto Spare Parts & Engineering Fasteners";
 
-            var COMPANY_NAME = "AMAL ENTERPRISES";
-            var COMPANY_TAGLINE = "Industrial Tools, Auto Spare Parts & Engineering Fasteners";
-            var ADMIN_WHATSAPP = "916296471636";
-            var ADMIN_EMAIL = "info@amalenterprises.in";
-            var ADMIN_LOCATION = "India (Pan-India Sourcing)";
+        // ========== NO DEFAULT — fetched from Contact Us page ==========
+        var ADMIN_WHATSAPP = "";
+        var ADMIN_EMAIL = "";
+        var ADMIN_LOCATION = "";
+        var contactLoaded = false;   // flag to track if fetch succeeded
 
-            var APPS_SCRIPT_URL =
-                "https://script.google.com/macros/s/AKfycbztYXKSLAac7t5DZ7rFqkOXgtZYZP2dfLKuTXOuSXTZv0vxkFu9BA9R161RLH-qOs4cVg/exec";
-
-            var API_TOKEN = "AmalQuotation2026_9x7Qm2";
-            var currentRole = "";
-
-            var STORAGE_KEY = "amal_user_data";
-            var SERIAL_KEY = "amal_quote_serial";
-            var PENDING_KEY = "amal_pending_quotations";
-
-            var PRODUCT_CATEGORIES = [
-                "Engineering Fasteners",
-                "Auto & Engineering Spare Parts",
-                "Industrial Hand & Power Tools",
-                "General Industrial Supplies",
-                "Other / Custom Product"
-            ];
-            var UNITS = ["piece", "set", "box", "kg", "metre", "dozen", "pair", "pack"];
-
-            var PAYMENT_TERMS = [
-                "Cash on Delivery (COD)",
-                "100% Advance",
-                "50% Advance & 50% on Delivery",
-                "Net 30 Days Credit"
-            ];
-            var GST_OPTIONS = [
-                "Exclusive of GST (Without GST)",
-                "Inclusive of GST"
-            ];
-            var DEFAULT_TERMS = "Goods once sold will not be taken back. Delivery charges extra if applicable.";
-
-            // --- Helpers ---
-            function numberValue(v) {
-                var n = Number.parseFloat(v);
-                return Number.isFinite(n) && n >= 0 ? n : 0;
-            }
-
-            function formatMoney(v) {
-                return "₹" + numberValue(v).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
-
-            function formatQuantity(v) {
-                return numberValue(v).toLocaleString("en-IN", { maximumFractionDigits: 6 });
-            }
-
-            function getDate() {
-                return new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-            }
-
-            function escapeHTML(v) {
-                return String(v || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-            }
-
-            function normalizeMobile(v) {
-                var num = String(v || "").replace(/\D/g, "");
-                if (num.length === 10) return "91" + num;
-                if (num.length === 12 && num.startsWith("91")) return num;
-                return "";
-            }
-
-            function openWhatsApp(recipient, message) {
-                var mobile = normalizeMobile(recipient);
-                if (!mobile) {
-                    showToast("Please enter a valid 10-digit mobile number.", "error");
-                    return;
-                }
-                window.open("https://wa.me/" + mobile + "?text=" + encodeURIComponent(message), "_blank", "noopener");
-            }
-
-            // --- Toast Notification ---
-            function showToast(msg, type) {
-                var toast = document.getElementById("aeToast");
-                var icon = toast.querySelector(".ae-toast-icon i");
-                var messageEl = toast.querySelector(".ae-toast-message");
-                toast.className = "ae-toast " + (type || "success");
-                if (type === "error") {
-                    icon.className = "fas fa-exclamation-circle";
-                } else {
-                    icon.className = "fas fa-check-circle";
-                }
-                messageEl.textContent = msg;
-                toast.style.display = "block";
-                clearTimeout(toast._hideTimer);
-                toast._hideTimer = setTimeout(function() {
-                    toast.style.display = "none";
-                }, 5000);
-            }
-
-            // --- Quotation Number Generator ---
-            function generateQuotationNumber() {
-                var now = new Date();
-                var day = String(now.getDate()).padStart(2, "0");
-                var month = String(now.getMonth() + 1).padStart(2, "0");
-                var year = now.getFullYear();
-                var monthKey = month + year;
-                var serial = 1;
-                try {
-                    var stored = localStorage.getItem(SERIAL_KEY);
-                    if (stored) {
-                        var data = JSON.parse(stored);
-                        if (data.monthKey === monthKey) {
-                            serial = data.serial + 1;
-                        } else {
-                            serial = 1;
+        // ========== AUTO FETCH from Contact Us page (index.html) ==========
+        function fetchContactDetails() {
+            // Try to fetch the main index page from the root
+            fetch(window.location.origin + '/index.html')
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch index.html');
+                    return response.text();
+                })
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // 1. Fetch Phone Number (from Contact card)
+                    const phoneLink = doc.querySelector('.contact-card a[href^="tel:"]');
+                    if (phoneLink) {
+                        const raw = phoneLink.textContent.trim().replace(/\D/g, '');
+                        if (raw.length >= 10) {
+                            ADMIN_WHATSAPP = raw;
                         }
                     }
-                } catch (e) {}
-                localStorage.setItem(SERIAL_KEY, JSON.stringify({ monthKey: monthKey, serial: serial }));
-                var serialStr = String(serial).padStart(2, "0");
-                return "AE/" + day + "/" + month + "/" + year + "/" + serialStr;
-            }
 
-            // --- LocalStorage User Data ---
-            function getUserData(mobile) {
-                try {
-                    var stored = localStorage.getItem(STORAGE_KEY);
-                    if (stored) {
-                        var data = JSON.parse(stored);
-                        if (data.mobile === mobile) return data;
+                    // 2. Fetch Email
+                    const emailLink = doc.querySelector('.contact-card a[href^="mailto:"]');
+                    if (emailLink) {
+                        const email = emailLink.textContent.trim();
+                        if (email) {
+                            ADMIN_EMAIL = email;
+                        }
                     }
-                } catch (e) {}
-                return null;
-            }
 
-            function saveUserData(data) {
-                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
-            }
+                    // 3. Fetch Location
+                    const locationCard = doc.querySelector('.contact-card .fa-map-marker-alt')?.closest('.contact-card');
+                    if (locationCard) {
+                        const locP = locationCard.querySelector('p:first-of-type');
+                        if (locP) {
+                            const loc = locP.textContent.trim();
+                            if (loc) {
+                                ADMIN_LOCATION = loc;
+                            }
+                        }
+                    }
 
-            // --- Offline Backup Queue Logic ---
-            function getPendingQuotations() {
-                try {
-                    var stored = localStorage.getItem(PENDING_KEY);
-                    return stored ? JSON.parse(stored) : [];
-                } catch (e) { return []; }
-            }
-
-            function savePendingQuotation(data) {
-                try {
-                    var pending = getPendingQuotations();
-                    pending.push({ data: data, timestamp: Date.now(), attempts: 0 });
-                    localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
-                } catch (e) {}
-            }
-
-            function removePendingQuotation(quoteNo) {
-                try {
-                    var pending = getPendingQuotations();
-                    pending = pending.filter(function(item) { return item.data.quoteNo !== quoteNo; });
-                    localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
-                } catch (e) {}
-            }
-
-            // --- Google Sheet Auto-Save Execution (hidden from user) ---
-            function saveToGoogleSheet(data, quoteNo) {
-                if (!APPS_SCRIPT_URL) {
-                    savePendingQuotation(data);
-                    return;
-                }
-
-                var params = new URLSearchParams({
-                    token: API_TOKEN,
-                    action: "saveQuotation",
-                    quoteNo: quoteNo,
-                    date: getDate(),
-                    role: data.roleName || "",
-                    name: data.name || "",
-                    whatsapp: data.whatsapp || "",
-                    address: data.address || "",
-                    email: data.email || "",
-                    category: data.category || "",
-                    product: data.product || "",
-                    specification: data.specification || "",
-                    quantity: String(data.quantity || 0),
-                    unit: data.unit || "",
-                    price: String(data.price || 0),
-                    total: String(data.total || 0),
-                    status: data.status || "",
-                    deliveryDate: data.deliveryDate || "",
-                    paymentTerms: data.paymentTerms || "",
-                    gstStatus: data.gstStatus || "",
-                    termsConditions: data.termsConditions || ""
+                    // Check if we got at least a phone number
+                    if (ADMIN_WHATSAPP) {
+                        contactLoaded = true;
+                        console.log('✅ Contact details fetched successfully.');
+                    } else {
+                        // fetched but no phone number found
+                        contactLoaded = false;
+                        showToast('Contact details not found on the page. Please check the Contact Us section.', 'error');
+                    }
+                })
+                .catch(err => {
+                    contactLoaded = false;
+                    console.warn('⚠️ Could not fetch contact details from index.html.', err);
+                    showToast('Could not load contact details. Please try again later.', 'error');
                 });
+        }
 
-                var url = APPS_SCRIPT_URL + "?" + params.toString();
+        var APPS_SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbztYXKSLAac7t5DZ7rFqkOXgtZYZP2dfLKuTXOuSXTZv0vxkFu9BA9R161RLH-qOs4cVg/exec";
 
-                fetch(url, { method: "GET", mode: "cors", cache: "no-store" })
+        var API_TOKEN = "AmalQuotation2026_9x7Qm2";
+        var currentRole = "";
+
+        var STORAGE_KEY = "amal_user_data";
+        var SERIAL_KEY = "amal_quote_serial";
+        var PENDING_KEY = "amal_pending_quotations";
+
+        var PRODUCT_CATEGORIES = [
+            "Engineering Fasteners",
+            "Auto & Engineering Spare Parts",
+            "Industrial Hand & Power Tools",
+            "General Industrial Supplies",
+            "Other / Custom Product"
+        ];
+        var UNITS = ["piece", "set", "box", "kg", "metre", "dozen", "pair", "pack"];
+
+        var PAYMENT_TERMS = [
+            "Cash on Delivery (COD)",
+            "100% Advance",
+            "50% Advance & 50% on Delivery",
+            "Net 30 Days Credit"
+        ];
+        var GST_OPTIONS = [
+            "Exclusive of GST (Without GST)",
+            "Inclusive of GST"
+        ];
+        var DEFAULT_TERMS = "Goods once sold will not be taken back. Delivery charges extra if applicable.";
+
+        // --- Helpers ---
+        function numberValue(v) {
+            var n = Number.parseFloat(v);
+            return Number.isFinite(n) && n >= 0 ? n : 0;
+        }
+
+        function formatMoney(v) {
+            return "₹" + numberValue(v).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatQuantity(v) {
+            return numberValue(v).toLocaleString("en-IN", { maximumFractionDigits: 6 });
+        }
+
+        function getDate() {
+            return new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+        }
+
+        function escapeHTML(v) {
+            return String(v || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
+                "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function normalizeMobile(v) {
+            var num = String(v || "").replace(/\D/g, "");
+            if (num.length === 10) return "91" + num;
+            if (num.length === 12 && num.startsWith("91")) return num;
+            return "";
+        }
+
+        function openWhatsApp(recipient, message) {
+            var mobile = normalizeMobile(recipient);
+            if (!mobile) {
+                showToast("Contact number not available. Please try again later.", "error");
+                return;
+            }
+            window.open("https://wa.me/" + mobile + "?text=" + encodeURIComponent(message), "_blank", "noopener");
+        }
+
+        // --- Toast Notification ---
+        function showToast(msg, type) {
+            var toast = document.getElementById("aeToast");
+            var icon = toast.querySelector(".ae-toast-icon i");
+            var messageEl = toast.querySelector(".ae-toast-message");
+            toast.className = "ae-toast " + (type || "success");
+            if (type === "error") {
+                icon.className = "fas fa-exclamation-circle";
+            } else {
+                icon.className = "fas fa-check-circle";
+            }
+            messageEl.textContent = msg;
+            toast.style.display = "block";
+            clearTimeout(toast._hideTimer);
+            toast._hideTimer = setTimeout(function() {
+                toast.style.display = "none";
+            }, 5000);
+        }
+
+        // --- Quotation Number Generator — ONLY increments when called (not on page load) ---
+        function generateQuotationNumber() {
+            var now = new Date();
+            var day = String(now.getDate()).padStart(2, "0");
+            var month = String(now.getMonth() + 1).padStart(2, "0");
+            var year = now.getFullYear();
+            var monthKey = month + year;
+            var serial = 1;
+            try {
+                var stored = localStorage.getItem(SERIAL_KEY);
+                if (stored) {
+                    var data = JSON.parse(stored);
+                    if (data.monthKey === monthKey) {
+                        serial = data.serial + 1;
+                    } else {
+                        serial = 1;
+                    }
+                }
+            } catch (e) {}
+            // Save the new serial
+            localStorage.setItem(SERIAL_KEY, JSON.stringify({ monthKey: monthKey, serial: serial }));
+            var serialStr = String(serial).padStart(2, "0");
+            return "AE/" + day + "/" + month + "/" + year + "/" + serialStr;
+        }
+
+        // --- Get next serial WITHOUT incrementing (for display only) ---
+        function getCurrentSerialDisplay() {
+            var now = new Date();
+            var month = String(now.getMonth() + 1).padStart(2, "0");
+            var year = now.getFullYear();
+            var monthKey = month + year;
+            var serial = 1;
+            try {
+                var stored = localStorage.getItem(SERIAL_KEY);
+                if (stored) {
+                    var data = JSON.parse(stored);
+                    if (data.monthKey === monthKey) {
+                        serial = data.serial + 1;
+                    } else {
+                        serial = 1;
+                    }
+                }
+            } catch (e) {}
+            return serial;
+        }
+
+        function getQuoteNumberForDisplay() {
+            var now = new Date();
+            var day = String(now.getDate()).padStart(2, "0");
+            var month = String(now.getMonth() + 1).padStart(2, "0");
+            var year = now.getFullYear();
+            var serial = getCurrentSerialDisplay();
+            var serialStr = String(serial).padStart(2, "0");
+            return "AE/" + day + "/" + month + "/" + year + "/" + serialStr;
+        }
+
+        // --- LocalStorage User Data ---
+        function getUserData(mobile) {
+            try {
+                var stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    var data = JSON.parse(stored);
+                    if (data.mobile === mobile) return data;
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        function saveUserData(data) {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+        }
+
+        // --- Offline Backup Queue Logic ---
+        function getPendingQuotations() {
+            try {
+                var stored = localStorage.getItem(PENDING_KEY);
+                return stored ? JSON.parse(stored) : [];
+            } catch (e) { return []; }
+        }
+
+        function savePendingQuotation(data) {
+            try {
+                var pending = getPendingQuotations();
+                pending.push({ data: data, timestamp: Date.now(), attempts: 0 });
+                localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+            } catch (e) {}
+        }
+
+        function removePendingQuotation(quoteNo) {
+            try {
+                var pending = getPendingQuotations();
+                pending = pending.filter(function(item) { return item.data.quoteNo !== quoteNo; });
+                localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+            } catch (e) {}
+        }
+
+        // --- Google Sheet Auto-Save ---
+        function saveToGoogleSheet(data, quoteNo) {
+            if (!APPS_SCRIPT_URL) {
+                savePendingQuotation(data);
+                return;
+            }
+
+            var params = new URLSearchParams({
+                token: API_TOKEN,
+                action: "saveQuotation",
+                quoteNo: quoteNo,
+                date: getDate(),
+                role: data.roleName || "",
+                name: data.name || "",
+                whatsapp: data.whatsapp || "",
+                address: data.address || "",
+                email: data.email || "",
+                category: data.category || "",
+                product: data.product || "",
+                specification: data.specification || "",
+                quantity: String(data.quantity || 0),
+                unit: data.unit || "",
+                price: String(data.price || 0),
+                total: String(data.total || 0),
+                status: data.status || "",
+                deliveryDate: data.deliveryDate || "",
+                paymentTerms: data.paymentTerms || "",
+                gstStatus: data.gstStatus || "",
+                termsConditions: data.termsConditions || ""
+            });
+
+            var url = APPS_SCRIPT_URL + "?" + params.toString();
+
+            fetch(url, { method: "GET", mode: "cors", cache: "no-store" })
                 .then(function(response) { return response.json(); })
                 .then(function(res) {
                     if (res && res.status === "success") {
@@ -1052,268 +1296,297 @@
                 })
                 .catch(function(err) {
                     fetch(url, { method: "GET", mode: "no-cors" })
-                    .then(function() {
-                        removePendingQuotation(quoteNo);
-                        showToast("✅ Quotation saved successfully!", "success");
-                    })
-                    .catch(function() {
-                        savePendingQuotation(data);
-                        showToast("⚠️ Network issue. Quotation saved locally.", "error");
-                    });
+                        .then(function() {
+                            removePendingQuotation(quoteNo);
+                            showToast("✅ Quotation saved successfully!", "success");
+                        })
+                        .catch(function() {
+                            savePendingQuotation(data);
+                            showToast("⚠️ Network issue. Quotation saved locally.", "error");
+                        });
                 });
-            }
+        }
 
-            function retryPendingQuotations() {
-                var pending = getPendingQuotations();
-                if (pending.length === 0) return;
-                var remaining = [];
-                pending.forEach(function(item) {
-                    if (item.attempts < 3) {
-                        item.attempts++;
-                        saveToGoogleSheet(item.data, item.data.quoteNo);
-                        remaining.push(item);
-                    } else {
-                        remaining.push(item);
-                    }
-                });
-                try { localStorage.setItem(PENDING_KEY, JSON.stringify(remaining)); } catch (e) {}
-            }
-
-            // --- MAIN FORM RENDER ---
-            function createQuotationSystem() {
-                var area = document.getElementById("quotationArea");
-                if (!area) return;
-
-                area.innerHTML = `
-                        <div class="ae-quotation-wrapper">
-                            <div class="ae-quotation-header">
-                                <div>
-                                    <div class="ae-small-label">100% Free to Use</div>
-                                    <h2>Create Quotation</h2>
-                                    <p>Select your role, fill in the details, and generate instantly. <strong style="color:#6db3f2;">No platform fees.</strong></p>
-                                </div>
-                            </div>
-                            <div class="ae-role-box">
-                                <div class="ae-field-label" style="font-size:14px; color:#a0acbd; margin-bottom:8px;">Choose Your Role</div>
-                                <div class="ae-role-buttons">
-                                    <button type="button" class="ae-role-btn" data-role="buyer">I am Buyer</button>
-                                    <button type="button" class="ae-role-btn" data-role="supplier">I am Supplier</button>
-                                </div>
-                            </div>
-                            <div class="ae-form-panel" id="aeFormPanel" style="display:none;">
-                                <div class="ae-form-role-title" id="aeRoleTitle"></div>
-                                <div class="ae-form-grid">
-                                    <div class="ae-field"><label>Quotation Number *</label><input id="aeQuoteNo" type="text" readonly style="cursor:default; background:rgba(255,255,255,0.06);"></div>
-                                    <div class="ae-field"><label>Expected Delivery Date</label><input id="aeDeliveryDate" type="date"></div>
-                                    <div class="ae-field"><label>Name / Industry *</label><input id="aeName" type="text" placeholder="Enter your name or industry name"></div>
-                                    <div class="ae-field"><label>WhatsApp Number *</label><input id="aeWhatsApp" type="tel" maxlength="10" placeholder="10-digit WhatsApp number"></div>
-                                    <div class="ae-field"><label>Address *</label><input id="aeAddress" type="text" placeholder="Enter your address"></div>
-                                    <div class="ae-field"><label>Email (Optional)</label><input id="aeEmail" type="email" placeholder="Email address"></div>
-                                    <div class="ae-field"><label>Product Category *</label><select id="aeCategory"><option value="">Select Product Category</option>${PRODUCT_CATEGORIES.map(function(i) { return '<option value="' + escapeHTML(i) + '">' + escapeHTML(i) + '</option>'; }).join("")}</select></div>
-                                    <div class="ae-field"><label>Product Name & Size * (e.g., M10 Hex Nut)</label><input id="aeProduct" type="text" placeholder="e.g. M10 Hex Nut, #8 Screw"></div>
-                                </div>
-
-                                <div class="ae-field"><label>Specification / Grade * (e.g., MS, GI, SS 304)</label><textarea id="aeSpecification" rows="2" placeholder="e.g. MS, GI, SS 304, High Tensile"></textarea></div>
-
-                                <div class="ae-quantity-row">
-                                    <div class="ae-field"><label>Quantity *</label><input id="aeQuantity" type="number" min="0.000001" step="any" placeholder="Quantity"></div>
-                                    <div class="ae-field"><label>Unit *</label><select id="aeUnit"><option value="">Unit</option>${UNITS.map(function(u) { return '<option value="' + escapeHTML(u) + '">' + escapeHTML(u) + '</option>'; }).join("")}</select></div>
-                                    <div class="ae-field"><label>Expected Unit Price (₹) *</label><input id="aePrice" type="number" min="0" step="0.01" placeholder="Enter your budget price or 0 if unknown"></div>
-                                </div>
-                                <div style="margin:8px 0 12px 0; font-size:15px; font-weight:600; text-align:right; color:#6db3f2;" id="aeLiveTotal">Estimated Total: ₹0.00</div>
-
-                                <div class="ae-form-grid">
-                                    <div class="ae-field"><label>Payment Terms *</label><select id="aePaymentTerms"><option value="">Select Payment Terms</option>${PAYMENT_TERMS.map(function(t) { return '<option value="' + escapeHTML(t) + '">' + escapeHTML(t) + '</option>'; }).join("")}</select></div>
-                                    <div class="ae-field"><label>GST Status *</label><select id="aeGstStatus"><option value="">Select GST Status</option>${GST_OPTIONS.map(function(g) { return '<option value="' + escapeHTML(g) + '">' + escapeHTML(g) + '</option>'; }).join("")}</select></div>
-                                </div>
-
-                                <div class="ae-field"><label>Terms & Conditions</label><textarea id="aeTermsConditions" rows="2">${DEFAULT_TERMS}</textarea></div>
-
-                                <div class="ae-status-section">
-                                    <label style="font-size:14px; color:#a0acbd; margin-bottom:6px; display:block;">Quotation Status *</label>
-                                    <div class="ae-status-options">
-                                        <label class="ae-status-option"><input type="radio" name="aeQuotationStatus" value="Final Quotation" checked> Final Quotation</label>
-                                        <label class="ae-status-option"><input type="radio" name="aeQuotationStatus" value="Negotiable"> Negotiable</label>
-                                    </div>
-                                </div>
-                                <div id="aeNegotiationNote" style="display:none; background:rgba(255,200,50,0.1); border-left:3px solid #f0b040; padding:10px; border-radius:6px; color:#f0d080; font-size:14px; margin-bottom:12px;">Price and delivery terms are negotiable.</div>
-                                <button type="button" class="ae-generate-btn" id="aeGenerateBtn"><i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation</button>
-                                <button type="button" class="ae-reset-btn" id="aeResetBtn"><i class="fas fa-undo" style="margin-right:8px;"></i> Reset Form</button>
-                            </div>
-                        </div>
-
-                        <div class="ae-modal-overlay" id="aeModal" style="display:none;">
-                            <div class="ae-modal-card">
-                                <button class="ae-close-btn" id="aeCloseModal">×</button>
-                                <div class="ae-preview-document" id="aePreviewDocument"></div>
-                                <div class="ae-action-buttons" id="aeActionButtons"></div>
-                            </div>
-                        </div>
-                    `;
-                bindEvents();
-
-                var quoteNoInput = document.getElementById("aeQuoteNo");
-                if (quoteNoInput) {
-                    quoteNoInput.value = generateQuotationNumber();
+        function retryPendingQuotations() {
+            var pending = getPendingQuotations();
+            if (pending.length === 0) return;
+            var remaining = [];
+            pending.forEach(function(item) {
+                if (item.attempts < 3) {
+                    item.attempts++;
+                    saveToGoogleSheet(item.data, item.data.quoteNo);
+                    remaining.push(item);
+                } else {
+                    remaining.push(item);
                 }
+            });
+            try { localStorage.setItem(PENDING_KEY, JSON.stringify(remaining)); } catch (e) {}
+        }
 
-                retryPendingQuotations();
+        // --- MAIN FORM RENDER ---
+        function createQuotationSystem() {
+            var area = document.getElementById("quotationArea");
+            if (!area) return;
+
+            area.innerHTML = `
+                    <div class="ae-quotation-wrapper">
+                        <div class="ae-quotation-header">
+                            <div>
+                                <div class="ae-small-label">100% Free to Use</div>
+                                <h2>Create Quotation</h2>
+                                <p>Select your role, fill in the details, and generate instantly. <strong style="color:#6db3f2;">No platform fees.</strong></p>
+                            </div>
+                        </div>
+                        <div class="ae-role-box">
+                            <div class="ae-field-label" style="font-size:14px; color:#a0acbd; margin-bottom:8px;">Choose Your Role</div>
+                            <div class="ae-role-buttons">
+                                <button type="button" class="ae-role-btn" data-role="buyer">I am Buyer</button>
+                                <button type="button" class="ae-role-btn" data-role="supplier">I am Supplier</button>
+                            </div>
+                        </div>
+                        <div class="ae-form-panel" id="aeFormPanel" style="display:none;">
+                            <div class="ae-form-role-title" id="aeRoleTitle"></div>
+                            <div class="ae-form-grid">
+                                <div class="ae-field"><label>Quotation Number *</label><input id="aeQuoteNo" type="text" readonly style="cursor:default; background:rgba(255,255,255,0.06);"></div>
+                                <div class="ae-field"><label>Expected Delivery Date</label><input id="aeDeliveryDate" type="date"></div>
+                                <div class="ae-field"><label>Name / Industry *</label><input id="aeName" type="text" placeholder="Enter your name or industry name"></div>
+                                <div class="ae-field"><label>WhatsApp Number *</label><input id="aeWhatsApp" type="tel" maxlength="10" placeholder="10-digit WhatsApp number"></div>
+                                <div class="ae-field"><label>Address *</label><input id="aeAddress" type="text" placeholder="Enter your address"></div>
+                                <div class="ae-field"><label>Email (Optional)</label><input id="aeEmail" type="email" placeholder="Email address"></div>
+                                <div class="ae-field"><label>Product Category *</label><select id="aeCategory"><option value="">Select Product Category</option>${PRODUCT_CATEGORIES.map(function(i) { return '<option value="' + escapeHTML(i) + '">' + escapeHTML(i) + '</option>'; }).join("")}</select></div>
+                                <div class="ae-field"><label>Product Name & Size * (e.g., M10 Hex Nut)</label><input id="aeProduct" type="text" placeholder="e.g. M10 Hex Nut, #8 Screw"></div>
+                            </div>
+
+                            <div class="ae-field"><label>Specification / Grade * (e.g., MS, GI, SS 304)</label><textarea id="aeSpecification" rows="2" placeholder="e.g. MS, GI, SS 304, High Tensile"></textarea></div>
+
+                            <div class="ae-quantity-row">
+                                <div class="ae-field"><label>Quantity *</label><input id="aeQuantity" type="number" min="0.000001" step="any" placeholder="Quantity"></div>
+                                <div class="ae-field"><label>Unit *</label><select id="aeUnit"><option value="">Unit</option>${UNITS.map(function(u) { return '<option value="' + escapeHTML(u) + '">' + escapeHTML(u) + '</option>'; }).join("")}</select></div>
+                                <div class="ae-field"><label>Expected Unit Price (₹) *</label><input id="aePrice" type="number" min="0" step="0.01" placeholder="Enter your budget price or 0 if unknown"></div>
+                            </div>
+                            <div style="margin:8px 0 12px 0; font-size:15px; font-weight:600; text-align:right; color:#6db3f2;" id="aeLiveTotal">Estimated Total: ₹0.00</div>
+
+                            <div class="ae-form-grid">
+                                <div class="ae-field"><label>Payment Terms *</label><select id="aePaymentTerms"><option value="">Select Payment Terms</option>${PAYMENT_TERMS.map(function(t) { return '<option value="' + escapeHTML(t) + '">' + escapeHTML(t) + '</option>'; }).join("")}</select></div>
+                                <div class="ae-field"><label>GST Status *</label><select id="aeGstStatus"><option value="">Select GST Status</option>${GST_OPTIONS.map(function(g) { return '<option value="' + escapeHTML(g) + '">' + escapeHTML(g) + '</option>'; }).join("")}</select></div>
+                            </div>
+
+                            <div class="ae-field"><label>Terms & Conditions</label><textarea id="aeTermsConditions" rows="2">${DEFAULT_TERMS}</textarea></div>
+
+                            <div class="ae-status-section">
+                                <label style="font-size:14px; color:#a0acbd; margin-bottom:6px; display:block;">Quotation Status *</label>
+                                <div class="ae-status-options">
+                                    <label class="ae-status-option"><input type="radio" name="aeQuotationStatus" value="Final Quotation" checked> Final Quotation</label>
+                                    <label class="ae-status-option"><input type="radio" name="aeQuotationStatus" value="Negotiable"> Negotiable</label>
+                                </div>
+                            </div>
+                            <div id="aeNegotiationNote" style="display:none; background:rgba(255,200,50,0.1); border-left:3px solid #f0b040; padding:10px; border-radius:6px; color:#f0d080; font-size:14px; margin-bottom:12px;">Price and delivery terms are negotiable.</div>
+                            <button type="button" class="ae-generate-btn" id="aeGenerateBtn"><i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation</button>
+                            <button type="button" class="ae-reset-btn" id="aeResetBtn"><i class="fas fa-undo" style="margin-right:8px;"></i> Reset Form</button>
+                        </div>
+                    </div>
+
+                    <div class="ae-modal-overlay" id="aeModal" style="display:none;">
+                        <div class="ae-modal-card">
+                            <button class="ae-close-btn" id="aeCloseModal">×</button>
+                            <div class="ae-preview-document" id="aePreviewDocument"></div>
+                            <div class="ae-action-buttons" id="aeActionButtons"></div>
+                        </div>
+                    </div>
+                `;
+            bindEvents();
+
+            // Set display quote number (without incrementing)
+            var quoteNoInput = document.getElementById("aeQuoteNo");
+            if (quoteNoInput) {
+                quoteNoInput.value = getQuoteNumberForDisplay();
             }
 
-            function bindEvents() {
-                document.querySelectorAll(".ae-role-btn").forEach(function(b) {
-                    b.addEventListener("click", function() { selectRole(this.dataset.role); });
-                });
-                document.getElementById("aeGenerateBtn").addEventListener("click", generateQuotation);
-                document.getElementById("aeResetBtn").addEventListener("click", resetForm);
-                document.getElementById("aeCloseModal").addEventListener("click", closePreview);
-                document.getElementById("aeModal").addEventListener("click", function(e) {
-                    if (e.target === e.currentTarget) closePreview();
-                });
-                ["aeQuantity", "aePrice", "aeUnit"].forEach(function(id) {
-                    var el = document.getElementById(id);
-                    el.addEventListener("input", updateLiveCalculation);
-                    el.addEventListener("change", updateLiveCalculation);
-                });
-                document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(function(r) {
-                    r.addEventListener("change", updateLiveCalculation);
-                });
+            retryPendingQuotations();
+        }
 
-                var whatsappInput = document.getElementById("aeWhatsApp");
-                if (whatsappInput) {
-                    whatsappInput.addEventListener("input", function() {
-                        var mobile = this.value.replace(/\D/g, "").slice(0, 10);
-                        this.value = mobile;
-                        if (mobile.length === 10) {
-                            var saved = getUserData(mobile);
-                            if (saved) {
-                                document.getElementById("aeName").value = saved.name || "";
-                                document.getElementById("aeAddress").value = saved.address || "";
-                                document.getElementById("aeEmail").value = saved.email || "";
-                                if (saved.role) {
-                                    document.querySelectorAll(".ae-role-btn").forEach(function(b) {
-                                        if (b.dataset.role === saved.role) selectRole(saved.role);
-                                    });
-                                }
+        function bindEvents() {
+            document.querySelectorAll(".ae-role-btn").forEach(function(b) {
+                b.addEventListener("click", function() { selectRole(this.dataset.role); });
+            });
+            document.getElementById("aeGenerateBtn").addEventListener("click", generateQuotation);
+            document.getElementById("aeResetBtn").addEventListener("click", resetForm);
+            document.getElementById("aeCloseModal").addEventListener("click", closePreview);
+            document.getElementById("aeModal").addEventListener("click", function(e) {
+                if (e.target === e.currentTarget) closePreview();
+            });
+            ["aeQuantity", "aePrice", "aeUnit"].forEach(function(id) {
+                var el = document.getElementById(id);
+                el.addEventListener("input", updateLiveCalculation);
+                el.addEventListener("change", updateLiveCalculation);
+            });
+            document.querySelectorAll('input[name="aeQuotationStatus"]').forEach(function(r) {
+                r.addEventListener("change", updateLiveCalculation);
+            });
+
+            var whatsappInput = document.getElementById("aeWhatsApp");
+            if (whatsappInput) {
+                whatsappInput.addEventListener("input", function() {
+                    var mobile = this.value.replace(/\D/g, "").slice(0, 10);
+                    this.value = mobile;
+                    if (mobile.length === 10) {
+                        var saved = getUserData(mobile);
+                        if (saved) {
+                            document.getElementById("aeName").value = saved.name || "";
+                            document.getElementById("aeAddress").value = saved.address || "";
+                            document.getElementById("aeEmail").value = saved.email || "";
+                            if (saved.role) {
+                                document.querySelectorAll(".ae-role-btn").forEach(function(b) {
+                                    if (b.dataset.role === saved.role) selectRole(saved.role);
+                                });
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
+        }
 
-            function resetForm() {
-                document.querySelectorAll("#aeFormPanel input:not([readonly]), #aeFormPanel select, #aeFormPanel textarea").forEach(function(el) {
+        function resetForm() {
+            document.querySelectorAll("#aeFormPanel input:not([readonly]), #aeFormPanel select, #aeFormPanel textarea")
+                .forEach(function(el) {
                     if (el.type === "radio" || el.type === "checkbox") return;
                     el.value = "";
                 });
-                document.querySelector('input[name="aeQuotationStatus"][value="Final Quotation"]').checked = true;
-                document.getElementById("aeLiveTotal").textContent = "Estimated Total: ₹0.00";
-                document.querySelectorAll(".ae-role-btn").forEach(function(b) { b.classList.remove("selected"); });
-                currentRole = "";
-                document.getElementById("aeFormPanel").style.display = "none";
-                document.getElementById("aeQuoteNo").value = generateQuotationNumber();
-                document.getElementById("aeNegotiationNote").style.display = "none";
-                showToast("Form has been reset.", "success");
+            document.querySelector('input[name="aeQuotationStatus"][value="Final Quotation"]').checked = true;
+            document.getElementById("aeLiveTotal").textContent = "Estimated Total: ₹0.00";
+            document.querySelectorAll(".ae-role-btn").forEach(function(b) { b.classList.remove("selected"); });
+            currentRole = "";
+            document.getElementById("aeFormPanel").style.display = "none";
+            // Reset to display-only number (no increment)
+            var quoteNoInput = document.getElementById("aeQuoteNo");
+            if (quoteNoInput) {
+                quoteNoInput.value = getQuoteNumberForDisplay();
             }
+            document.getElementById("aeNegotiationNote").style.display = "none";
+            showToast("Form has been reset.", "success");
+        }
 
-            function selectRole(role) {
-                currentRole = role;
-                document.querySelectorAll(".ae-role-btn").forEach(function(b) {
-                    b.classList.toggle("selected", b.dataset.role === role);
-                });
-                var name = role === "buyer" ? "Buyer" : "Supplier";
-                document.getElementById("aeRoleTitle").textContent = name + " Quotation";
-                document.getElementById("aeFormPanel").style.display = "block";
+        function selectRole(role) {
+            currentRole = role;
+            document.querySelectorAll(".ae-role-btn").forEach(function(b) {
+                b.classList.toggle("selected", b.dataset.role === role);
+            });
+            var name = role === "buyer" ? "Buyer" : "Supplier";
+            document.getElementById("aeRoleTitle").textContent = name + " Quotation";
+            document.getElementById("aeFormPanel").style.display = "block";
+        }
+
+        function updateLiveCalculation() {
+            var q = numberValue(document.getElementById("aeQuantity").value);
+            var p = numberValue(document.getElementById("aePrice").value);
+            document.getElementById("aeLiveTotal").textContent = "Estimated Total: " + formatMoney(q * p);
+            var sel = document.querySelector('input[name="aeQuotationStatus"]:checked');
+            document.getElementById("aeNegotiationNote").style.display = (sel && sel.value === "Negotiable") ? "block" :
+            "none";
+        }
+
+        function getFormData() {
+            var status = document.querySelector('input[name="aeQuotationStatus"]:checked');
+            var q = numberValue(document.getElementById("aeQuantity").value);
+            var p = numberValue(document.getElementById("aePrice").value);
+            var w = document.getElementById("aeWhatsApp").value.replace(/\D/g, "").slice(0, 10);
+            return {
+                role: currentRole,
+                roleName: currentRole === "buyer" ? "Buyer" : "Supplier",
+                quoteNo: document.getElementById("aeQuoteNo").value.trim(),
+                name: document.getElementById("aeName").value.trim(),
+                whatsapp: w,
+                address: document.getElementById("aeAddress").value.trim(),
+                email: document.getElementById("aeEmail").value.trim(),
+                category: document.getElementById("aeCategory").value,
+                product: document.getElementById("aeProduct").value.trim(),
+                specification: document.getElementById("aeSpecification").value.trim(),
+                quantity: q,
+                unit: document.getElementById("aeUnit").value,
+                price: p,
+                total: q * p,
+                status: status ? status.value : "",
+                deliveryDate: document.getElementById("aeDeliveryDate").value || "",
+                paymentTerms: document.getElementById("aePaymentTerms").value || "",
+                gstStatus: document.getElementById("aeGstStatus").value || "",
+                termsConditions: document.getElementById("aeTermsConditions").value.trim() || DEFAULT_TERMS
+            };
+        }
+
+        function validateData(data) {
+            if (!data.role) { showToast("Please select a role first.", "error"); return false; }
+            if (!data.name) { showToast("Please enter your name or industry name.", "error"); return false; }
+            if (!/^[0-9]{10}$/.test(data.whatsapp)) { showToast("Please enter a valid 10-digit WhatsApp number.",
+                    "error"); return false; }
+            if (!data.address) { showToast("Please enter your address.", "error"); return false; }
+            if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+                showToast("Please enter a valid email or leave blank.", "error");
+                return false;
             }
+            if (!data.category) { showToast("Please select a product category.", "error"); return false; }
+            if (!data.product) { showToast("Please enter the product name & size.", "error"); return false; }
+            if (!(data.quantity > 0)) { showToast("Please enter a valid quantity.", "error"); return false; }
+            if (!data.unit) { showToast("Please select a unit.", "error"); return false; }
+            if (!(data.price >= 0)) { showToast("Please enter a valid unit price (0 is allowed).", "error"); return false; }
+            if (!data.status) { showToast("Please select a quotation status.", "error"); return false; }
+            if (!data.paymentTerms) { showToast("Please select payment terms.", "error"); return false; }
+            if (!data.gstStatus) { showToast("Please select GST status.", "error"); return false; }
+            return true;
+        }
 
-            function updateLiveCalculation() {
-                var q = numberValue(document.getElementById("aeQuantity").value);
-                var p = numberValue(document.getElementById("aePrice").value);
-                document.getElementById("aeLiveTotal").textContent = "Estimated Total: " + formatMoney(q * p);
-                var sel = document.querySelector('input[name="aeQuotationStatus"]:checked');
-                document.getElementById("aeNegotiationNote").style.display = (sel && sel.value === "Negotiable") ? "block" : "none";
-            }
+        function generateQuotation() {
+            if (!currentRole) { showToast("Please select a role first.", "error"); return; }
+            var data = getFormData();
+            if (!validateData(data)) return;
 
-            function getFormData() {
-                var status = document.querySelector('input[name="aeQuotationStatus"]:checked');
-                var q = numberValue(document.getElementById("aeQuantity").value);
-                var p = numberValue(document.getElementById("aePrice").value);
-                var w = document.getElementById("aeWhatsApp").value.replace(/\D/g, "").slice(0, 10);
-                return {
-                    role: currentRole,
-                    roleName: currentRole === "buyer" ? "Buyer" : "Supplier",
-                    quoteNo: document.getElementById("aeQuoteNo").value.trim(),
-                    name: document.getElementById("aeName").value.trim(),
-                    whatsapp: w,
-                    address: document.getElementById("aeAddress").value.trim(),
-                    email: document.getElementById("aeEmail").value.trim(),
-                    category: document.getElementById("aeCategory").value,
-                    product: document.getElementById("aeProduct").value.trim(),
-                    specification: document.getElementById("aeSpecification").value.trim(),
-                    quantity: q,
-                    unit: document.getElementById("aeUnit").value,
-                    price: p,
-                    total: q * p,
-                    status: status ? status.value : "",
-                    deliveryDate: document.getElementById("aeDeliveryDate").value || "",
-                    paymentTerms: document.getElementById("aePaymentTerms").value || "",
-                    gstStatus: document.getElementById("aeGstStatus").value || "",
-                    termsConditions: document.getElementById("aeTermsConditions").value.trim() || DEFAULT_TERMS
-                };
-            }
+            // --- INCREMENT SERIAL ONLY NOW (on successful generate) ---
+            var newQuoteNo = generateQuotationNumber();
+            document.getElementById("aeQuoteNo").value = newQuoteNo;
+            data.quoteNo = newQuoteNo;
 
-            function validateData(data) {
-                if (!data.role) { showToast("Please select a role first.", "error"); return false; }
-                if (!data.name) { showToast("Please enter your name or industry name.", "error"); return false; }
-                if (!/^[0-9]{10}$/.test(data.whatsapp)) { showToast("Please enter a valid 10-digit WhatsApp number.", "error"); return false; }
-                if (!data.address) { showToast("Please enter your address.", "error"); return false; }
-                if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-                    showToast("Please enter a valid email or leave blank.", "error");
-                    return false;
-                }
-                if (!data.category) { showToast("Please select a product category.", "error"); return false; }
-                if (!data.product) { showToast("Please enter the product name & size.", "error"); return false; }
-                if (!(data.quantity > 0)) { showToast("Please enter a valid quantity.", "error"); return false; }
-                if (!data.unit) { showToast("Please select a unit.", "error"); return false; }
-                if (!(data.price >= 0)) { showToast("Please enter a valid unit price (0 is allowed).", "error"); return false; }
-                if (!data.status) { showToast("Please select a quotation status.", "error"); return false; }
-                if (!data.paymentTerms) { showToast("Please select payment terms.", "error"); return false; }
-                if (!data.gstStatus) { showToast("Please select GST status.", "error"); return false; }
-                return true;
-            }
+            var btn = document.getElementById("aeGenerateBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i> Saving...';
 
-            function generateQuotation() {
-                if (!currentRole) { showToast("Please select a role first.", "error"); return; }
-                var data = getFormData();
-                if (!validateData(data)) return;
+            showPreview(data);
+            saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email,
+                role: currentRole });
+            saveToGoogleSheet(data, data.quoteNo);
 
-                var btn = document.getElementById("aeGenerateBtn");
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i> Saving...';
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation';
+            }, 4000);
+        }
 
-                showPreview(data);
-                saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email, role: currentRole });
-                saveToGoogleSheet(data, data.quoteNo);
+        // ===== PREVIEW MODAL =====
+        function showPreview(data) {
+            var box = document.getElementById("aePreviewDocument");
+            var currentDate = getDate();
+            var isFinal = data.status === "Final Quotation";
+            var statusClass = isFinal ? "final" : "negotiable";
+            var total = data.total;
+            var gstDisplay = data.gstStatus || "Exclusive of GST (Without GST)";
+            var roleTitle = data.roleName === "Buyer" ? "Buyer Quotation" : "Supplier Quotation";
+            var partyTitle = data.roleName === "Buyer" ? "BUYER DETAILS" : "SUPPLIER DETAILS";
+            var partyNameLabel = data.roleName === "Buyer" ? "Customer Name" : "Supplier Name";
 
-                setTimeout(function() {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation';
-                }, 4000);
-            }
+            // Check if contact info is available
+            var hasContact = ADMIN_WHATSAPP && ADMIN_EMAIL && ADMIN_LOCATION;
+            var contactHtml = hasContact ? `
+                        <div class="ae-company-footer">
+                            <strong>${COMPANY_NAME}</strong><br>
+                            ${COMPANY_TAGLINE}<br>
+                            📞 <a href="tel:+${ADMIN_WHATSAPP}">+${ADMIN_WHATSAPP}</a> &nbsp;|&nbsp; ✉️ <a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a><br>
+                            📍 ${ADMIN_LOCATION}
+                        </div>
+                    ` : `
+                        <div class="ae-company-footer" style="color:#999; font-style:italic;">
+                            Contact information currently unavailable. Please try again later.
+                        </div>
+                    `;
 
-            // ===== PREVIEW MODAL =====
-            function showPreview(data) {
-                var box = document.getElementById("aePreviewDocument");
-                var currentDate = getDate();
-                var isFinal = data.status === "Final Quotation";
-                var statusClass = isFinal ? "final" : "negotiable";
-                var total = data.total;
-                var gstDisplay = data.gstStatus || "Exclusive of GST (Without GST)";
-                var roleTitle = data.roleName === "Buyer" ? "Buyer Quotation" : "Supplier Quotation";
-                var partyTitle = data.roleName === "Buyer" ? "BUYER DETAILS" : "SUPPLIER DETAILS";
-                var partyNameLabel = data.roleName === "Buyer" ? "Customer Name" : "Supplier Name";
-
-                box.innerHTML = `
+            box.innerHTML = `
                         <div class="ae-role-header">
                             <h1>${escapeHTML(roleTitle)}</h1>
                             <div class="ae-sub">${escapeHTML(data.roleName)} - ${escapeHTML(data.status)}</div>
@@ -1381,12 +1654,7 @@
                             </div>
                         </div>
 
-                        <div class="ae-company-footer">
-                            <strong>${COMPANY_NAME}</strong><br>
-                            ${COMPANY_TAGLINE}<br>
-                            📞 <a href="tel:+${ADMIN_WHATSAPP}">+${ADMIN_WHATSAPP}</a> &nbsp;|&nbsp; ✉️ <a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a><br>
-                            📍 ${ADMIN_LOCATION}
-                        </div>
+                        ${contactHtml}
 
                         <div class="ae-gst-note">* Prices are exclusive of GST</div>
 
@@ -1394,27 +1662,32 @@
                             <i class="fas fa-check-circle"></i> This quotation is 100% FREE to create. No platform fees applied.
                         </div>
                     `;
-                createActionButtons(data);
-                document.getElementById("aeModal").style.display = "flex";
-                document.body.style.overflow = 'hidden';
-            }
+            createActionButtons(data);
+            document.getElementById("aeModal").style.display = "flex";
+            document.body.style.overflow = 'hidden';
+        }
 
-            function createActionButtons(data) {
-                var buttons = document.getElementById("aeActionButtons");
-                buttons.innerHTML = `
+        function createActionButtons(data) {
+            var buttons = document.getElementById("aeActionButtons");
+            buttons.innerHTML = `
                         <button class="ae-whatsapp-btn" id="aeWhatsAppBtn"><i class="fab fa-whatsapp"></i> Share via WhatsApp</button>
                         <button class="ae-print-btn" id="aePrintBtn"><i class="fas fa-print"></i> Print / Download PDF</button>
                         <button class="ae-secondary-btn" id="aeCloseActionBtn">Close</button>
                     `;
 
-                document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
-                    openWhatsApp(ADMIN_WHATSAPP, createWhatsAppMessage(data));
-                });
+            document.getElementById("aeWhatsAppBtn").addEventListener("click", function() {
+                // Check if we have a contact number
+                if (!ADMIN_WHATSAPP) {
+                    showToast("Contact number not available. Please try again later.", "error");
+                    return;
+                }
+                openWhatsApp(ADMIN_WHATSAPP, createWhatsAppMessage(data));
+            });
 
-                document.getElementById("aePrintBtn").addEventListener("click", function() {
-                    var printContent = document.getElementById("aePreviewDocument").innerHTML;
-                    var win = window.open('', '_blank');
-                    win.document.write(`
+            document.getElementById("aePrintBtn").addEventListener("click", function() {
+                var printContent = document.getElementById("aePreviewDocument").innerHTML;
+                var win = window.open('', '_blank');
+                win.document.write(`
                             <html><head><title>Quotation - ${escapeHTML(data.quoteNo)}</title>
                             <style>
                                 body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; max-width: 950px; margin: 0 auto; }
@@ -1461,41 +1734,46 @@
                             </style>
                             </head><body>${printContent}</body></html>
                         `);
-                    win.document.close();
-                    setTimeout(function() { win.print(); }, 500);
-                });
+                win.document.close();
+                setTimeout(function() { win.print(); }, 500);
+            });
 
-                document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
-            }
+            document.getElementById("aeCloseActionBtn").addEventListener("click", closePreview);
+        }
 
-            function createWhatsAppMessage(data) {
-                var msg = "*" + COMPANY_NAME + "*\n*Quotation*\n\nQuotation No: " + data.quoteNo + "\nDate: " + getDate();
-                if (data.deliveryDate) msg += "\nExpected Delivery: " + data.deliveryDate;
-                msg += "\n\nRole: " + data.roleName + "\n\nName/Industry: " + data.name + "\nWhatsApp: " + data.whatsapp + "\nAddress: " + data.address;
-                if (data.email) msg += "\nEmail: " + data.email;
-                msg += "\n\nProduct Category: " + data.category + "\nProduct: " + data.product + "\nQuantity: " + formatQuantity(data.quantity) + " " + data.unit + "\nUnit Price: " + formatMoney(data.price) + " / " + data.unit + "\nEstimated Total: " + formatMoney(data.total) + "\n\nQuotation Status: *" + data.status + "*";
-                if (data.specification) msg += "\n\nSpecification / Grade:\n" + data.specification;
-                msg += "\n\nPayment Terms: " + data.paymentTerms;
-                msg += "\nGST Status: " + data.gstStatus;
-                if (data.termsConditions) msg += "\n\nTerms & Conditions:\n" + data.termsConditions;
-                if (data.status === "Negotiable") msg += "\n\nPrice is negotiable. Commercial terms can be discussed.";
-                if (data.roleName === "Supplier") msg += "\n\nPlease share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.";
-                if (data.roleName === "Buyer") msg += "\n\nPlease confirm the requirement and commercial terms.";
-                msg += "\n\n✅ This quotation was created 100% FREE on AMAL ENTERPRISES platform.";
-                return msg;
-            }
+        function createWhatsAppMessage(data) {
+            var msg = "*" + COMPANY_NAME + "*\n*Quotation*\n\nQuotation No: " + data.quoteNo + "\nDate: " + getDate();
+            if (data.deliveryDate) msg += "\nExpected Delivery: " + data.deliveryDate;
+            msg += "\n\nRole: " + data.roleName + "\n\nName/Industry: " + data.name + "\nWhatsApp: " + data.whatsapp +
+                "\nAddress: " + data.address;
+            if (data.email) msg += "\nEmail: " + data.email;
+            msg += "\n\nProduct Category: " + data.category + "\nProduct: " + data.product + "\nQuantity: " + formatQuantity(
+                data.quantity) + " " + data.unit + "\nUnit Price: " + formatMoney(data.price) + " / " + data.unit +
+                "\nEstimated Total: " + formatMoney(data.total) + "\n\nQuotation Status: *" + data.status + "*";
+            if (data.specification) msg += "\n\nSpecification / Grade:\n" + data.specification;
+            msg += "\n\nPayment Terms: " + data.paymentTerms;
+            msg += "\nGST Status: " + data.gstStatus;
+            if (data.termsConditions) msg += "\n\nTerms & Conditions:\n" + data.termsConditions;
+            if (data.status === "Negotiable") msg += "\n\nPrice is negotiable. Commercial terms can be discussed.";
+            if (data.roleName === "Supplier") msg +=
+                "\n\nPlease share/confirm your best supply price and commercial terms with AMAL ENTERPRISES.";
+            if (data.roleName === "Buyer") msg += "\n\nPlease confirm the requirement and commercial terms.";
+            msg += "\n\n✅ This quotation was created 100% FREE on AMAL ENTERPRISES platform.";
+            return msg;
+        }
 
-            function closePreview() {
-                document.getElementById("aeModal").style.display = "none";
-                document.body.style.overflow = '';
-            }
+        function closePreview() {
+            document.getElementById("aeModal").style.display = "none";
+            document.body.style.overflow = '';
+        }
 
-            // --- INIT ---
-            window.onload = function() {
-                createQuotationSystem();
-            };
-        })();
-    </script>
+        // --- INIT ---
+        window.onload = function() {
+            fetchContactDetails(); // Auto-fetch from Contact Us page
+            createQuotationSystem();
+        };
+    })();
+</script>
 
 </body>
 </html>
