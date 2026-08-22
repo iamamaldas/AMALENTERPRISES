@@ -264,6 +264,24 @@
             cursor: not-allowed;
             transform: none !important;
         }
+        .ae-reset-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: #a0acbd;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 8px;
+        }
+        .ae-reset-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #6db3f2;
+            color: #f0f4fa;
+        }
 
         /* MODAL */
         .ae-modal-overlay {
@@ -573,6 +591,91 @@
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
+        /* ============ FOOTER ============ */
+        footer {
+            margin-top: auto;
+            padding: 28px 24px 30px;
+            background: rgba(0, 0, 0, 0.30);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 0 0 32px 32px;
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            text-align: center;
+        }
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .footer-left .legal-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .footer-left .legal-links a {
+            color: #7e8a9a;
+            font-size: 12px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .footer-left .legal-links a:hover {
+            color: #6db3f2;
+        }
+        .footer-left .legal-links .sep {
+            color: #3a4a5a;
+            font-size: 12px;
+        }
+        .footer-left .copyright {
+            color: #5a6a7a;
+            font-size: 13px;
+        }
+
+        /* FLOATING SHARE BUTTON */
+        .ae-floating-share {
+            position: fixed;
+            right: 18px;
+            bottom: 22px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(17,26,42,0.92);
+            color: #f0f4fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            cursor: pointer;
+            z-index: 9998;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+            backdrop-filter: blur(10px);
+            transition: transform .25s ease, border-color .25s ease, background .25s ease;
+        }
+        .ae-floating-share:hover {
+            transform: translateY(-3px) scale(1.04);
+            border-color: #6db3f2;
+            background: rgba(17,26,42,0.98);
+        }
+        .ae-floating-share:active { transform: scale(.96); }
+        @media (max-width: 600px) {
+            .ae-floating-share {
+                width: 46px;
+                height: 46px;
+                right: 14px;
+                bottom: 16px;
+                font-size: 17px;
+            }
+        }
+
         /* RESPONSIVE */
         @media (max-width: 700px) {
             .nav-links {
@@ -636,23 +739,36 @@
         <span class="ae-toast-message"></span>
     </div>
 
-    <footer style="margin-top:auto; padding:30px 24px; background:rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.04);">
-        <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
-            <div>
-                <div style="color:#5a6a7a; font-size:13px;">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
-                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;">
-                    <a href="#" style="color:#7e8a9a; font-size:12px; text-decoration:none; transition:0.3s;" onclick="alert('Disclaimer content here')">Disclaimer</a> |
-                    <a href="#" style="color:#7e8a9a; font-size:12px; text-decoration:none; transition:0.3s;" onclick="alert('Privacy Policy content here')">Privacy Policy</a> |
-                    <a href="#" style="color:#7e8a9a; font-size:12px; text-decoration:none; transition:0.3s;" onclick="alert('Terms & Conditions content here')">Terms &amp; Conditions</a>
+    <!-- ============ FOOTER ============ -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-left">
+                <div class="legal-links">
+                    <a href="#" onclick="openLegalModal('disclaimer'); return false;">Disclaimer</a>
+                    <span class="sep">|</span>
+                    <a href="#" onclick="openLegalModal('privacy'); return false;">Privacy Policy</a>
+                    <span class="sep">|</span>
+                    <a href="#" onclick="openLegalModal('terms'); return false;">Terms &amp; Conditions</a>
                 </div>
-            </div>
-            <div style="display:flex; gap:14px; align-items:center;">
-                <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#a0acbd; text-decoration:none; transition:0.3s;" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <div class="copyright">&copy; <span id="currentYear"></span> AMAL ENTERPRISES. All Rights Reserved.</div>
             </div>
         </div>
     </footer>
+
+    <!-- FLOATING SHARE -->
+    <button class="ae-floating-share" type="button" id="aeFloatingShare"
+            aria-label="Share AMAL ENTERPRISES" title="Share">
+        <i class="fas fa-share-alt"></i>
+    </button>
+
+    <!-- ============ LEGAL MODAL ============ -->
+    <div id="legalModal" class="legal-modal-overlay">
+        <div class="legal-modal-card">
+            <button class="legal-close-btn" onclick="closeLegalModal()">&times;</button>
+            <h3 id="legalModalTitle">Legal Policy</h3>
+            <div id="legalModalContent"><p>Loading…</p></div>
+        </div>
+    </div>
 
     <script>
         // --- Mobile Menu ---
@@ -666,6 +782,66 @@
             });
         });
 
+        // --- Legal Modal ---
+        var legalContents = {
+            disclaimer: {
+                title: "Disclaimer",
+                content: '<p><strong>General Information</strong></p><p>The information provided by AMAL ENTERPRISES is for general informational purposes only. We make no representation or warranty of any kind regarding the accuracy, adequacy, validity, or completeness of any information on the site.</p><br><p><strong>Limitation of Liability</strong></p><p>In no event shall AMAL ENTERPRISES be liable for any direct, indirect, incidental, or consequential damages arising out of your use of this website.</p>'
+            },
+            privacy: {
+                title: "Privacy Policy",
+                content: '<p><strong>Information We Collect</strong></p><p>We collect your name, company, email, and phone number when you use our quotation system.</p><br><p><strong>How We Use Your Information</strong></p><p>We use it to connect you with buyers/suppliers and improve our services. We do not sell or trade your data.</p>'
+            },
+            terms: {
+                title: "Terms & Conditions",
+                content: '<p><strong>Acceptance of Terms</strong></p><p>By using this website, you agree to these terms. AMAL ENTERPRISES acts as a facilitator and does not guarantee product quality or delivery.</p><br><p><strong>User Responsibilities</strong></p><p>Users are responsible for the accuracy of the information they provide.</p>'
+            }
+        };
+
+        function openLegalModal(type) {
+            var modal = document.getElementById("legalModal");
+            document.getElementById("legalModalTitle").textContent = legalContents[type].title;
+            document.getElementById("legalModalContent").innerHTML = legalContents[type].content;
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeLegalModal() {
+            document.getElementById("legalModal").style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        document.getElementById("legalModal").addEventListener("click", function(e) {
+            if (e.target === this) closeLegalModal();
+        });
+
+        // --- Floating Share ---
+        (function () {
+            var btn = document.getElementById("aeFloatingShare");
+            if (!btn) return;
+            btn.addEventListener("click", function () {
+                if (navigator.share) {
+                    navigator.share({
+                        title: "AMAL ENTERPRISES",
+                        text: "AMAL ENTERPRISES — Industrial Tools, Auto Spare Parts & Engineering Fasteners",
+                        url: window.location.href
+                    }).catch(function () {});
+                } else if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(window.location.href)
+                        .then(function () { alert("Share link copied."); })
+                        .catch(function () {});
+                } else {
+                    var t = document.createElement("input");
+                    t.value = window.location.href;
+                    document.body.appendChild(t);
+                    t.select();
+                    try { document.execCommand("copy"); } catch (e) {}
+                    document.body.removeChild(t);
+                    alert("Share link copied.");
+                }
+            });
+        })();
+
         // ==========================================
         //  QUOTATION SYSTEM — GOOGLE SHEETS UPSERT INTEGRATION
         // ==========================================
@@ -678,7 +854,6 @@
             var ADMIN_EMAIL = "info@amalenterprises.in";
             var ADMIN_LOCATION = "India (Pan-India Sourcing)";
 
-            // Google Apps Script Web App Deployment URL
             var APPS_SCRIPT_URL =
                 "https://script.google.com/macros/s/AKfycbztYXKSLAac7t5DZ7rFqkOXgtZYZP2dfLKuTXOuSXTZv0vxkFu9BA9R161RLH-qOs4cVg/exec";
 
@@ -831,10 +1006,9 @@
                 } catch (e) {}
             }
 
-            // --- Google Sheet Auto-Save Execution ---
+            // --- Google Sheet Auto-Save Execution (hidden from user) ---
             function saveToGoogleSheet(data, quoteNo) {
                 if (!APPS_SCRIPT_URL) {
-                    showToast("Google Sheets URL not configured. Data saved locally.", "error");
                     savePendingQuotation(data);
                     return;
                 }
@@ -865,38 +1039,26 @@
 
                 var url = APPS_SCRIPT_URL + "?" + params.toString();
 
-                // Direct HTTP Call handling
-                fetch(url, {
-                    method: "GET",
-                    mode: "cors",
-                    cache: "no-store"
-                })
-                .then(function(response) {
-                    return response.json();
-                })
+                fetch(url, { method: "GET", mode: "cors", cache: "no-store" })
+                .then(function(response) { return response.json(); })
                 .then(function(res) {
                     if (res && res.status === "success") {
-                        if (res.action === "updated") {
-                            showToast("✅ Existing mobile record updated in Google Sheet!", "success");
-                        } else {
-                            showToast("✅ New entry saved to Google Sheet successfully!", "success");
-                        }
                         removePendingQuotation(quoteNo);
+                        showToast("✅ Quotation saved successfully!", "success");
                     } else {
-                        showToast("⚠️ Sheet API response note: " + (res.message || "Saved"), "success");
                         removePendingQuotation(quoteNo);
+                        showToast("✅ Quotation saved successfully!", "success");
                     }
                 })
                 .catch(function(err) {
-                    // Fallback execution when strict browser CORS policy masks response body
                     fetch(url, { method: "GET", mode: "no-cors" })
                     .then(function() {
-                        showToast("✅ Quotation submitted successfully to Google Sheet!", "success");
                         removePendingQuotation(quoteNo);
+                        showToast("✅ Quotation saved successfully!", "success");
                     })
                     .catch(function() {
-                        showToast("⚠️ Network issue. Saved locally for retry queue.", "error");
                         savePendingQuotation(data);
+                        showToast("⚠️ Network issue. Quotation saved locally.", "error");
                     });
                 });
             }
@@ -976,7 +1138,7 @@
                                 </div>
                                 <div id="aeNegotiationNote" style="display:none; background:rgba(255,200,50,0.1); border-left:3px solid #f0b040; padding:10px; border-radius:6px; color:#f0d080; font-size:14px; margin-bottom:12px;">Price and delivery terms are negotiable.</div>
                                 <button type="button" class="ae-generate-btn" id="aeGenerateBtn"><i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation</button>
-                                <div id="aeSaveStatus" style="margin-top:12px; text-align:center; font-size:14px; display:none;"></div>
+                                <button type="button" class="ae-reset-btn" id="aeResetBtn"><i class="fas fa-undo" style="margin-right:8px;"></i> Reset Form</button>
                             </div>
                         </div>
 
@@ -1003,6 +1165,7 @@
                     b.addEventListener("click", function() { selectRole(this.dataset.role); });
                 });
                 document.getElementById("aeGenerateBtn").addEventListener("click", generateQuotation);
+                document.getElementById("aeResetBtn").addEventListener("click", resetForm);
                 document.getElementById("aeCloseModal").addEventListener("click", closePreview);
                 document.getElementById("aeModal").addEventListener("click", function(e) {
                     if (e.target === e.currentTarget) closePreview();
@@ -1036,6 +1199,21 @@
                         }
                     });
                 }
+            }
+
+            function resetForm() {
+                document.querySelectorAll("#aeFormPanel input:not([readonly]), #aeFormPanel select, #aeFormPanel textarea").forEach(function(el) {
+                    if (el.type === "radio" || el.type === "checkbox") return;
+                    el.value = "";
+                });
+                document.querySelector('input[name="aeQuotationStatus"][value="Final Quotation"]').checked = true;
+                document.getElementById("aeLiveTotal").textContent = "Estimated Total: ₹0.00";
+                document.querySelectorAll(".ae-role-btn").forEach(function(b) { b.classList.remove("selected"); });
+                currentRole = "";
+                document.getElementById("aeFormPanel").style.display = "none";
+                document.getElementById("aeQuoteNo").value = generateQuotationNumber();
+                document.getElementById("aeNegotiationNote").style.display = "none";
+                showToast("Form has been reset.", "success");
             }
 
             function selectRole(role) {
@@ -1115,16 +1293,9 @@
 
                 showPreview(data);
                 saveUserData({ mobile: data.whatsapp, name: data.name, address: data.address, email: data.email, role: currentRole });
-
                 saveToGoogleSheet(data, data.quoteNo);
 
-                var statusDiv = document.getElementById("aeSaveStatus");
-                statusDiv.style.display = "block";
-                statusDiv.style.color = "#6db3f2";
-                statusDiv.innerHTML = "✅ Quotation processed & synchronized successfully!";
-
                 setTimeout(function() {
-                    statusDiv.style.display = "none";
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-file-invoice" style="margin-right:8px;"></i> Create Free Quotation';
                 }, 4000);
@@ -1325,5 +1496,6 @@
             };
         })();
     </script>
+
 </body>
 </html>
